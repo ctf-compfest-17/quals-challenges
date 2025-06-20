@@ -1,0 +1,4 @@
+void __cdecl wow_reverse_cool_function_d6525aa8(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 17049;
+}

@@ -1,0 +1,4 @@
+void __cdecl COMPFEST17_free_picoCTF_34766559(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 22013;
+}

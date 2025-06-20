@@ -1,0 +1,4 @@
+void __cdecl fl4g_C0mpf3st_wow_b67fb336(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 7378;
+}

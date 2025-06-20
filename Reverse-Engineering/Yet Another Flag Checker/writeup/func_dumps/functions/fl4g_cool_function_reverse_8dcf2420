@@ -1,0 +1,4 @@
+void __cdecl fl4g_cool_function_reverse_8dcf2420(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 3379;
+}

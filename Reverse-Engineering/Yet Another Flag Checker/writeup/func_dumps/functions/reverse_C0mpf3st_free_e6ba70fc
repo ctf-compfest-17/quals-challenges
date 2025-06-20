@@ -1,0 +1,4 @@
+void __cdecl reverse_C0mpf3st_free_e6ba70fc(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 4702;
+}

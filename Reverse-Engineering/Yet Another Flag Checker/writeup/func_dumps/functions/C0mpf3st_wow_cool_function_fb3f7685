@@ -1,0 +1,4 @@
+void __cdecl C0mpf3st_wow_cool_function_fb3f7685(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 3793;
+}

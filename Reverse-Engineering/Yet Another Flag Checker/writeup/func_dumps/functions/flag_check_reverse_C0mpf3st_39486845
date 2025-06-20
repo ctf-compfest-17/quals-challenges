@@ -1,0 +1,4 @@
+void __cdecl flag_check_reverse_C0mpf3st_39486845(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 28774;
+}

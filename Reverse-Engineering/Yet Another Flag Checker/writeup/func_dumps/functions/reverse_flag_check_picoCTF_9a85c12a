@@ -1,0 +1,4 @@
+void __cdecl reverse_flag_check_picoCTF_9a85c12a(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 13370;
+}

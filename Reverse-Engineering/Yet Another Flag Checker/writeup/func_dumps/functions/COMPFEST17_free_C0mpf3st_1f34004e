@@ -1,0 +1,4 @@
+void __cdecl COMPFEST17_free_C0mpf3st_1f34004e(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 2018;
+}

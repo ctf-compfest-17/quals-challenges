@@ -1,0 +1,6 @@
+std::vector<int>::reference __cdecl std::vector<int>::operator[](
+        std::vector<int> *const this,
+        std::vector<int>::size_type __n)
+{
+  return &this->_M_impl._M_start[__n];
+}

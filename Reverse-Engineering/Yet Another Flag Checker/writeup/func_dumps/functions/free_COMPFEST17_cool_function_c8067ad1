@@ -1,0 +1,4 @@
+void __cdecl free_COMPFEST17_cool_function_c8067ad1(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 2022;
+}

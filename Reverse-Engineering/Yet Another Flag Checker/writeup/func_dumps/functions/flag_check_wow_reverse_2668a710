@@ -1,0 +1,4 @@
+void __cdecl flag_check_wow_reverse_2668a710(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 6067;
+}

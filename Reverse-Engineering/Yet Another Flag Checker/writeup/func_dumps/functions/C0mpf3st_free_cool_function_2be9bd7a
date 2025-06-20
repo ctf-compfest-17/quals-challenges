@@ -1,0 +1,4 @@
+void __cdecl C0mpf3st_free_cool_function_2be9bd7a(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 12324;
+}

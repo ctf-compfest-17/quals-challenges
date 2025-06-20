@@ -1,0 +1,4 @@
+void __cdecl cool_function_flag_check_reverse_da4f21d0(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 4109;
+}

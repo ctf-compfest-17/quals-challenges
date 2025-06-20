@@ -1,0 +1,4 @@
+void __cdecl cool_function_free_flag_check_9627c45d(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 28542;
+}

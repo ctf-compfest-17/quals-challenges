@@ -1,0 +1,4 @@
+void __cdecl C0mpf3st_COMPFEST17_reverse_cba0a4ee(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 13001;
+}

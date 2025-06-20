@@ -1,0 +1,4 @@
+void __cdecl COMPFEST17_picoCTF_wow_ad82140c(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 15317;
+}

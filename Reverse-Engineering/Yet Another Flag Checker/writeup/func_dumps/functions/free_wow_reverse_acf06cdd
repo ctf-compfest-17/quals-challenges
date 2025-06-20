@@ -1,0 +1,4 @@
+void __cdecl free_wow_reverse_acf06cdd(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 15476;
+}

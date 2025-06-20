@@ -1,0 +1,4 @@
+void __cdecl flag_check_COMPFEST17_wow_d4784467(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 30622;
+}

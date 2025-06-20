@@ -1,0 +1,4 @@
+void __cdecl reverse_COMPFEST17_flag_check_8a56257e(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 27387;
+}

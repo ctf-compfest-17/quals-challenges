@@ -1,0 +1,4 @@
+void __cdecl reverse_cool_function_COMPFEST17_0d73a250(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 4826;
+}

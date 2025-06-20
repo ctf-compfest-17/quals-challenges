@@ -17,7 +17,7 @@ Is it really a CTF without a flag checker challenge?
 > ^[A-Za-z0-9]+$
 > ```
 ## Difficulty
-Tingkat kesulitan soal: medium
+Tingkat kesulitan soal: medium-hard
 
 ## Hints
 -

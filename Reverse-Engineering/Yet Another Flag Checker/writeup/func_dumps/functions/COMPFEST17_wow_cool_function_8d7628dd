@@ -1,0 +1,4 @@
+void __cdecl COMPFEST17_wow_cool_function_8d7628dd(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 13676;
+}

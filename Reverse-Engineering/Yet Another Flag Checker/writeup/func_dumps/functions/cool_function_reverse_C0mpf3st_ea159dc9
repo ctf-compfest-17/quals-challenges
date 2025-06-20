@@ -1,0 +1,4 @@
+void __cdecl cool_function_reverse_C0mpf3st_ea159dc9(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 9596;
+}

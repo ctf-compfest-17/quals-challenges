@@ -1,0 +1,4 @@
+void __cdecl wow_cool_function_free_51174add(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 30174;
+}

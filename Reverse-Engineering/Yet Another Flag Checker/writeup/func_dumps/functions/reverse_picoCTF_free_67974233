@@ -1,0 +1,4 @@
+void __cdecl reverse_picoCTF_free_67974233(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 2208;
+}

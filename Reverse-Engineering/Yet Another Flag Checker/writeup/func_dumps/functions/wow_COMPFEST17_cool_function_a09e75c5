@@ -1,0 +1,4 @@
+void __cdecl wow_COMPFEST17_cool_function_a09e75c5(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 25520;
+}

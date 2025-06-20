@@ -1,0 +1,4 @@
+void __cdecl cool_function_COMPFEST17_C0mpf3st_494c08f7(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 1565;
+}

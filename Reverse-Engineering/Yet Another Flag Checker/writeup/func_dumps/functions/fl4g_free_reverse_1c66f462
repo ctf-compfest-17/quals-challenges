@@ -1,0 +1,4 @@
+void __cdecl fl4g_free_reverse_1c66f462(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 21908;
+}

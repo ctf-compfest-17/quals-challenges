@@ -1,0 +1,4 @@
+void __cdecl COMPFEST17_reverse_fl4g_6dbd2699(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 12453;
+}

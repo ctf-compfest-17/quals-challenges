@@ -1,0 +1,4 @@
+void __cdecl fl4g_COMPFEST17_flag_check_5c80985b(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 29051;
+}

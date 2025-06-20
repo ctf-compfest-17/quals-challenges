@@ -1,0 +1,4 @@
+void __cdecl free_C0mpf3st_fl4g_e250c593(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 28033;
+}

@@ -1,0 +1,4 @@
+void __cdecl free_COMPFEST17_picoCTF_55a988df(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 13190;
+}

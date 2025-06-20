@@ -1,0 +1,4 @@
+void __cdecl fl4g_reverse_picoCTF_92a08bf9(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 15473;
+}

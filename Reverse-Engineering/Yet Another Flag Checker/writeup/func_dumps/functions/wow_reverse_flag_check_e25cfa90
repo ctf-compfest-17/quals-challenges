@@ -1,0 +1,4 @@
+void __cdecl wow_reverse_flag_check_e25cfa90(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 20523;
+}

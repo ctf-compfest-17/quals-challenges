@@ -1,0 +1,4 @@
+void __cdecl flag_check_picoCTF_wow_6d3a2d24(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 11054;
+}

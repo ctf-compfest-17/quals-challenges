@@ -1,0 +1,119 @@
+void __cdecl picoCTF_COMPFEST17_C0mpf3st_470e7a4f(const std::string *inp, __int64 *checksum)
+{
+  char v2; // bl
+  int v3; // ebx
+  char v4; // si
+  char v5; // bl
+  int v6; // ebx
+  char v7; // si
+  char v8; // bl
+  int v9; // ebx
+  char v10; // si
+  char v11; // bl
+  int v12; // ebx
+  char v13; // si
+  char v14; // al
+  char v15; // bl
+  int v16; // ebx
+  char v17; // si
+  char v18; // bl
+  int v19; // ebx
+  char v20; // si
+  char v21; // bl
+  int v22; // ebx
+  char v23; // si
+  char v24; // bl
+  int v25; // ebx
+  char v26; // si
+  char v27; // bl
+  int v28; // ebx
+  char v29; // si
+  char v30; // bl
+  int v31; // ebx
+  char v32; // si
+  char v33; // al
+
+  *checksum += 32017;
+  v2 = *(_BYTE *)std::string::operator[](inp, 26);
+  v3 = (char)(v2 & *(_BYTE *)std::string::operator[](inp, 20));
+  v4 = *(_BYTE *)std::string::operator[](inp, 26);
+  if ( v3 + (char)(v4 | *(_BYTE *)std::string::operator[](inp, 20)) != 210 )
+    goto LABEL_9;
+  if ( *(_BYTE *)std::string::operator[](inp, 6) != 67 )
+    goto LABEL_9;
+  v5 = *(_BYTE *)std::string::operator[](inp, 27);
+  v6 = (char)(v5 | *(_BYTE *)std::string::operator[](inp, 34));
+  v7 = *(_BYTE *)std::string::operator[](inp, 27);
+  if ( v6 - (char)(v7 & *(_BYTE *)std::string::operator[](inp, 34)) != 10 )
+    goto LABEL_9;
+  if ( *(_BYTE *)std::string::operator[](inp, 20) == 127
+    && *(_BYTE *)std::string::operator[](inp, 37) == 70
+    && (v8 = *(_BYTE *)std::string::operator[](inp, 28),
+        v9 = (char)(v8 | *(_BYTE *)std::string::operator[](inp, 5)),
+        v10 = *(_BYTE *)std::string::operator[](inp, 28),
+        v9 - (char)(v10 & *(_BYTE *)std::string::operator[](inp, 5)) == 53)
+    && (v11 = *(_BYTE *)std::string::operator[](inp, 17),
+        v12 = (char)(v11 & *(_BYTE *)std::string::operator[](inp, 5)),
+        v13 = *(_BYTE *)std::string::operator[](inp, 17),
+        v12 + (char)(v13 | *(_BYTE *)std::string::operator[](inp, 5)) == 134) )
+  {
+    v14 = 1;
+  }
+  else
+  {
+LABEL_9:
+    v14 = 0;
+  }
+  if ( v14 )
+  {
+    picoCTF_COMPFEST17_reverse_bc731692(inp, checksum);
+  }
+  else
+  {
+    if ( *(_BYTE *)std::string::operator[](inp, 21) != 85 )
+      goto LABEL_23;
+    if ( *(_BYTE *)std::string::operator[](inp, 36) != 126 )
+      goto LABEL_23;
+    v15 = *(_BYTE *)std::string::operator[](inp, 0);
+    v16 = (char)(v15 & *(_BYTE *)std::string::operator[](inp, 55));
+    v17 = *(_BYTE *)std::string::operator[](inp, 0);
+    if ( v16 + (char)(v17 | *(_BYTE *)std::string::operator[](inp, 55)) != 136 )
+      goto LABEL_23;
+    if ( *(_BYTE *)std::string::operator[](inp, 48) != 108 )
+      goto LABEL_23;
+    v18 = *(_BYTE *)std::string::operator[](inp, 31);
+    v19 = (char)(v18 | *(_BYTE *)std::string::operator[](inp, 11));
+    v20 = *(_BYTE *)std::string::operator[](inp, 31);
+    if ( v19 - (char)(v20 & *(_BYTE *)std::string::operator[](inp, 11)) != 121 )
+      goto LABEL_23;
+    v21 = *(_BYTE *)std::string::operator[](inp, 51);
+    v22 = (char)(v21 & *(_BYTE *)std::string::operator[](inp, 55));
+    v23 = *(_BYTE *)std::string::operator[](inp, 51);
+    if ( v22 + (char)(v23 | *(_BYTE *)std::string::operator[](inp, 55)) != 134 )
+      goto LABEL_23;
+    v24 = *(_BYTE *)std::string::operator[](inp, 40);
+    v25 = (char)(v24 | *(_BYTE *)std::string::operator[](inp, 49));
+    v26 = *(_BYTE *)std::string::operator[](inp, 40);
+    if ( v25 - (char)(v26 & *(_BYTE *)std::string::operator[](inp, 49)) != 114 )
+      goto LABEL_23;
+    v27 = *(_BYTE *)std::string::operator[](inp, 20);
+    v28 = (char)(v27 | *(_BYTE *)std::string::operator[](inp, 33));
+    v29 = *(_BYTE *)std::string::operator[](inp, 20);
+    if ( v28 - (char)(v29 & *(_BYTE *)std::string::operator[](inp, 33)) == 17
+      && (v30 = *(_BYTE *)std::string::operator[](inp, 1),
+          v31 = (char)(v30 & *(_BYTE *)std::string::operator[](inp, 39)),
+          v32 = *(_BYTE *)std::string::operator[](inp, 1),
+          v31 + (char)(v32 | *(_BYTE *)std::string::operator[](inp, 39)) == 159)
+      && *(_BYTE *)std::string::operator[](inp, 10) == 49 )
+    {
+      v33 = 1;
+    }
+    else
+    {
+LABEL_23:
+      v33 = 0;
+    }
+    if ( v33 )
+      wow_picoCTF_C0mpf3st_490640b4(inp, checksum);
+  }
+}

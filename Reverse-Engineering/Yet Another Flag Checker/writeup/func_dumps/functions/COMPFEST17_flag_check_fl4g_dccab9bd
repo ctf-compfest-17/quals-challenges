@@ -1,0 +1,4 @@
+void __cdecl COMPFEST17_flag_check_fl4g_dccab9bd(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 31777;
+}

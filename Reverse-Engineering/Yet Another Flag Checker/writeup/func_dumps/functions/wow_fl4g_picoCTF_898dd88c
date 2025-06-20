@@ -1,0 +1,4 @@
+void __cdecl wow_fl4g_picoCTF_898dd88c(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 11794;
+}

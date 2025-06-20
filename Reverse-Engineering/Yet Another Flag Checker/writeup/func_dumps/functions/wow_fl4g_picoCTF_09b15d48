@@ -1,0 +1,118 @@
+void __cdecl wow_fl4g_picoCTF_09b15d48(const std::string *inp, __int64 *checksum)
+{
+  char v2; // bl
+  int v3; // ebx
+  char v4; // si
+  char v5; // bl
+  int v6; // ebx
+  char v7; // si
+  char v8; // bl
+  int v9; // ebx
+  char v10; // si
+  char v11; // bl
+  int v12; // ebx
+  char v13; // si
+  char v14; // bl
+  int v15; // ebx
+  char v16; // si
+  char v17; // al
+  char v18; // bl
+  int v19; // ebx
+  char v20; // si
+  char v21; // bl
+  int v22; // ebx
+  char v23; // si
+  char v24; // bl
+  int v25; // ebx
+  char v26; // si
+  char v27; // bl
+  int v28; // ebx
+  char v29; // si
+  char v30; // al
+
+  *checksum += 10785;
+  if ( *(_BYTE *)std::string::operator[](inp, 40) != 76 )
+    goto LABEL_10;
+  v2 = *(_BYTE *)std::string::operator[](inp, 10);
+  v3 = (char)(v2 | *(_BYTE *)std::string::operator[](inp, 8));
+  v4 = *(_BYTE *)std::string::operator[](inp, 10);
+  if ( v3 - (char)(v4 & *(_BYTE *)std::string::operator[](inp, 8)) != 65 )
+    goto LABEL_10;
+  v5 = *(_BYTE *)std::string::operator[](inp, 7);
+  v6 = (char)(v5 | *(_BYTE *)std::string::operator[](inp, 22));
+  v7 = *(_BYTE *)std::string::operator[](inp, 7);
+  if ( v6 - (char)(v7 & *(_BYTE *)std::string::operator[](inp, 22)) != 98 )
+    goto LABEL_10;
+  v8 = *(_BYTE *)std::string::operator[](inp, 2);
+  v9 = (char)(v8 | *(_BYTE *)std::string::operator[](inp, 41));
+  v10 = *(_BYTE *)std::string::operator[](inp, 2);
+  if ( v9 - (char)(v10 & *(_BYTE *)std::string::operator[](inp, 41)) != 35 )
+    goto LABEL_10;
+  v11 = *(_BYTE *)std::string::operator[](inp, 20);
+  v12 = (char)(v11 | *(_BYTE *)std::string::operator[](inp, 43));
+  v13 = *(_BYTE *)std::string::operator[](inp, 20);
+  if ( v12 - (char)(v13 & *(_BYTE *)std::string::operator[](inp, 43)) == 50
+    && *(_BYTE *)std::string::operator[](inp, 42) == 90
+    && (v14 = *(_BYTE *)std::string::operator[](inp, 32),
+        v15 = (char)(v14 | *(_BYTE *)std::string::operator[](inp, 29)),
+        v16 = *(_BYTE *)std::string::operator[](inp, 32),
+        v15 - (char)(v16 & *(_BYTE *)std::string::operator[](inp, 29)) == 127)
+    && *(_BYTE *)std::string::operator[](inp, 21) == 92 )
+  {
+    v17 = 1;
+  }
+  else
+  {
+LABEL_10:
+    v17 = 0;
+  }
+  if ( v17 )
+  {
+    picoCTF_free_flag_check_ecdcd675(inp, checksum);
+  }
+  else
+  {
+    if ( *(_BYTE *)std::string::operator[](inp, 17) != 57 )
+      goto LABEL_26;
+    if ( *(_BYTE *)std::string::operator[](inp, 50) != 72 )
+      goto LABEL_26;
+    if ( *(_BYTE *)std::string::operator[](inp, 4) != 77 )
+      goto LABEL_26;
+    if ( *(_BYTE *)std::string::operator[](inp, 8) != 119 )
+      goto LABEL_26;
+    if ( *(_BYTE *)std::string::operator[](inp, 23) != 112 )
+      goto LABEL_26;
+    if ( *(_BYTE *)std::string::operator[](inp, 46) != 68 )
+      goto LABEL_26;
+    v18 = *(_BYTE *)std::string::operator[](inp, 20);
+    v19 = (char)(v18 & *(_BYTE *)std::string::operator[](inp, 19));
+    v20 = *(_BYTE *)std::string::operator[](inp, 20);
+    if ( v19 + (char)(v20 | *(_BYTE *)std::string::operator[](inp, 19)) != 228 )
+      goto LABEL_26;
+    v21 = *(_BYTE *)std::string::operator[](inp, 10);
+    v22 = (char)(v21 | *(_BYTE *)std::string::operator[](inp, 52));
+    v23 = *(_BYTE *)std::string::operator[](inp, 10);
+    if ( v22 - (char)(v23 & *(_BYTE *)std::string::operator[](inp, 52)) != 121 )
+      goto LABEL_26;
+    if ( *(_BYTE *)std::string::operator[](inp, 13) == 122
+      && *(char *)std::string::operator[](inp, 28) == 128
+      && (v24 = *(_BYTE *)std::string::operator[](inp, 16),
+          v25 = (char)(v24 & *(_BYTE *)std::string::operator[](inp, 55)),
+          v26 = *(_BYTE *)std::string::operator[](inp, 16),
+          v25 + (char)(v26 | *(_BYTE *)std::string::operator[](inp, 55)) == 128)
+      && (v27 = *(_BYTE *)std::string::operator[](inp, 45),
+          v28 = (char)(v27 & *(_BYTE *)std::string::operator[](inp, 40)),
+          v29 = *(_BYTE *)std::string::operator[](inp, 45),
+          v28 + (char)(v29 | *(_BYTE *)std::string::operator[](inp, 40)) == 195) )
+    {
+      v30 = 1;
+    }
+    else
+    {
+LABEL_26:
+      v30 = 0;
+    }
+    if ( v30 )
+      flag_check_cool_function_COMPFEST17_5ee0070c(inp, checksum);
+  }
+}

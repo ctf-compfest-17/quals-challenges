@@ -1,0 +1,4 @@
+void __cdecl cool_function_wow_C0mpf3st_2ad9e5e9(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 2016;
+}

@@ -1,0 +1,4 @@
+void __cdecl COMPFEST17_picoCTF_flag_check_cdd0500d(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 19440;
+}

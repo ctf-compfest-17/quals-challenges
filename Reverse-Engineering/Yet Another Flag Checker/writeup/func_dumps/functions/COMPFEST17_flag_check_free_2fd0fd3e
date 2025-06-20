@@ -1,0 +1,4 @@
+void __cdecl COMPFEST17_flag_check_free_2fd0fd3e(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 3989;
+}

@@ -1,0 +1,202 @@
+void __cdecl fl4g_C0mpf3st_COMPFEST17_83fa5a43(const std::string *inp, __int64 *checksum)
+{
+  char v2; // bl
+  int v3; // ebx
+  char v4; // si
+  char v5; // bl
+  int v6; // ebx
+  char v7; // si
+  char v8; // bl
+  int v9; // ebx
+  char v10; // si
+  char v11; // bl
+  int v12; // ebx
+  char v13; // si
+  char v14; // bl
+  int v15; // ebx
+  char v16; // si
+  char v17; // bl
+  int v18; // ebx
+  char v19; // si
+  char v20; // bl
+  int v21; // ebx
+  char v22; // si
+  char v23; // bl
+  int v24; // ebx
+  char v25; // si
+  char v26; // bl
+  int v27; // ebx
+  char v28; // si
+  char v29; // bl
+  int v30; // ebx
+  char v31; // si
+  char v32; // bl
+  int v33; // ebx
+  char v34; // si
+  char v35; // bl
+  int v36; // ebx
+  char v37; // si
+  char v38; // bl
+  int v39; // ebx
+  char v40; // si
+  char v41; // al
+  char v42; // bl
+  int v43; // ebx
+  char v44; // si
+  char v45; // bl
+  int v46; // ebx
+  char v47; // si
+  char v48; // bl
+  int v49; // ebx
+  char v50; // si
+  char v51; // bl
+  int v52; // ebx
+  char v53; // si
+  char v54; // bl
+  int v55; // ebx
+  char v56; // si
+  char v57; // bl
+  int v58; // ebx
+  char v59; // si
+  char v60; // bl
+  int v61; // ebx
+  char v62; // si
+  char v63; // al
+
+  *checksum += 21264;
+  v2 = *(_BYTE *)std::string::operator[](inp, 1);
+  v3 = (char)(v2 | *(_BYTE *)std::string::operator[](inp, 14));
+  v4 = *(_BYTE *)std::string::operator[](inp, 1);
+  if ( v3 - (char)(v4 & *(_BYTE *)std::string::operator[](inp, 14)) != 56 )
+    goto LABEL_20;
+  v5 = *(_BYTE *)std::string::operator[](inp, 37);
+  v6 = (char)(v5 & *(_BYTE *)std::string::operator[](inp, 49));
+  v7 = *(_BYTE *)std::string::operator[](inp, 37);
+  if ( v6 + (char)(v7 | *(_BYTE *)std::string::operator[](inp, 49)) != 122 )
+    goto LABEL_20;
+  v8 = *(_BYTE *)std::string::operator[](inp, 35);
+  v9 = (char)(v8 | *(_BYTE *)std::string::operator[](inp, 20));
+  v10 = *(_BYTE *)std::string::operator[](inp, 35);
+  if ( v9 - (char)(v10 & *(_BYTE *)std::string::operator[](inp, 20)) != 46 )
+    goto LABEL_20;
+  v11 = *(_BYTE *)std::string::operator[](inp, 33);
+  v12 = (char)(v11 & *(_BYTE *)std::string::operator[](inp, 51));
+  v13 = *(_BYTE *)std::string::operator[](inp, 33);
+  if ( v12 + (char)(v13 | *(_BYTE *)std::string::operator[](inp, 51)) != 156 )
+    goto LABEL_20;
+  v14 = *(_BYTE *)std::string::operator[](inp, 51);
+  v15 = (char)(v14 | *(_BYTE *)std::string::operator[](inp, 9));
+  v16 = *(_BYTE *)std::string::operator[](inp, 51);
+  if ( v15 - (char)(v16 & *(_BYTE *)std::string::operator[](inp, 9)) != 99 )
+    goto LABEL_20;
+  v17 = *(_BYTE *)std::string::operator[](inp, 25);
+  v18 = (char)(v17 | *(_BYTE *)std::string::operator[](inp, 35));
+  v19 = *(_BYTE *)std::string::operator[](inp, 25);
+  if ( v18 - (char)(v19 & *(_BYTE *)std::string::operator[](inp, 35)) != 63 )
+    goto LABEL_20;
+  if ( *(_BYTE *)std::string::operator[](inp, 8) != 121 )
+    goto LABEL_20;
+  v20 = *(_BYTE *)std::string::operator[](inp, 18);
+  v21 = (char)(v20 | *(_BYTE *)std::string::operator[](inp, 16));
+  v22 = *(_BYTE *)std::string::operator[](inp, 18);
+  if ( v21 - (char)(v22 & *(_BYTE *)std::string::operator[](inp, 16)) != 87 )
+    goto LABEL_20;
+  if ( *(_BYTE *)std::string::operator[](inp, 55) != 73 )
+    goto LABEL_20;
+  v23 = *(_BYTE *)std::string::operator[](inp, 50);
+  v24 = (char)(v23 & *(_BYTE *)std::string::operator[](inp, 39));
+  v25 = *(_BYTE *)std::string::operator[](inp, 50);
+  if ( v24 + (char)(v25 | *(_BYTE *)std::string::operator[](inp, 39)) != 149 )
+    goto LABEL_20;
+  v26 = *(_BYTE *)std::string::operator[](inp, 21);
+  v27 = (char)(v26 & *(_BYTE *)std::string::operator[](inp, 51));
+  v28 = *(_BYTE *)std::string::operator[](inp, 21);
+  if ( v27 + (char)(v28 | *(_BYTE *)std::string::operator[](inp, 51)) != 148 )
+    goto LABEL_20;
+  v29 = *(_BYTE *)std::string::operator[](inp, 34);
+  v30 = (char)(v29 & *(_BYTE *)std::string::operator[](inp, 8));
+  v31 = *(_BYTE *)std::string::operator[](inp, 34);
+  if ( v30 + (char)(v31 | *(_BYTE *)std::string::operator[](inp, 8)) != 164 )
+    goto LABEL_20;
+  v32 = *(_BYTE *)std::string::operator[](inp, 40);
+  v33 = (char)(v32 | *(_BYTE *)std::string::operator[](inp, 23));
+  v34 = *(_BYTE *)std::string::operator[](inp, 40);
+  if ( v33 - (char)(v34 & *(_BYTE *)std::string::operator[](inp, 23)) != 55 )
+    goto LABEL_20;
+  v35 = *(_BYTE *)std::string::operator[](inp, 2);
+  v36 = (char)(v35 & *(_BYTE *)std::string::operator[](inp, 39));
+  v37 = *(_BYTE *)std::string::operator[](inp, 2);
+  if ( v36 + (char)(v37 | *(_BYTE *)std::string::operator[](inp, 39)) == 140
+    && *(_BYTE *)std::string::operator[](inp, 26) == 100
+    && *(_BYTE *)std::string::operator[](inp, 45) == 122
+    && (v38 = *(_BYTE *)std::string::operator[](inp, 3),
+        v39 = (char)(v38 | *(_BYTE *)std::string::operator[](inp, 53)),
+        v40 = *(_BYTE *)std::string::operator[](inp, 3),
+        v39 - (char)(v40 & *(_BYTE *)std::string::operator[](inp, 53)) == 62)
+    && *(_BYTE *)std::string::operator[](inp, 15) == 68 )
+  {
+    v41 = 1;
+  }
+  else
+  {
+LABEL_20:
+    v41 = 0;
+  }
+  if ( v41 )
+  {
+    wow_COMPFEST17_reverse_4b86abe4(inp, checksum);
+  }
+  else
+  {
+    v42 = *(_BYTE *)std::string::operator[](inp, 4);
+    v43 = (char)(v42 & *(_BYTE *)std::string::operator[](inp, 3));
+    v44 = *(_BYTE *)std::string::operator[](inp, 4);
+    if ( v43 + (char)(v44 | *(_BYTE *)std::string::operator[](inp, 3)) != 170 )
+      goto LABEL_36;
+    v45 = *(_BYTE *)std::string::operator[](inp, 12);
+    v46 = (char)(v45 & *(_BYTE *)std::string::operator[](inp, 24));
+    v47 = *(_BYTE *)std::string::operator[](inp, 12);
+    if ( v46 + (char)(v47 | *(_BYTE *)std::string::operator[](inp, 24)) != 135 )
+      goto LABEL_36;
+    v48 = *(_BYTE *)std::string::operator[](inp, 53);
+    v49 = (char)(v48 & *(_BYTE *)std::string::operator[](inp, 35));
+    v50 = *(_BYTE *)std::string::operator[](inp, 53);
+    if ( v49 + (char)(v50 | *(_BYTE *)std::string::operator[](inp, 35)) != 175 )
+      goto LABEL_36;
+    v51 = *(_BYTE *)std::string::operator[](inp, 35);
+    v52 = (char)(v51 | *(_BYTE *)std::string::operator[](inp, 40));
+    v53 = *(_BYTE *)std::string::operator[](inp, 35);
+    if ( v52 - (char)(v53 & *(_BYTE *)std::string::operator[](inp, 40)) != 8 )
+      goto LABEL_36;
+    if ( *(_BYTE *)std::string::operator[](inp, 2) != 83 )
+      goto LABEL_36;
+    if ( *(_BYTE *)std::string::operator[](inp, 8) != 124 )
+      goto LABEL_36;
+    v54 = *(_BYTE *)std::string::operator[](inp, 47);
+    v55 = (char)(v54 | *(_BYTE *)std::string::operator[](inp, 20));
+    v56 = *(_BYTE *)std::string::operator[](inp, 47);
+    if ( v55 - (char)(v56 & *(_BYTE *)std::string::operator[](inp, 20)) != 3 )
+      goto LABEL_36;
+    v57 = *(_BYTE *)std::string::operator[](inp, 48);
+    v58 = (char)(v57 | *(_BYTE *)std::string::operator[](inp, 35));
+    v59 = *(_BYTE *)std::string::operator[](inp, 48);
+    if ( v58 - (char)(v59 & *(_BYTE *)std::string::operator[](inp, 35)) == 54
+      && *(_BYTE *)std::string::operator[](inp, 6) == 55
+      && (v60 = *(_BYTE *)std::string::operator[](inp, 5),
+          v61 = (char)(v60 & *(_BYTE *)std::string::operator[](inp, 45)),
+          v62 = *(_BYTE *)std::string::operator[](inp, 5),
+          v61 + (char)(v62 | *(_BYTE *)std::string::operator[](inp, 45)) == 197)
+      && *(_BYTE *)std::string::operator[](inp, 18) == 108
+      && *(_BYTE *)std::string::operator[](inp, 16) == 60 )
+    {
+      v63 = 1;
+    }
+    else
+    {
+LABEL_36:
+      v63 = 0;
+    }
+    if ( v63 )
+      reverse_picoCTF_cool_function_1f4fe6a4(inp, checksum);
+  }
+}

@@ -1,0 +1,8 @@
+void __cdecl std::_Vector_base<int>::_M_deallocate(
+        std::_Vector_base<int> *const this,
+        std::_Vector_base<int>::pointer __p,
+        std::size_t __n)
+{
+  if ( __p )
+    std::__new_allocator<int>::deallocate((std::__new_allocator<int> *const)this, __p, __n);
+}

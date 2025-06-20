@@ -1,0 +1,4 @@
+void __cdecl C0mpf3st_COMPFEST17_fl4g_cd8d5260(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 1032;
+}

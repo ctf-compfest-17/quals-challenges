@@ -1,0 +1,4 @@
+void __cdecl wow_reverse_picoCTF_f076073b(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 19127;
+}

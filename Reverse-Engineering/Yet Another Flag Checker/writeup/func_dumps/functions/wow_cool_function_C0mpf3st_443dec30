@@ -1,0 +1,4 @@
+void __cdecl wow_cool_function_C0mpf3st_443dec30(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 13112;
+}

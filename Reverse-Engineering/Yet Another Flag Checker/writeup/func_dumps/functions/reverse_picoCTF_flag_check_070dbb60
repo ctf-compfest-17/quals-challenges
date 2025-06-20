@@ -1,0 +1,4 @@
+void __cdecl reverse_picoCTF_flag_check_070dbb60(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 21492;
+}

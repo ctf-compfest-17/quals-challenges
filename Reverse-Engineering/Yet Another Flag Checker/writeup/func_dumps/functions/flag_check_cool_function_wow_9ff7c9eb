@@ -1,0 +1,4 @@
+void __cdecl flag_check_cool_function_wow_9ff7c9eb(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 14844;
+}

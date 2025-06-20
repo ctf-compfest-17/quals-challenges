@@ -1,0 +1,4 @@
+void __cdecl reverse_free_cool_function_c7558e9d(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 19391;
+}

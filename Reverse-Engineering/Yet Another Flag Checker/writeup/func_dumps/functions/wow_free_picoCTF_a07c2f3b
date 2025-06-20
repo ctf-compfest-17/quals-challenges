@@ -1,0 +1,4 @@
+void __cdecl wow_free_picoCTF_a07c2f3b(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 21813;
+}

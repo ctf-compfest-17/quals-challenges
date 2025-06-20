@@ -1,0 +1,4 @@
+void __cdecl flag_check_cool_function_fl4g_77340c2e(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 29591;
+}

@@ -21,7 +21,7 @@ def generate_flag(flag):
 FLAG = generate_flag("it5_sm4r7_bu7_als0_v3ry_d4ng3r0u5")
 
 print(FLAG)
-exit()
+
 
 OPS_EQ = ["=="] # gajadi pake inequality wkwkwkwk
 OPS_ARITH = ["+", "^"] + ["^"]
@@ -58,7 +58,8 @@ class Expr:
             return f"!((((int)inp[{self.x}] & (int)inp[{self.y}]) + ((int)inp[{self.x}] | (int)inp[{self.y}])) - {self.z})"
         elif self.expr_type == 2:
             return f"!((((int)inp[{self.x}] | (int)inp[{self.y}]) - ((int)inp[{self.x}] & (int)inp[{self.y}])) - {self.z})"
-
+print(Expr(x=42, y=ord('u'), r=123))
+exit()
 class FuncNode:
     def __init__(self, idx):
         self.id = idx
@@ -243,6 +244,6 @@ for i in node_indices:
 
 final_code = headers + "\n" + forward_declarations + "\n" + function_definitions + "\n" + main_func
 
-with open("challenge.cpp", "w") as f:
+with open("challenge2.cpp", "w") as f:
     f.write(final_code)
 

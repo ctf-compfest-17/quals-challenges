@@ -1,0 +1,4 @@
+void __cdecl cool_function_picoCTF_flag_check_59dfa2df(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 7854;
+}

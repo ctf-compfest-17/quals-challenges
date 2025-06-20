@@ -1,0 +1,4 @@
+void __cdecl reverse_flag_check_free_9c8661be(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 11767;
+}

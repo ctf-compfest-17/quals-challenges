@@ -1,0 +1,4 @@
+void __cdecl cool_function_fl4g_picoCTF_c3535feb(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 19398;
+}

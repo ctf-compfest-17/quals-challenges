@@ -1,0 +1,4 @@
+void __cdecl COMPFEST17_free_C0mpf3st_5dec7070(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 23491;
+}

@@ -1,0 +1,4 @@
+void __cdecl free_COMPFEST17_C0mpf3st_084a8a9a(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 372;
+}

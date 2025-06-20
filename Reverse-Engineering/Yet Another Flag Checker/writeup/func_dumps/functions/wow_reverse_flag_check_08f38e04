@@ -1,0 +1,4 @@
+void __cdecl wow_reverse_flag_check_08f38e04(const std::string *inp, __int64 *checksum)
+{
+  *checksum -= 4;
+}

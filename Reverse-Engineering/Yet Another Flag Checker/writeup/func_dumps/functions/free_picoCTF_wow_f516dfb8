@@ -1,0 +1,4 @@
+void __cdecl free_picoCTF_wow_f516dfb8(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 16658;
+}

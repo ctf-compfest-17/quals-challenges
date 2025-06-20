@@ -1,0 +1,118 @@
+void __cdecl wow_cool_function_fl4g_85422afb(const std::string *inp, __int64 *checksum)
+{
+  char v2; // bl
+  int v3; // ebx
+  char v4; // si
+  char v5; // bl
+  int v6; // ebx
+  char v7; // si
+  char v8; // bl
+  int v9; // ebx
+  char v10; // si
+  char v11; // bl
+  int v12; // ebx
+  char v13; // si
+  char v14; // bl
+  int v15; // ebx
+  char v16; // si
+  char v17; // al
+  char v18; // bl
+  int v19; // ebx
+  char v20; // si
+  char v21; // bl
+  int v22; // ebx
+  char v23; // si
+  char v24; // bl
+  int v25; // ebx
+  char v26; // si
+  char v27; // bl
+  int v28; // ebx
+  char v29; // si
+  char v30; // bl
+  int v31; // ebx
+  char v32; // si
+  char v33; // al
+
+  *checksum += 17978;
+  v2 = *(_BYTE *)std::string::operator[](inp, 51);
+  v3 = (char)(v2 | *(_BYTE *)std::string::operator[](inp, 14));
+  v4 = *(_BYTE *)std::string::operator[](inp, 51);
+  if ( v3 - (char)(v4 & *(_BYTE *)std::string::operator[](inp, 14)) != 75 )
+    goto LABEL_11;
+  v5 = *(_BYTE *)std::string::operator[](inp, 39);
+  v6 = (char)(v5 | *(_BYTE *)std::string::operator[](inp, 9));
+  v7 = *(_BYTE *)std::string::operator[](inp, 39);
+  if ( v6 - (char)(v7 & *(_BYTE *)std::string::operator[](inp, 9)) != 35 )
+    goto LABEL_11;
+  v8 = *(_BYTE *)std::string::operator[](inp, 25);
+  v9 = (char)(v8 & *(_BYTE *)std::string::operator[](inp, 29));
+  v10 = *(_BYTE *)std::string::operator[](inp, 25);
+  if ( v9 + (char)(v10 | *(_BYTE *)std::string::operator[](inp, 29)) != 178 )
+    goto LABEL_11;
+  v11 = *(_BYTE *)std::string::operator[](inp, 13);
+  v12 = (char)(v11 & *(_BYTE *)std::string::operator[](inp, 15));
+  v13 = *(_BYTE *)std::string::operator[](inp, 13);
+  if ( v12 + (char)(v13 | *(_BYTE *)std::string::operator[](inp, 15)) == 188
+    && *(_BYTE *)std::string::operator[](inp, 46) == 61
+    && *(_BYTE *)std::string::operator[](inp, 37) == 72
+    && (v14 = *(_BYTE *)std::string::operator[](inp, 27),
+        v15 = (char)(v14 & *(_BYTE *)std::string::operator[](inp, 8)),
+        v16 = *(_BYTE *)std::string::operator[](inp, 27),
+        v15 + (char)(v16 | *(_BYTE *)std::string::operator[](inp, 8)) == 162)
+    && *(_BYTE *)std::string::operator[](inp, 44) == 124
+    && *(_BYTE *)std::string::operator[](inp, 6) == 67 )
+  {
+    v17 = 1;
+  }
+  else
+  {
+LABEL_11:
+    v17 = 0;
+  }
+  if ( v17 )
+  {
+    C0mpf3st_COMPFEST17_flag_check_7fec306d(inp, checksum);
+  }
+  else
+  {
+    v18 = *(_BYTE *)std::string::operator[](inp, 30);
+    v19 = (char)(v18 & *(_BYTE *)std::string::operator[](inp, 38));
+    v20 = *(_BYTE *)std::string::operator[](inp, 30);
+    if ( v19 + (char)(v20 | *(_BYTE *)std::string::operator[](inp, 38)) != 204 )
+      goto LABEL_24;
+    v21 = *(_BYTE *)std::string::operator[](inp, 4);
+    v22 = (char)(v21 | *(_BYTE *)std::string::operator[](inp, 31));
+    v23 = *(_BYTE *)std::string::operator[](inp, 4);
+    if ( v22 - (char)(v23 & *(_BYTE *)std::string::operator[](inp, 31)) != 116 )
+      goto LABEL_24;
+    if ( *(_BYTE *)std::string::operator[](inp, 1) != 83 )
+      goto LABEL_24;
+    if ( *(_BYTE *)std::string::operator[](inp, 49) != 51 )
+      goto LABEL_24;
+    v24 = *(_BYTE *)std::string::operator[](inp, 50);
+    v25 = (char)(v24 | *(_BYTE *)std::string::operator[](inp, 52));
+    v26 = *(_BYTE *)std::string::operator[](inp, 50);
+    if ( v25 - (char)(v26 & *(_BYTE *)std::string::operator[](inp, 52)) != 14 )
+      goto LABEL_24;
+    v27 = *(_BYTE *)std::string::operator[](inp, 44);
+    v28 = (char)(v27 | *(_BYTE *)std::string::operator[](inp, 29));
+    v29 = *(_BYTE *)std::string::operator[](inp, 44);
+    if ( v28 - (char)(v29 & *(_BYTE *)std::string::operator[](inp, 29)) == 60
+      && (v30 = *(_BYTE *)std::string::operator[](inp, 43),
+          v31 = (char)(v30 & *(_BYTE *)std::string::operator[](inp, 29)),
+          v32 = *(_BYTE *)std::string::operator[](inp, 43),
+          v31 + (char)(v32 | *(_BYTE *)std::string::operator[](inp, 29)) == 145)
+      && *(_BYTE *)std::string::operator[](inp, 53) == 92
+      && *(_BYTE *)std::string::operator[](inp, 20) == 119 )
+    {
+      v33 = 1;
+    }
+    else
+    {
+LABEL_24:
+      v33 = 0;
+    }
+    if ( v33 )
+      COMPFEST17_reverse_cool_function_db576a7d(inp, checksum);
+  }
+}

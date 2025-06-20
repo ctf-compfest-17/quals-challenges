@@ -1,0 +1,4 @@
+void __cdecl wow_flag_check_C0mpf3st_ffbd6cbb(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 3121;
+}

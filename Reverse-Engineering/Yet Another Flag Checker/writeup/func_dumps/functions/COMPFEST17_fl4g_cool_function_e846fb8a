@@ -1,0 +1,4 @@
+void __cdecl COMPFEST17_fl4g_cool_function_e846fb8a(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 643;
+}

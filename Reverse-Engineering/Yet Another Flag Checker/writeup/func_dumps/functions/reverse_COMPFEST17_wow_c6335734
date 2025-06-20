@@ -1,0 +1,4 @@
+void __cdecl reverse_COMPFEST17_wow_c6335734(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 31209;
+}

@@ -1,0 +1,4 @@
+void __cdecl reverse_free_C0mpf3st_7cf64379(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 21777;
+}

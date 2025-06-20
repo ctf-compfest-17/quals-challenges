@@ -1,0 +1,4 @@
+void __cdecl C0mpf3st_reverse_cool_function_d58f855f(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 15012;
+}

@@ -1,0 +1,4 @@
+void __cdecl fl4g_free_COMPFEST17_dc0c3980(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 23845;
+}

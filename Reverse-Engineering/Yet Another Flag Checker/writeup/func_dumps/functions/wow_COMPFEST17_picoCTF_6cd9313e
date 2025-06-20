@@ -1,0 +1,4 @@
+void __cdecl wow_COMPFEST17_picoCTF_6cd9313e(const std::string *inp, __int64 *checksum)
+{
+  *checksum += 19575;
+}
