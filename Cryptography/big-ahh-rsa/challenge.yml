@@ -23,7 +23,7 @@ category: crypto
 description: "
   Surely this is safe right?
 
-  nc localhost 1337"
+  nc {{ IP_SERVER }} 1337"
 
 # Flags specify answers that your challenge use. You should generally provide
 # at least one.
