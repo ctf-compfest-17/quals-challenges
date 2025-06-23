@@ -1,4 +1,0 @@
-void __cdecl free_fl4g_flag_check_2cad8fa4(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 8060;
-}

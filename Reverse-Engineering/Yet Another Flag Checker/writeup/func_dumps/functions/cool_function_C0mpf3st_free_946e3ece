@@ -1,4 +1,0 @@
-void __cdecl cool_function_C0mpf3st_free_946e3ece(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 5925;
-}

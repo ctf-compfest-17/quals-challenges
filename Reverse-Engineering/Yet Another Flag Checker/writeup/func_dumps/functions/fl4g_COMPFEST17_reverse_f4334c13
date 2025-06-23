@@ -1,4 +1,0 @@
-void __cdecl fl4g_COMPFEST17_reverse_f4334c13(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 31593;
-}

@@ -1,4 +1,0 @@
-void __cdecl free_reverse_COMPFEST17_4cf33e18(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 27158;
-}

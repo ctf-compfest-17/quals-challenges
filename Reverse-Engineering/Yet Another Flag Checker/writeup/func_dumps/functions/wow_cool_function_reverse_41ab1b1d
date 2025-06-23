@@ -1,4 +1,0 @@
-void __cdecl wow_cool_function_reverse_41ab1b1d(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 7762;
-}

@@ -1,4 +1,0 @@
-void __cdecl fl4g_reverse_flag_check_4f81b1d9(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 29504;
-}

@@ -1,4 +1,0 @@
-void __cdecl reverse_flag_check_cool_function_073b00ab(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 16606;
-}

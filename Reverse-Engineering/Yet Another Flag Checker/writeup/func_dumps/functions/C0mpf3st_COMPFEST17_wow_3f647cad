@@ -1,4 +1,0 @@
-void __cdecl C0mpf3st_COMPFEST17_wow_3f647cad(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 25583;
-}

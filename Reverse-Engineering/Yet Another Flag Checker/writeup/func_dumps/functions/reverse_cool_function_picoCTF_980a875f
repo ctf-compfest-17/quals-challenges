@@ -1,4 +1,0 @@
-void __cdecl reverse_cool_function_picoCTF_980a875f(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 27851;
-}

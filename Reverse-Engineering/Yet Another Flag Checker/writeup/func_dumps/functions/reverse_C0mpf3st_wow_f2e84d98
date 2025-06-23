@@ -1,4 +1,0 @@
-void __cdecl reverse_C0mpf3st_wow_f2e84d98(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 25173;
-}

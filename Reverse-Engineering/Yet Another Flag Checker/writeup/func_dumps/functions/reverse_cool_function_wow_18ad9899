@@ -1,4 +1,0 @@
-void __cdecl reverse_cool_function_wow_18ad9899(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 7230;
-}

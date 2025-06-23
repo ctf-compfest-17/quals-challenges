@@ -1,4 +1,0 @@
-void __cdecl cool_function_flag_check_reverse_881c6efa(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 30197;
-}

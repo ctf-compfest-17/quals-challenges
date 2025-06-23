@@ -1,4 +1,0 @@
-void __cdecl picoCTF_free_C0mpf3st_0cd6a652(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 29557;
-}

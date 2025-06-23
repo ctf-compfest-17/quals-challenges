@@ -1,4 +1,0 @@
-void __cdecl C0mpf3st_fl4g_flag_check_49d4b2fa(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 25857;
-}

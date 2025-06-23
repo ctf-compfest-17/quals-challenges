@@ -1,4 +1,0 @@
-void __cdecl COMPFEST17_fl4g_flag_check_46515dcd(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 138;
-}

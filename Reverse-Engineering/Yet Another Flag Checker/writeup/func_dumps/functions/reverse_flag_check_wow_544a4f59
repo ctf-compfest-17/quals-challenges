@@ -1,4 +1,0 @@
-void __cdecl reverse_flag_check_wow_544a4f59(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 17383;
-}

@@ -1,4 +1,0 @@
-void __cdecl cool_function_COMPFEST17_free_092cb13c(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 28662;
-}

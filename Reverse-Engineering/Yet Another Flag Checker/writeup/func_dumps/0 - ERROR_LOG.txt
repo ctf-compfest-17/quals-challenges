@@ -1,8 +1,0 @@
-[EXCEPTION on function 'operator new(unsigned long long)']: 'substring not found' | Info: ValueError, substring not found
-
-[EXCEPTION on function 'operator delete(void *, unsigned long long)']: 'substring not found' | Info: ValueError, substring not found
-
-[EXCEPTION on function 'std::__new_allocator<int>::deallocate(int *, unsigned long long)']: 'substring not found' | Info: ValueError, substring not found
-
-[EXCEPTION on function 'std::__new_allocator<int>::allocate(unsigned long long, void const*)']: 'substring not found' | Info: ValueError, substring not found
-

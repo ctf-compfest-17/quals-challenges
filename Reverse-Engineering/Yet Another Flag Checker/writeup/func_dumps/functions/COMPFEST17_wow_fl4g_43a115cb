@@ -1,4 +1,0 @@
-void __cdecl COMPFEST17_wow_fl4g_43a115cb(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 7463;
-}

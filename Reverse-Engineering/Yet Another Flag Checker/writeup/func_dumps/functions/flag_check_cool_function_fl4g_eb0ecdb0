@@ -1,4 +1,0 @@
-void __cdecl flag_check_cool_function_fl4g_eb0ecdb0(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 11013;
-}

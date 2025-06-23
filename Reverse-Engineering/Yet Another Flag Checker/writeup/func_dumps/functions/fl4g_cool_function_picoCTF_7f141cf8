@@ -1,4 +1,0 @@
-void __cdecl fl4g_cool_function_picoCTF_7f141cf8(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 25245;
-}

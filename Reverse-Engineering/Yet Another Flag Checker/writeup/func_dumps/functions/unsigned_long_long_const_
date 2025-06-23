@@ -1,7 +1,0 @@
-const unsigned __int64 *__cdecl std::min<unsigned long long>(const unsigned __int64 *__a, const unsigned __int64 *__b)
-{
-  if ( *__b >= *__a )
-    return __a;
-  else
-    return __b;
-}

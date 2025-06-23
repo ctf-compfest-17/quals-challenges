@@ -1,4 +1,0 @@
-void __cdecl cool_function_free_reverse_b1b0432c(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 8833;
-}

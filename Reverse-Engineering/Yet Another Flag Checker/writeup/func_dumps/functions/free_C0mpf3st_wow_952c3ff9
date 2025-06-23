@@ -1,4 +1,0 @@
-void __cdecl free_C0mpf3st_wow_952c3ff9(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 12702;
-}

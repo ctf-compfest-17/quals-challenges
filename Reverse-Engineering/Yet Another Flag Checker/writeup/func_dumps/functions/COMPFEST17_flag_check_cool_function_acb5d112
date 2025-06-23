@@ -1,4 +1,0 @@
-void __cdecl COMPFEST17_flag_check_cool_function_acb5d112(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 9864;
-}

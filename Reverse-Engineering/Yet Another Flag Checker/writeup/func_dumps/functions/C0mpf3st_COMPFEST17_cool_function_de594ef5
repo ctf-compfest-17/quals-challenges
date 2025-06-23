@@ -1,4 +1,0 @@
-void __cdecl C0mpf3st_COMPFEST17_cool_function_de594ef5(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 6783;
-}

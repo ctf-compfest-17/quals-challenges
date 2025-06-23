@@ -1,4 +1,0 @@
-void __cdecl wow_C0mpf3st_picoCTF_5401acfe(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 29148;
-}

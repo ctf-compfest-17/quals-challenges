@@ -1,4 +1,0 @@
-void __cdecl flag_check_reverse_wow_92a0e7a4(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 20877;
-}

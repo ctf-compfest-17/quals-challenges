@@ -1,4 +1,0 @@
-void __cdecl wow_COMPFEST17_fl4g_8a1d6947(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 17286;
-}

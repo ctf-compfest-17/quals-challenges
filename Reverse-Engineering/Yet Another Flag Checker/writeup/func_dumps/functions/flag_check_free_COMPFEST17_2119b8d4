@@ -1,4 +1,0 @@
-void __cdecl flag_check_free_COMPFEST17_2119b8d4(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 16713;
-}

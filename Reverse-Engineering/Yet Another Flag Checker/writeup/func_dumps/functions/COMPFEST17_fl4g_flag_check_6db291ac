@@ -1,4 +1,0 @@
-void __cdecl COMPFEST17_fl4g_flag_check_6db291ac(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 32632;
-}

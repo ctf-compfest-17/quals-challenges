@@ -1,4 +1,0 @@
-void __cdecl COMPFEST17_cool_function_free_e8e0dd18(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 31963;
-}

@@ -1,4 +1,0 @@
-void __cdecl wow_COMPFEST17_cool_function_d3fad7d3(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 90;
-}

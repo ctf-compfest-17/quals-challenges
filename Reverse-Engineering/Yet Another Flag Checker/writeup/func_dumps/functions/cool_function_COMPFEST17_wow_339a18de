@@ -1,4 +1,0 @@
-void __cdecl cool_function_COMPFEST17_wow_339a18de(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 30678;
-}

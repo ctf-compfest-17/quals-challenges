@@ -1,4 +1,0 @@
-void __cdecl picoCTF_reverse_COMPFEST17_322f6246(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 15632;
-}

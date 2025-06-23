@@ -1,4 +1,0 @@
-void __cdecl COMPFEST17_C0mpf3st_flag_check_cd3afef9(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 2109;
-}

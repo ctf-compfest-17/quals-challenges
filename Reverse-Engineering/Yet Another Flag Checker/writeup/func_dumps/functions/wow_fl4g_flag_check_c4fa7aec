@@ -1,4 +1,0 @@
-void __cdecl wow_fl4g_flag_check_c4fa7aec(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 22567;
-}

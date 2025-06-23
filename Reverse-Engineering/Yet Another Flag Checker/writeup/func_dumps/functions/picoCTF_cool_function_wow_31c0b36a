@@ -1,4 +1,0 @@
-void __cdecl picoCTF_cool_function_wow_31c0b36a(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 19401;
-}

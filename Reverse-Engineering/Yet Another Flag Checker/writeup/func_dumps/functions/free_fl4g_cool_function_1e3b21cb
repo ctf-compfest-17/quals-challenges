@@ -1,4 +1,0 @@
-void __cdecl free_fl4g_cool_function_1e3b21cb(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 30471;
-}

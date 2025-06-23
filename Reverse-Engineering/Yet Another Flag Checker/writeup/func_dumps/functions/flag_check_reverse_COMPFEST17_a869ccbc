@@ -1,4 +1,0 @@
-void __cdecl flag_check_reverse_COMPFEST17_a869ccbc(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 14895;
-}

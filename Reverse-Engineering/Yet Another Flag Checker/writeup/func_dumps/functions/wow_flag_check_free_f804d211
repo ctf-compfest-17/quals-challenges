@@ -1,4 +1,0 @@
-void __cdecl wow_flag_check_free_f804d211(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 3468;
-}

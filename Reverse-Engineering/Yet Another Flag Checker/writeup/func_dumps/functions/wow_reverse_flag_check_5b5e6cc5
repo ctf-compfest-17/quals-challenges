@@ -1,4 +1,0 @@
-void __cdecl wow_reverse_flag_check_5b5e6cc5(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 9369;
-}

@@ -1,4 +1,0 @@
-void __cdecl COMPFEST17_cool_function_picoCTF_ccd2e3ea(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 14394;
-}

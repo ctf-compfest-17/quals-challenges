@@ -1,4 +1,0 @@
-void __cdecl wow_COMPFEST17_cool_function_ec0f40c3(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 5220;
-}

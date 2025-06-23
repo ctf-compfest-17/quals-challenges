@@ -1,4 +1,0 @@
-void __cdecl COMPFEST17_cool_function_wow_e951ccd9(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 17174;
-}

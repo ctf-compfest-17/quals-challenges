@@ -1,4 +1,0 @@
-void __cdecl C0mpf3st_flag_check_cool_function_56503192(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 25971;
-}

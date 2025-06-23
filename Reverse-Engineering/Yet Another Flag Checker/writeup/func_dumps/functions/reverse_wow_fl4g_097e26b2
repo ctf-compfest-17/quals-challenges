@@ -1,4 +1,0 @@
-void __cdecl reverse_wow_fl4g_097e26b2(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 24334;
-}

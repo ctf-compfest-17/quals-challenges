@@ -1,4 +1,0 @@
-void __cdecl wow_cool_function_free_37d097ca(const std::string *inp, __int64 *checksum)
-{
-  *checksum += 12578;
-}
