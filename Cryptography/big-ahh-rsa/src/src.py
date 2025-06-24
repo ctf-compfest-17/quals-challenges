@@ -2,7 +2,6 @@
 from Crypto.Util.number import getPrime, inverse, bytes_to_long, long_to_bytes
 from random import randint
 from math import gcd
-from decimal import Decimal
 FLAG = b"COMPFEST17{63n3r4l1z3d_w13n3r_4774ck_4641n57_700_l4r63_d_15_c00l_e97e4f3392}"
 
 def generate_pub_key():
@@ -13,7 +12,8 @@ def generate_pub_key():
             break
     N = p * q
     phi = (p**2-1) * (q**2-1)
-    bound = round((Decimal(2*N).sqrt()).sqrt())
+    print("N: ", N)
+    bound = int(input("Enter bound: "))
     while True:
         d = randint(phi-bound,phi-1)
         if gcd(d,phi) == 1:
@@ -34,7 +34,6 @@ if __name__ == "__main__":
     print("")
     m = FLAG
     ct = encrypt(m, N, e)
-    print("N:", N)
     print("e:", e)
     print("ct:", ct)
 
