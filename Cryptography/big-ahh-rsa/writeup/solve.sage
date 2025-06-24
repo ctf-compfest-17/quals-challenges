@@ -1,6 +1,6 @@
 from pwn import *
 from Crypto.Util.number import getPrime, inverse, long_to_bytes, bytes_to_long
-
+from decimal import Decimal
 def coppersmith_howgrave_univariate(pol, modulus, beta, mm, tt, XX):
     """
     Coppersmith revisited by Howgrave-Graham
@@ -116,6 +116,10 @@ if __name__ == "__main__":
     #proc = process(["python3", "../src/src.py"])
     proc.recvuntil(b"N:")
     N = int(proc.recvline().strip())
+    bound = round((2*N).sqrt().sqrt())
+    proc.recvuntil(b"Enter bound: ")
+    print(f"Bound: {bound}")
+    proc.sendline(str(bound).encode())
     proc.recvuntil(b"e:")
     e = int(proc.recvline().strip())
     proc.recvuntil(b"ct:")
