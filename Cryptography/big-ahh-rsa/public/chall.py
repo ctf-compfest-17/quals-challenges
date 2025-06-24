@@ -19,7 +19,7 @@ def generate_pub_key():
         if gcd(d,phi) == 1:
             break
     e = pow(d,-1,phi)
-    return N,e,d
+    return N,e
 
 def encrypt(m, N, e):
     m = bytes_to_long(m)
@@ -29,7 +29,7 @@ def encrypt(m, N, e):
 if __name__ == "__main__":
     print("Generating public key....")
     print("")
-    N, e,d= generate_pub_key()
+    N, e= generate_pub_key()
     print("Done!")
     print("")
     m = FLAG
