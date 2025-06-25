@@ -1,4 +1,4 @@
-# Big Ahh RSA
+# Custom Parameter
 
 by Karev
 
@@ -11,7 +11,7 @@ COMPFEST17{63n3r4l1z3d_w13n3r_4774ck_4641n57_700_l4r63_d_15_c00l_e97e4f3392}
 ```
 
 ## Description
-Surely this is safe right?
+This time I allow you to customize a parameter, but I made sure it is safe.
 
 ## Difficulty
 Tingkat kesulitan soal: medium-hard 

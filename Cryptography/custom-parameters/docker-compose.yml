@@ -3,7 +3,7 @@ services:
       build: .
       ports:
         - 1337:1337
-      container_name: big-ahh-rsa
+      container_name: custom-parameters
       restart: on-failure
       deploy:
         resources:

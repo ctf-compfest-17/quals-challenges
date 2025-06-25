@@ -1,8 +1,8 @@
 
-from Crypto.Util.number import getPrime, inverse, bytes_to_long, long_to_bytes
+from Crypto.Util.number import getPrime, bytes_to_long
 from random import randint
 from math import gcd
-FLAG = b"COMPFEST17{63n3r4l1z3d_w13n3r_4774ck_4641n57_700_l4r63_d_15_c00l_e97e4f3392}"
+FLAG = b"REDACTED"
 
 def generate_pub_key():
     while True:

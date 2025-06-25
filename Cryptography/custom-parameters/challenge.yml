@@ -2,7 +2,7 @@
 # other tools to install and deploy your challenge.
 
 # Required sections
-name: "Big Ahh RSA"
+name: "Custom Parameter"
 author: "Karev"
 
 # Select a category from:
@@ -21,7 +21,7 @@ category: crypto
 # {{ IP_SERVER }} to get service IP address
 # {{ PORT }} to get service port
 description: "
-  Surely this is safe right?
+  This time I allow you to customize a parameter, but I made sure it is safe.
 
   nc {{ IP_SERVER }} 1337"
 
