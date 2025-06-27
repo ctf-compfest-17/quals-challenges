@@ -45,5 +45,3 @@ Penjelasan cara menjalankan service yang dibutuhkan serta requirementsnya.
 - Gunakan libc 2.31 ketika sudah keluar. Alias Ubuntu 20.04.
 
 ## Notes
-- Dockerfile belom disetting tapi pakai python version 3.12 (python3.12 slim bookworm)
-- Rencananya mau dibuff lagi hehe (f()() diganti jadi f() biar gak sus)

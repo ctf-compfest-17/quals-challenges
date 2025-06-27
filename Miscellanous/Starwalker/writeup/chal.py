@@ -1,4 +1,4 @@
-from dis import opmap
+
 banner = """
                             @@                               
                           @@@@@                              
@@ -31,27 +31,33 @@ banner = """
 @@                @@@   @@       @@@@@@@@@                   
 @@@@@@@@@@@@@@@@@@@@    @@               @@@                 
 @@@@@@@@@@@@@@@@@@    @@                 @@@                 
-                      @@@@@@@@@@@@@@@@@@@@                   
+                      @@@@@@@@@@@@@@@@@@@@        
+
+%s, This jail is Pissing me off...           
 """
 
-LOAD_FAST = opmap['LOAD_FAST']
 def good(x: str):
-    return x.isprintable() and 'e' not in x.lower() 
-print()
+    return all([y in allowed for y in x])
+
+name = input('OK desu ka? ')
+allowed = set(name)
+
+if not name.isprintable() or len(name) > 15:
+    print('☠⚐🏱☜')
+    exit()
+    
+print(banner % (name))
+
+inp = input('>>> ')
 
 def f():
     pass
-code = bytes([
-    opmap['LOAD_FAST'], 40,
-    83, 88,
-])
 
-f.__code__ = f.__code__.replace(co_names=('__call__',), co_consts=('breakpoint',), co_code=code)
-try:
-  f()
-  f()()
-  f()()()
-  f()()()()
-  f()()()()()
-except:
-  exit()
+if all([y in allowed for y in inp]) and len(inp) < 30 and inp.isprintable():
+    f.__code__ = f.__code__.replace(
+        co_names=(), 
+        co_consts=(), 
+        co_code=inp.encode())
+    f()()
+else:
+    print('These characters are Pissing me off...')

@@ -3,6 +3,18 @@
 Beda kayak pycjail biasa, di chall ini kita gak bisa specify `co_const` ato `co_names` tapi kita masi bisa recover builtins sama masih bisa dapetin function yang kita mau tanpa harus pake `co_const`.
 Di python versi 3.12, `LOAD_FAST` dan `STORE_FAST` ga ada bounds checkingnya (saking cepetnya wkkwkwkw). Dengan ini, kita bisa magically ngambil builtins.
 
+# Chosen Bytes
+
+Ini bisa coba coba dan eksplorasi buat opcodes yang ASCII printable, but in my case:
+
+**Opcodes**
+> `LOAD_FAST`, `RETURN_VALUE`,`SWAP`, `UNPACK_EX`, `MATCH_KEYS`, 
+> `PUSH_EXC_INFO`, `POP_EXCEPT`, `BUILD_TUPLE`
+
+**Operands**
+> 40 (`__builtins__.__dict__` index), 59 (ini dummy number bisa literally anything), 
+> 120, 121, 109 (`breakpoint` index)
+
 # Steps
 
 1. Load builtins dengan `LOAD_FAST` index 42 dua kali (ini nanti buat `MATCH_KEYS`)
@@ -14,7 +26,7 @@ Di python versi 3.12, `LOAD_FAST` dan `STORE_FAST` ga ada bounds checkingnya (sa
 > 
 > `STACK[-1]` is a tuple of mapping keys, and `STACK[-2]` is the match subject. If `STACK[-2]` contains all of the keys in `STACK[-1]`, push a tuple containing the corresponding values. Otherwise, push `None`.
 6. `UNPACK_EX` lagi dan sekarang kita punya builtins di stack urutan kebalik.
-7. `POP` (pake gadget `PUSH_EXC_INFO` + `POP_EXCEPT`) sampe dapet `breakpoint`.
+7. Switch pake `SWAP` biar naro `breakpoint()` di TOS.
 8. Now we have Pdb tinggal shell/open('./flag.txt').
 
 # Further Reading
