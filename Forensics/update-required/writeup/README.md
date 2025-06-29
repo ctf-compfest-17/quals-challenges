@@ -15,7 +15,7 @@ delete the original file from the victim device
 
 From our static analysis, we know that the encrypted file was split and transmitted via TCP. We use the following Wireshark filter: "ip.dst == 192.168.129.92 && tcp.port == 1337", We identify TCP streams 25 through 27, corresponding to the three encrypted parts. By dumping the data from these streams and reassembling them in the correct order, we obtain the full encrypted file.
 
-The encrypted file is a password-protected PDF. Based on the chall desc, the password is the MetaMask seed phrase. To retrieve the seed, we must first obtain the MetaMask vault password.
+Once the encrypted file is reassembled, we proceed to decrypt it using decrypt.py, which performs AES decryption with the correct key and IV derived from the binary. This yields a password-protected PDF. Now, we must retrieve the password to open this PDF. As stated in the challenge description, the password is the MetaMask seed phrase. However, the seed phrase is itself protected by the MetaMask vault password, which we need to recover next.
 
 According to the challenge desc, the user once copied the MetaMask password to the clipboard. Based on this [article](https://www.inversecos.com/2022/05/how-to-perform-clipboard-forensics.html),  we examined the ActivitiesCache.db file.
 There, we found a base64-encoded clipboard payload. Decoding it revealed the MetaMask password : m0ndstadtc1ty0fFr33dom .Once we recover the MetaMask password from the clipboard data, we can unlock the MetaMask vault and retrieve the seed phrase.
