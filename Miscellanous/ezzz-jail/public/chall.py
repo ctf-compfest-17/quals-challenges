@@ -3,7 +3,7 @@ import base64
 from RestrictedPython import compile_restricted, safe_globals
 from safe_exceptions import EXCEPTIONS_TO_REMOVE  
 
-im_kind = RuntimeError('error')
+error = RuntimeError('error')
 _original_safe_globals = None
 
 def get_globals():
@@ -16,8 +16,8 @@ def get_globals():
             if exc in safe_globals_copy['__builtins__']:
                 del safe_globals_copy['__builtins__'][exc]
         
-        safe_globals_copy['__builtins__']['im_kind'] = im_kind
-        safe_globals_copy['__builtins__']['im_too_kind'] = open
+        safe_globals_copy['__builtins__']['error'] = error
+        safe_globals_copy['__builtins__']['open'] = open
         
         _original_safe_globals = safe_globals_copy
     

