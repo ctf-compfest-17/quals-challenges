@@ -1,0 +1,12 @@
+services:
+    ezzz-jail:
+      build: .
+      ports:
+        - 9000:8080
+      container_name: ezzz-jail
+      restart: on-failure
+      deploy:
+        resources:
+          limits:
+            cpus: '0.25'
+            memory: 256M
