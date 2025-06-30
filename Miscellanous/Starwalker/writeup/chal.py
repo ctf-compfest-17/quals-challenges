@@ -1,4 +1,4 @@
-
+#!/usr/local/bin/python3.12
 banner = """
                             @@                               
                           @@@@@                              
@@ -37,7 +37,7 @@ banner = """
 """
 
 def good(x: str):
-    return all([y in allowed for y in x])
+    return all(32 <= ord(c) <= 126 for c in x) and all([y in allowed for y in x]) and len(x) < 30
 
 name = input('OK desu ka? ')
 allowed = set(name)
@@ -53,7 +53,7 @@ inp = input('>>> ')
 def f():
     pass
 
-if all([y in allowed for y in inp]) and len(inp) < 30 and inp.isprintable():
+if good(inp):
     f.__code__ = f.__code__.replace(
         co_names=(), 
         co_consts=(), 
