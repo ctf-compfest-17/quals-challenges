@@ -17,7 +17,7 @@ This jail is Pissing me off...
 Tingkat kesulitan soal: hard
 
 ## Hints
-* Did you know that `LOAD_FAST` and `STORE_FAST` are so fast that they don't properly do bounds checking?
+
 
 ## Tags
 pycjail

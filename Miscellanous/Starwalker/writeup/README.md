@@ -17,7 +17,7 @@ Ini bisa coba coba dan eksplorasi buat opcodes yang ASCII printable, but in my c
 
 # Steps
 
-1. Load builtins dengan `LOAD_FAST` index 42 dua kali (ini nanti buat `MATCH_KEYS`)
+1. Load builtins dengan `LOAD_FAST` index 40 dua kali (ini nanti buat `MATCH_KEYS`)
 2. Unpack 120 values pake `UNPACK_EX`
 3. Pindah stack[-121] ke atas trus POP (karena pop di-ban kita bisa push exception pake `PUSH_EXC_INFO` trus `POP_EXCEPT` 2 kali) 
 4. Bikin tuple 120 keys.
