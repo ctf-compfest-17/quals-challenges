@@ -3,6 +3,9 @@
 Beda kayak pycjail biasa, di chall ini kita gak bisa specify `co_const` ato `co_names` tapi kita masi bisa recover builtins sama masih bisa dapetin function yang kita mau tanpa harus pake `co_const`.
 Di python versi 3.12, `LOAD_FAST` dan `STORE_FAST` ga ada bounds checkingnya (saking cepetnya wkkwkwkw). Dengan ini, kita bisa magically ngambil builtins.
 
+> **Note:**
+> Karena `LOAD_FAST` dengan index out-of-bounds merupakan undefined behavior, index dari `__builtins__.__dict__` dapat berganti tiap kali containernya di-run (bagi yang pengen ngerun dockernya di local machine). 
+
 # Chosen Bytes
 
 Ini bisa coba coba dan eksplorasi buat opcodes yang ASCII printable (ingat nyari opcode pake `dis._all_opmap` karena `dis.opmap` tidak lengkap), but in my case:
