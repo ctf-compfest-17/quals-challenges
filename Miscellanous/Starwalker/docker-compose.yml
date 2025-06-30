@@ -2,7 +2,7 @@ services:
   starwalker:
     build: .
     ports:
-      - 5000:5000
+      - 1225:1225
     container_name: starwalker
     restart: on-failure
     privileged: true
