@@ -5,7 +5,7 @@ Di python versi 3.12, `LOAD_FAST` dan `STORE_FAST` ga ada bounds checkingnya (sa
 
 # Chosen Bytes
 
-Ini bisa coba coba dan eksplorasi buat opcodes yang ASCII printable, but in my case:
+Ini bisa coba coba dan eksplorasi buat opcodes yang ASCII printable (ingat nyari opcode pake `dis._all_opmap` karena `dis.opmap` tidak lengkap), but in my case:
 
 **Opcodes**
 > `LOAD_FAST`, `RETURN_VALUE`,`SWAP`, `UNPACK_EX`, `MATCH_KEYS`, 

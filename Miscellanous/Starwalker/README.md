@@ -17,7 +17,7 @@ This jail is Pissing me off...
 Tingkat kesulitan soal: hard
 
 ## Hints
-
+* Did you know that the `dis` module have been hiding a bunch of opcodes from `dis.opmap`? Can you find the secret opcodes?
 
 ## Tags
 pycjail
