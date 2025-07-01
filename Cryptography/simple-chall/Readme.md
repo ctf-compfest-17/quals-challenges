@@ -1,4 +1,4 @@
-# Judul Soal
+# Simple Chall
 
 by fele
 
