@@ -50,7 +50,7 @@ hints:
 # Link to problem attachment for participants
 # Can be removed if unused
 # Accepts strings
-attachment: chall.py
+attachment: link_to_attachment
 
 ##############
 #  BAGIAN TC #
