@@ -86,8 +86,9 @@ contract Fortress {
         vaultContract.deposit(depositAmount);
         uint256 myShares = vaultContract.shares(address(this));
         require(myShares > 0, "No shares to withdraw!");
+        uint256 vaultBalance = tokenInstance.balanceOf(address(vaultContract));
         vaultContract.withdraw(myShares);
-        tokenInstance.transfer(owner, tokenInstance.balanceOf(address(vaultContract)));
+        tokenInstance.transfer(owner, vaultBalance);
         return true;
     }
     

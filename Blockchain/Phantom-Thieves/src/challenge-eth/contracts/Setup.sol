@@ -11,20 +11,16 @@ contract Setup {
     }
 
     function isSolved() external view returns (bool) {
-        return _isLocked();
-    }
-
-    function _isLocked() private view returns (bool) {
         Vault vault = challenge.vaultContract();
 
         if (vault.totalShares() == 0) {
             return false;
         }
+        uint256 _amount = challenge.tokenInstance().balanceOf(address(challenge));
+        uint256 currentBalance = challenge.tokenInstance().balanceOf(address(vault));
+        uint256 currentShares = vault.totalShares();
+        uint256 shares = (_amount * currentShares) / currentBalance;
 
-        (bool success,) = address(challenge).staticcall(
-            abi.encodeWithSignature("openVault()")
-        );
-
-        return !success;
+        return shares == 0;
     }
 }
