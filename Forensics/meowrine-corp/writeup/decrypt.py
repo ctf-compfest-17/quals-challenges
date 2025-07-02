@@ -5,9 +5,9 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 
 def decrypt_file(encrypted_file_path, output_file_path):
-    # Hardcoded key and IV (same as PowerShell script)
-    key = b"9xK#mP2$vB8nQ7zL"  # 16 bytes
-    iv = b"4tR!jF6&wE3sA9hY"   # 16 bytes
+    # Hardcoded key and IV (same byte arrays as PowerShell script)
+    key = bytes([57,120,75,35,109,80,50,36,118,66,56,110,81,55,122,76])  # 16 bytes
+    iv = bytes([52,116,82,33,106,70,54,38,119,69,51,115,65,57,104,89])   # 16 bytes
     
     try:
         # Read encrypted file
