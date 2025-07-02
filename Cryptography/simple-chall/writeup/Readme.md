@@ -5,8 +5,11 @@
 - Untuk modifikasi pada bagian total dapat kita selesaikan dengan mengonstruksi sebuah matriks M dan mereduksinya dengan gaussian. 
 
 f_i ≡ total_i^-1 * g_i (% mod)
+
 f_i * total_i ≡ g_i (% mod)
+
 f_i * total_i = g_i + mod * k, k ∈ Z
+
 g_i = f_i * total_i - mod * k, k ∈ Z
 
 Kemudian kita dapat menyusun matrix M yang terdiri atas vektor (1, f_i) (0, mod)
