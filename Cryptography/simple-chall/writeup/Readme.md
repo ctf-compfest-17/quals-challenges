@@ -20,4 +20,3 @@ Singkatnya jika kita reduksi matriks M dengan gaussian, kita akan mendapatkan ve
 Sehingga, kita dapat membentuk M = [[1, total_i], [0, mod]] kemudian direduksi dengan gaussian.
 
 Dengan demikian kita akan mendapatkan total_i nya dan dapat kita masukkan ke dalam solver.
-Sumber : https://blog.csdn.net/u010883831/article/details/122660103 nomor 6
