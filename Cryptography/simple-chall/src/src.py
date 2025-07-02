@@ -3,7 +3,7 @@ from Crypto.Util.number import inverse, getPrime
 from Crypto.Cipher import AES
 import hashlib, random, math
 
-flag = b"COMPFEST17{1dK_bUt_5uB53t_5Um_15_345Y_r19hT_5a581d63c1}"
+flag = b"COMPFEST17{MuLt1pl3_m0du14r_5uB53t_5uM_w1th_4_l1ttl3_b1t_0f_m0d1f1c4t10n_3badbfd552}"
 
 def generate_key(n):
     priv_key = []

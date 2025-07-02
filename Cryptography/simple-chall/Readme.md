@@ -7,7 +7,7 @@ by fele
 ## Flag
 
 ```
-COMPFEST17{1dK_bUt_5uB53t_5Um_15_345Y_r19hT_5a581d63c1}
+COMPFEST17{MuLt1pl3_m0du14r_5uB53t_5uM_w1th_4_l1ttl3_b1t_0f_m0d1f1c4t10n_3badbfd552}
 ```
 
 ## Description
@@ -22,7 +22,7 @@ Tingkat kesulitan soal: easy-medium
 * hint dst.
 
 ## Tags
-lattice, modular subset sum, knapsack, cvp
+lattice, multiple modular subset sum, knapsack, cvp
 
 ## Deployment
 Penjelasan cara menjalankan service yang dibutuhkan serta requirementsnya.
