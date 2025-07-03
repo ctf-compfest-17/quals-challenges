@@ -1,0 +1,8 @@
+import os
+
+SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
+ALGORITHM =  os.getenv('ALGORITHM', 'HS256')
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES', 60)
+ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@example.com')
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'admin123')
+MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017')

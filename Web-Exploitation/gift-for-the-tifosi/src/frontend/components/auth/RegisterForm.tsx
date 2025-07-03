@@ -1,0 +1,189 @@
+'use client'
+
+import { useForm } from '@tanstack/react-form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { fetcher } from '@/lib/fetcher'
+import { toast } from 'sonner'
+import { z } from "zod/v4";
+import { Textarea } from '@/components/ui/textarea'
+
+type RegisterValues = {
+    email: string
+    username: string
+    password: string
+    description: string
+}
+
+export const RegisterForm = () => {
+    const schema = z.object({
+        email: z.email('Invalid email address'),
+        username: z.string().min(4, 'Username must be at least 4 characters long')
+            .max(8, 'Username must be at most 8 characters long')
+            .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
+        password: z.string().min(8, 'Password must be at least 8 characters long'),
+        description: z.string().max(200, 'Description must be at most 200 characters long'),
+    })
+
+    const form = useForm({
+        defaultValues: {
+            email: '',
+            username: '',
+            password: '',
+            description: ''
+        },
+        onSubmit: async ({ value }: { value: RegisterValues }) => {
+            const result = schema.safeParse(value)
+            if (!result.success) {
+                const firstError = result.error.issues[0]
+                toast.error(`${firstError.path.join('.')}: ${firstError.message}`)
+                return
+            }
+            try {
+                const response = await fetcher('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify(value),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+
+                if (response.success) {
+                    toast.success('Registration successful! Redirecting...')
+                    window.location.href = '/login'
+                }
+                else {
+                    throw new Error('Registration failed')
+                }
+            } catch (error) {
+                console.error('Registration failed:', error)
+                toast.error('Registration failed. Please try again.')
+            }
+        },
+    })
+
+
+    return (
+        <Card className="w-full rounded-none sm:max-w-md sm:rounded-md mx-auto mt-10">
+            <CardHeader>
+                <CardTitle>Register</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <form onSubmit={async (e) => {
+                    e.preventDefault()
+                    await form.handleSubmit()
+                }}
+                    className="space-y-4 w-full">
+                    <form.Field
+                        name="email"
+                        validators={{
+                            onChange: ({ value }) => {
+                                const result = z.email().safeParse(value)
+                                return result.success ? undefined : 'Invalid email address'
+                            }
+                        }}
+                    >
+                        {field => (
+                            <div>
+                                <Label htmlFor="email" className="mb-2">Email</Label>
+                                <Input
+                                    id="email"
+                                    value={field.state.value}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    placeholder="mail@example.com"
+                                />
+                                {field.state.meta.errors && (
+                                    <p className="text-red-500 text-sm mt-1">{field.state.meta.errors[0]}</p>
+                                )}
+                            </div>
+                        )}
+                    </form.Field>
+                    <form.Field
+                        name="username"
+                        validators={{
+                            onChange: ({ value }) => {
+                                const result = z.string().min(4).max(8).regex(/^[a-zA-Z0-9_]+$/).safeParse(value)
+                                return result.success ? undefined : 'Username must be 4-8 characters long and can only contain letters, numbers, and underscores'
+                            }
+                        }}
+                    >
+                        {field => (
+                            <div>
+                                <Label htmlFor="username" className="mb-2">Username</Label>
+                                <Input
+                                    id="username"
+                                    value={field.state.value}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    placeholder="Username"
+                                />
+                                {field.state.meta.errors && (
+                                    <p className="text-red-500 text-sm mt-1">{field.state.meta.errors[0]}</p>
+                                )}
+                            </div>
+                        )}
+                    </form.Field>
+
+                    <form.Field
+                        name="password"
+                        validators={{
+                            onChange: ({ value }) => {
+                                const result = z.string().min(8).safeParse(value)
+                                return result.success ? undefined : 'Password must be at least 8 characters long'
+                            }
+                        }}
+                    >
+                        {field => (
+                            <div>
+                                <Label htmlFor="password" className="mb-2">Password</Label>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    value={field.state.value}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    placeholder="••••••••"
+                                />
+                                {field.state.meta.errors && (
+                                    <p className="text-red-500 text-sm mt-1">{field.state.meta.errors[0]}</p>
+                                )}
+                            </div>
+                        )}
+                    </form.Field>
+
+                    <form.Field
+                        name="description"
+                        validators={{
+                            onChange: ({ value }) => {
+                                const result = z.string().max(200).safeParse(value)
+                                return result.success ? undefined : 'Description must be at most 200 characters long'
+                            }
+                        }}
+
+                    >
+                        {field => (
+                            <div>
+                                <Label htmlFor="description" className="mb-2">Description</Label>
+                                <Textarea
+                                    id="description"
+                                    value={field.state.value}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    placeholder="Tell us about yourself"
+                                />
+                                {field.state.meta.errors && (
+                                    <p className="text-red-500 text-sm mt-1">{field.state.meta.errors[0]}</p>
+                                )}
+                            </div>
+                        )}
+                    </form.Field>
+
+                    <Button type="submit" className="w-full">Register</Button>
+
+                    <p className="text-sm text-gray-500 text-center w-full">
+                        Already have an account? <a href="/login" className="text-blue-500 hover:underline">Login</a>
+                    </p>
+                </form>
+            </CardContent>
+        </Card>
+    )
+}

@@ -1,0 +1,41 @@
+from fastapi import Request, HTTPException
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from app.utils.response import error
+
+def register_exception_handlers(app):
+    @app.exception_handler(RequestValidationError)
+    async def handle_validation_error(request: Request, exc: RequestValidationError):
+        formatted = []
+        for err in exc.errors():
+            field = " -> ".join(str(loc) for loc in err["loc"][1:])
+            msg = err["msg"]
+
+            match err["type"]:
+                case "string_pattern_mismatch":
+                    if field == "username":
+                        msg = "Username must be alphanumeric and can include underscores"
+                    elif field == "email":
+                        msg = "Please provide a valid email address"
+                case "string_too_short":
+                    if field == "password":
+                        msg = "Password must be at least 8 characters long"
+                case "string_too_long":
+                    if field == "username":
+                        msg = "Username must not exceed 16 characters"
+                    elif field == "description":
+                        msg = "Description must not exceed 200 characters"
+                case "missing":
+                    msg = f"{field.capitalize()} is required"
+
+            formatted.append({"field": field, "message": msg})
+
+        return JSONResponse(status_code=422, content=error("Validation Error", 422, data=formatted))
+
+    @app.exception_handler(HTTPException)
+    async def handle_http_exception(request: Request, exc: HTTPException):
+        return JSONResponse(status_code=exc.status_code, content=error(exc.detail, exc.status_code))
+
+    @app.exception_handler(Exception)
+    async def handle_general_exception(request: Request, exc: Exception):
+        return JSONResponse(status_code=500, content=error("Internal Server Error", 500, data={"error": str(exc)}))

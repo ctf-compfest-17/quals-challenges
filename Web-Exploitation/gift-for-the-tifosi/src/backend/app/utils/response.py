@@ -1,0 +1,31 @@
+from http.client import HTTPException
+
+from typing import Any, Optional
+from fastapi import HTTPException
+from app.schemas.response_schema import ApiResponse
+
+def success(
+    message: str = "Operation successful",
+    data: Any = None,
+    status_code: int = 200
+) -> dict:
+    response = ApiResponse(
+        statusCode=status_code,
+        success=True,
+        message=message,
+        data=data
+    )
+    return response.model_dump()
+
+def error(
+    message: str,
+    status_code: int = 400,
+    data: Any = None
+) -> dict:
+    response = ApiResponse(
+        statusCode=status_code,
+        success=False,
+        message=message,
+        data=data
+    )
+    return response.model_dump()

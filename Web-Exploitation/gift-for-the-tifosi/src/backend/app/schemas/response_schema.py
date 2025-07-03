@@ -1,0 +1,15 @@
+from pydantic import BaseModel
+from typing import Any, Optional
+from datetime import datetime
+
+class ApiResponse(BaseModel):
+    statusCode: int
+    success: bool
+    message: str
+    data: Optional[Any] = None
+    timestamp: Optional[str] = None
+    
+    def __init__(self, **data):
+        if 'timestamp' not in data:
+            data['timestamp'] = datetime.now().isoformat()
+        super().__init__(**data)

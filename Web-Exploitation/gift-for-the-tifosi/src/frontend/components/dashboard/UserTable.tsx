@@ -1,0 +1,145 @@
+'use client'
+
+import {
+    useReactTable,
+    getCoreRowModel,
+    getPaginationRowModel,
+    ColumnDef,
+} from '@tanstack/react-table'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { useEffect, useMemo, useState } from 'react'
+import useSWR from 'swr'
+import { fetcher } from '@/lib/fetcher'
+
+type User = {
+    username: string
+    created_at: string
+}
+
+type ApiResponse = {
+    statusCode: number
+    success: boolean
+    message: string
+    data: {
+        results: User[]
+        total: number
+        page: number
+        limit: number
+        totalPages: number
+    }
+    timestamp: string
+}
+
+export const UserTable = () => {
+    const [page, setPage] = useState(1)
+    const [limit] = useState(10)
+    const [search, setSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [totalPages, setTotalPages] = useState(1)
+
+    useEffect(() => {
+        const t = setTimeout(() => setDebouncedSearch(search), 500)
+        return () => clearTimeout(t)
+    }, [search])
+
+    const queryKey = `/dashboard/users?username=${debouncedSearch}&page=${page}&limit=${limit}`
+
+    const { data, isLoading } = useSWR<ApiResponse>(queryKey, fetcher, {
+        refreshInterval: 5000,
+    })
+
+    const users = useMemo(() => {
+        return (
+            data?.data.results?.sort(
+                (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+            ) || []
+        )
+    }, [data])
+
+    useEffect(() => {
+        if (data) {
+            setTotalPages(data.data.totalPages)
+        }
+    }, [data])
+
+    const columns: ColumnDef<User>[] = [
+        { accessorKey: 'username', header: 'Username' },
+        {
+            accessorKey: 'created_at',
+            header: 'Created At',
+            cell: ({ getValue }) => new Date(getValue() as string).toLocaleString(),
+        },
+    ]
+
+    const table = useReactTable({
+        data: users,
+        columns,
+        pageCount: totalPages,
+        state: { pagination: { pageIndex: page - 1, pageSize: limit } },
+        manualPagination: true,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+    })
+
+    return (
+        <Card className="space-y-4 p-4 h-full">
+            <CardHeader>
+                <CardTitle>Users</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div>
+                    <Input
+                        placeholder="Search username..."
+                        value={search}
+                        onChange={e => {
+                            setSearch(e.target.value)
+                            setPage(1)
+                        }}
+                        className="w-64"
+                    />
+
+                    <Table>
+                        <TableHeader>
+                            {table.getHeaderGroups().map(headerGroup => (
+                                <TableRow key={headerGroup.id}>
+                                    {headerGroup.headers.map(header => (
+                                        <TableHead key={header.id}>
+                                            {header.column.columnDef.header as string}
+                                        </TableHead>
+                                    ))}
+                                </TableRow>
+                            ))}
+                        </TableHeader>
+
+                        <TableBody>
+                            {table.getRowModel().rows.map(row => (
+                                <TableRow key={row.id}>
+                                    {row.getVisibleCells().map(cell => (
+                                        <TableCell key={cell.id}>
+                                            {cell.getValue() as string}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+
+                    <div className="flex justify-between items-center">
+                        <span>Page {page} of {totalPages}</span>
+                        <div className="flex gap-2">
+                            <Button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
+                                Previous
+                            </Button>
+                            <Button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
+                                Next
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    )
+}

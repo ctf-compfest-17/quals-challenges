@@ -1,0 +1,102 @@
+'use client';
+
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useForm } from '@tanstack/react-form';
+import { z } from 'zod';
+import { fetcher } from '@/lib/fetcher';
+import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
+
+interface EditProfileModalProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}
+
+type ProfileValues = {
+    description: string;
+};
+
+export default function EditProfileModal({ open, onOpenChange }: EditProfileModalProps) {
+    const [initial, setInitial] = useState<ProfileValues>({ description: '' });
+
+    useEffect(() => {
+        if (open) {
+            fetcher('/profile/view')
+                .then(res => {
+                    setInitial({ description: res.data.description });
+                })
+                .catch(() => { });
+        }
+    }, [open]);
+
+    const schema = z.object({
+        description: z.string().max(200, 'Description must be at most 200 characters long'),
+    });
+
+    const form = useForm({
+        defaultValues: initial,
+        onSubmit: async ({ value }: { value: ProfileValues }) => {
+            const result = schema.safeParse(value);
+            if (!result.success) {
+                toast.error(result.error.issues[0].message);
+                return;
+            }
+
+            try {
+                const res = await fetcher('/profile/edit', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ description: value.description }),
+                });
+                if (res.success) {
+                    toast.success('Description updated');
+                    onOpenChange(false);
+                } else throw new Error();
+            } catch {
+                toast.error('Update failed');
+            }
+        },
+    });
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Edit Description</DialogTitle>
+                    <DialogDescription>Update your profile description.</DialogDescription>
+                </DialogHeader>
+
+                <form
+                    onSubmit={async e => {
+                        e.preventDefault();
+                        await form.handleSubmit();
+                    }}
+                    className="space-y-4 py-4"
+                >
+                    <form.Field name="description">
+                        {field => (
+                            <div>
+                                <Label htmlFor="description" className="mb-1">About You</Label>
+                                <Textarea
+                                    id="description"
+                                    value={field.state.value}
+                                    onChange={e => field.handleChange(e.target.value)}
+                                    rows={4}
+                                />
+                                {field.state.meta.errors && <p className="text-red-500 text-sm">{field.state.meta.errors[0]}</p>}
+                            </div>
+                        )}
+                    </form.Field>
+
+                    <DialogFooter>
+                        <Button type="submit" className="mr-2">Save</Button>
+                        <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}

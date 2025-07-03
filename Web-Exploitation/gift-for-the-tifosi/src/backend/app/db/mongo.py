@@ -1,0 +1,47 @@
+import motor.motor_asyncio
+from app.core.config import ADMIN_EMAIL, ADMIN_PASSWORD, MONGODB_URI
+from app.models.user_model import UserInDB
+from app.core.security import get_password_hash
+from datetime import datetime, timezone
+import asyncio
+
+client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_URI)
+db = client["fastapi-app"]
+user_collection = db["users"]
+
+async def init_db():
+    await db.drop_collection("users")
+    
+    await user_collection.create_index("email", unique=True)
+    await user_collection.create_index("username", unique=True)
+    
+    admin_user =  UserInDB(
+        username="admin",
+        email=ADMIN_EMAIL,
+        hashed_password=get_password_hash(ADMIN_PASSWORD),
+        description="admin",
+        created_at=datetime.now(tz=timezone.utc)
+    )
+    
+    await user_collection.insert_one(admin_user.dict())
+    print("[+] Database initialized with admin user.")
+
+async def update_admin():
+    while True:
+        await user_collection.update_one(
+            {"username": "admin"},
+            {"$set": {
+                "username": "admin",
+                "email": ADMIN_EMAIL,
+                "hashed_password": get_password_hash(ADMIN_PASSWORD),
+                "description": "admin"
+                }
+             }
+        )
+        await asyncio.sleep(5)
+
+def get_db():
+    return db
+
+def close_connection():
+    client.close()

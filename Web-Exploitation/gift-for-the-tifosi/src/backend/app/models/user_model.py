@@ -1,0 +1,14 @@
+from pydantic import BaseModel, EmailStr
+from datetime import datetime
+
+class UserInDB(BaseModel):
+    username: str
+    email: EmailStr
+    hashed_password: str
+    description: str
+    created_at: datetime
+    
+    model_config = {
+        "str_strip_whitespace": True,
+        "extra": "forbid"
+    }

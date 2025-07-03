@@ -1,0 +1,162 @@
+'use client';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import ViewProfileModal from '@/components/modals/ViewProfileModal';
+import EditProfileModal from '@/components/modals/EditProfileModal';
+
+function base64Decode(str: string) {
+    try {
+        return decodeURIComponent(
+            atob(str)
+                .split('')
+                .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                .join('')
+        );
+    } catch {
+        return '';
+    }
+}
+
+function getUsernameFromToken(): string | null {
+    const cookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('token='));
+    if (!cookie) return null;
+    const token = cookie.split('=')[1];
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    try {
+        const payload = JSON.parse(base64Decode(parts[1]));
+        return payload.username;
+    } catch {
+        return null;
+    }
+}
+
+export default function Navbar() {
+    const [username, setUsername] = useState<string | null>(null);
+    const [viewOpen, setViewOpen] = useState(false);
+    const [editOpen, setEditOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        setUsername(getUsernameFromToken());
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!mounted || typeof window === 'undefined') return;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const modal = urlParams.get('modal');
+
+        if (modal === 'profile') {
+            setViewOpen(true);
+        } else if (modal === 'edit') {
+            setEditOpen(true);
+        }
+    }, [mounted]);
+
+    const handleLogout = () => {
+        document.cookie = 'token=; path=/; max-age=0';
+        router.push('/login');
+    };
+
+    const updateURL = (params: URLSearchParams) => {
+        if (typeof window === 'undefined') return;
+
+        const newUrl = params.toString()
+            ? `${window.location.pathname}?${params.toString()}`
+            : window.location.pathname;
+        router.replace(newUrl);
+    };
+
+    const handleViewModalChange = (open: boolean) => {
+        setViewOpen(open);
+        if (!open && mounted && typeof window !== 'undefined') {
+            const currentParams = new URLSearchParams(window.location.search);
+            currentParams.delete('modal');
+            updateURL(currentParams);
+        }
+    };
+
+    const handleEditModalChange = (open: boolean) => {
+        setEditOpen(open);
+        if (!open && mounted && typeof window !== 'undefined') {
+            const currentParams = new URLSearchParams(window.location.search);
+            currentParams.delete('modal');
+            updateURL(currentParams);
+        }
+    };
+
+    const openViewModal = () => {
+        setViewOpen(true);
+        if (mounted && typeof window !== 'undefined') {
+            const currentParams = new URLSearchParams(window.location.search);
+            currentParams.set('modal', 'profile');
+            updateURL(currentParams);
+        }
+    };
+
+    const openEditModal = () => {
+        setEditOpen(true);
+        if (mounted && typeof window !== 'undefined') {
+            const currentParams = new URLSearchParams(window.location.search);
+            currentParams.set('modal', 'edit');
+            updateURL(currentParams);
+        }
+    };
+
+    return (
+        <>
+            <nav className="w-full dark:bg-[#171717] shadow p-4 flex justify-between items-center">
+                <div className="text-xl font-bold">
+                    <Link href="/">Charles Leclerc for WDC</Link>
+                </div>
+                <div className="flex space-x-4">
+                    <Link href="/dashboard" className="hover:underline">
+                        Home
+                    </Link>
+                    <Link href="https://youtu.be/pWcwf6TJuXs?si=E8c95ENXOCh0S4so&t=20" className="hover:underline">
+                        About
+                    </Link>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="px-4">
+                                {username ?? 'Profile'}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onSelect={openViewModal}>
+                                Profile
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={openEditModal}>
+                                Edit Description
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem asChild>
+                                <button onClick={handleLogout} className="w-full text-red-600 text-left">
+                                    Sign Out
+                                </button>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            </nav>
+            <ViewProfileModal open={viewOpen} onOpenChange={handleViewModalChange} />
+            <EditProfileModal open={editOpen} onOpenChange={handleEditModalChange} />
+        </>
+    );
+}

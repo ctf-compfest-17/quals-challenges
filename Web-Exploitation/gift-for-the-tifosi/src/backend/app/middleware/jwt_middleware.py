@@ -1,0 +1,24 @@
+from fastapi import Request
+from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+from jose import JWTError, jwt
+from app.core.config import SECRET_KEY, ALGORITHM
+
+class JWTMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        if request.method == "OPTIONS":
+            return await call_next(request)
+
+        if request.url.path.startswith("/auth"):
+            return await call_next(request)
+
+        auth: str | None = request.headers.get("Authorization")
+        if not auth or not auth.startswith("Bearer "):
+            return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
+
+        try:
+            jwt.decode(auth.split(" ", 1)[1], SECRET_KEY, algorithms=[ALGORITHM])
+        except JWTError:
+            return JSONResponse(status_code=401, content={"detail": "Invalid Token"})
+
+        return await call_next(request)

@@ -1,0 +1,8 @@
+fastapi
+motor
+python-jose[cryptography]
+pydantic[email]
+passlib[bcrypt]
+uvicorn
+bs4
+slowapi

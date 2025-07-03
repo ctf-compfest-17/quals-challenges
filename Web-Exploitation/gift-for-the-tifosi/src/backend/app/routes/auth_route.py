@@ -1,0 +1,38 @@
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import JSONResponse
+from app.schemas.user_schema import UserCreate, UserLogin
+from app.services import user_service
+from app.core.security import create_access_token, verify_password
+from app.utils.response import success
+from pymongo.errors import DuplicateKeyError
+
+router = APIRouter()
+
+@router.post("/register")
+async def register(user: UserCreate):
+    try:
+        await user_service.create_user(user.dict())
+    except DuplicateKeyError as e:
+        if "email" in str(e):
+            raise HTTPException(status_code=400, detail="Email already registered")
+        if "username" in str(e):
+            raise HTTPException(status_code=400, detail="Username already taken")
+        raise HTTPException(status_code=400, detail="Registration failed")
+    
+    return JSONResponse(
+        status_code=201,
+        content=success("User registered successfully")
+    )
+
+@router.post("/login")
+async def login(user: UserLogin):
+    db_user = await user_service.find_user_by_email(user.email)
+    if not db_user or not verify_password(user.password, db_user["hashed_password"]):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    user_id = str(db_user["_id"])
+    token = create_access_token({"sub": user_id, "username": db_user["username"]})
+    data = {"access_token": token, "token_type": "bearer"}
+    return JSONResponse(
+        status_code=200,
+        content=success("Login successful", data=data)
+    )
