@@ -1,4 +1,4 @@
-# gumshoe
+# crash out
 
 by ultradiyow
 
@@ -11,7 +11,11 @@ COMPFEST17{cr4sh1ng_1nt0_th3_v0001d_b00m_boOm_B00M!!_b51a77934b}
 ```
 
 ## Description
-I recently brought my laptop to a service center. It crashes every 2 am. Since then, and now I don't trust them anymore.. Can you find out what is going on?
+I recently brought my laptop to a service center. Now it starts to behave weirdly, the powershell tab just comes up out of nowhere?? Can you find out what is going on?
+
+Here is a dump of my machine:
+https://drive.google.com/file/d/1oaqD44dLpa9AhnqQni38m12YmBozCbRm/view?usp=sharing
+Password: 848331f8c07b6c372bd03321f31609f7345b1de42e942b7ce88cd29e4ca3c92
 
 ## Difficulty
 Tingkat kesulitan soal: medium
@@ -26,25 +30,6 @@ Tags dari soal pisahkan koma (e.g: tags1, tags2, tags3)
 
 ## Deployment
 Penjelasan cara menjalankan service yang dibutuhkan serta requirementsnya.
-
-#### Contoh 1
-- Install docker engine>=19.03.12 and docker-compose>=1.26.2.
-- Run the container using:
-    ```
-    docker-compose up --build --detach
-    ```
-
-#### Contoh 2
-- How to compile:
-    ```
-    gcc soal.c -o soal -O2 -D\_FORTIFY\_SOURCE=2 -fstack-protector-all -Wl,-z,now,-z,relro -Wall -no-pie
-    ```
-- Jalankan:
-    ```
-    ./soal
-    ```
-- Workdir di `/home/...`
-- Gunakan libc 2.31 ketika sudah keluar. Alias Ubuntu 20.04.
 
 ## Notes
 Tambahan informasi untuk soal, deployment, atau serangan yang mungkin terjadi pada service soal
