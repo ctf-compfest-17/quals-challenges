@@ -1,0 +1,40 @@
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.params import Body
+from fastapi.responses import JSONResponse
+from app.core.security import oauth2_scheme, jwt, SECRET_KEY, ALGORITHM
+from app.services.user_service import find_user_by_id, update_profile_by_id
+from fastapi import Query
+from app.utils.response import success
+from app.schemas.user_schema import UserEdit
+from bson.objectid import ObjectId
+from typing import Optional
+
+router = APIRouter()
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    user_id = ObjectId(payload.get("sub"))
+    user = await find_user_by_id(user_id)
+    return user
+
+@router.get("/view")
+async def view_user(id: Optional[str] = Query(None), user = Depends(get_current_user)):
+    if id:
+        user = await find_user_by_id(id)
+        if not user:
+            return HTTPException("User not found", status_code=404)
+    data = {k: v for k, v in user.items() if k not in ["_id", "hashed_password"]}
+    data["created_at"] = user["created_at"].isoformat()
+    return JSONResponse(status_code=200, content=success("User profile retrieved successfully", data=data))
+
+@router.put("/edit")
+async def edit_user(id: Optional[str] = Query(None), body: UserEdit = Body(...), user = Depends(get_current_user)):
+    if id:
+        try:
+            await update_profile_by_id(id, body.description)
+        except ValueError as e:
+            return HTTPException(status_code=400, detail=str(e))
+    else:
+        user_id = str(user["_id"])
+        await update_profile_by_id(user_id, body.description)
+        return JSONResponse(status_code=200, content=success("Profile updated successfully"))

@@ -1,0 +1,123 @@
+const puppeteer = require('puppeteer');
+const axios = require('axios');
+
+const CONFIG = {
+    APPNAME: process.env['APPNAME'] || "Admin",
+    APPURL: process.env['APPURL'] || "http://172.17.0.1",
+    APPURLREGEX: process.env['APPURLREGEX'] || "^.*$",
+    APPFLAG: process.env['APPFLAG'] || "dev{flag}",
+    APPLIMITTIME: Number(process.env['APPLIMITTIME'] || "60"),
+    APPLIMIT: Number(process.env['APPLIMIT'] || "5"),
+    APPEMAIL: process.env['APPEMAIL'] || "admin@example.com",
+    APPPASS: process.env['APPPASS'] || "admin123",
+}
+console.table(CONFIG)
+const initBrowser = puppeteer.launch({
+    executablePath: "/usr/bin/chromium-browser",
+    headless: 'new',
+    args: [
+        '--disable-dev-shm-usage',
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-gpu',
+        '--no-gpu',
+        '--disable-default-apps',
+        '--disable-translate',
+        '--disable-device-discovery-notifications',
+        '--disable-software-rasterizer',
+        '--disable-xss-auditor'
+    ],
+    userDataDir: '/home/bot/data/',
+    ignoreHTTPSErrors: true
+});
+
+async function loginViaAPI() {
+    try {
+        console.log("Attempting API login...");
+        const loginData = {
+            email: CONFIG.APPEMAIL,
+            password: CONFIG.APPPASS
+        };
+
+        const response = await axios.post(`${CONFIG.APPURL}/api/auth/login`, loginData, {
+            timeout: 10000,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log("Login response:", response.status, response.data);
+
+        if (response.data && response.data.success && response.data.data && response.data.data.access_token) {
+            const token = response.data.data.access_token;
+            console.log("Login successful, token received");
+            return token;
+        } else {
+            throw new Error("Invalid login response format");
+        }
+    } catch (error) {
+        console.error("API login failed:", error.message);
+        if (error.response) {
+            console.error("Response data:", error.response.data);
+            console.error("Response status:", error.response.status);
+        }
+        throw error;
+    }
+}
+
+module.exports = {
+    name: CONFIG.APPNAME,
+    urlRegex: CONFIG.APPURLREGEX,
+    rateLimit: {
+        windowS: CONFIG.APPLIMITTIME,
+        max: CONFIG.APPLIMIT
+    },
+    bot: async (urlToVisit) => {
+        const browser = await initBrowser;
+        const context = await browser.createIncognitoBrowserContext();
+        try {
+            const accessToken = await loginViaAPI();
+            console.log(accessToken)
+
+            const page = await context.newPage();
+
+            console.log("Setting authentication cookies...");
+            await page.setCookie(
+                {
+                    name: "token",
+                    httpOnly: false,
+                    value: accessToken,
+                    url: CONFIG.APPURL
+                },
+                {
+                    name: "flag",
+                    httpOnly: false,
+                    value: CONFIG.APPFLAG,
+                    url: CONFIG.APPURL
+                }
+            );
+
+            await page.setExtraHTTPHeaders({
+                'Authorization': `Bearer ${accessToken}`
+            });
+
+            console.log(`Bot visiting ${urlToVisit}`);
+            await page.goto(urlToVisit, {
+                waitUntil: 'networkidle2',
+                timeout: 30000
+            });
+
+            console.log("Waiting for page interactions...");
+            await page.waitForTimeout(5000);
+
+            console.log("Bot visit completed, closing browser...");
+            await context.close();
+            return true;
+        } catch (e) {
+            console.error("Bot error:", e.message);
+            console.error("Stack trace:", e.stack);
+            await context.close();
+            return false;
+        }
+    }
+}

@@ -1,0 +1,7 @@
+from bs4 import BeautifulSoup
+
+def contains_blacklisted_html(text: str) -> bool:
+    if text:
+        soup = BeautifulSoup(text, 'html.parser')
+        return any(tag.name for tag in soup.find_all())
+    return False

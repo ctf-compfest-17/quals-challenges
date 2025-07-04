@@ -1,0 +1,73 @@
+from app.db.mongo import user_collection
+from app.core.security import get_password_hash
+from app.core.blacklist import contains_blacklisted_html
+from app.models.user_model import UserInDB
+from datetime import datetime, timezone
+from bson.objectid import ObjectId
+from app.db.mongo import get_db
+
+def serialize_user_data(doc):
+    user_data = {}
+    for k, v in doc.items():
+        if k in ["_id", "email", "description", "hashed_password"]:
+            continue
+        elif k == "created_at" and isinstance(v, datetime):
+            user_data[k] = v.isoformat()
+        else:
+            user_data[k] = v
+    return user_data
+
+async def create_user(data):
+    
+    for field in ["username", "email", "password", "description"]:
+        if field not in data or not data[field]:
+            raise ValueError(f"{field} is required")
+        
+        if contains_blacklisted_html(data["username"]) or contains_blacklisted_html(data["email"]):
+            raise ValueError("Input contains blacklisted HTML content")
+    
+    user = UserInDB(
+        username=data["username"],
+        email=data["email"],
+        hashed_password=get_password_hash(data["password"]),
+        description=data["description"],
+        created_at=datetime.now(tz=timezone.utc),
+    )
+    await user_collection.insert_one(user.dict())
+    return user
+
+async def find_user_by_email(email):
+    return await user_collection.find_one({"email": email})
+
+async def find_users_by_username(name):    
+    cursor = user_collection.find({
+        "username": {"$regex": f"^{name}", "$options": "i"}
+    }).limit(100)
+    users = []
+    
+    async for doc in cursor:
+        user_data = serialize_user_data(doc)
+        users.append(user_data)
+    return users
+
+async def find_users_by_username_paginated(username: str, skip: int, limit: int):
+    db = get_db()
+    _filter = {"username": {"$regex": username, "$options": "i"}}
+    cursor = db["users"].find(_filter).skip(skip).limit(limit)
+    users = []
+    async for doc in cursor:
+        user_data = serialize_user_data(doc)
+        users.append(user_data)
+        
+    total = await db["users"].count_documents(_filter)
+    return users, total
+
+async def find_user_by_id(user_id):
+    return await user_collection.find_one({"_id": ObjectId(user_id)})
+
+async def update_profile_by_id(user_id, description):
+    if not user_id or not description:
+        raise ValueError("ID and description required")
+    if contains_blacklisted_html(description):
+        raise ValueError("Description contains blacklisted HTML content")
+    await user_collection.update_one({"_id": ObjectId(user_id)}, {"$set": {"description": description}})

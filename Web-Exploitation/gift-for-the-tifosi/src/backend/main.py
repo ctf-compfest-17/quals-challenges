@@ -1,0 +1,43 @@
+from fastapi import FastAPI, Request
+from app.routes import auth_route, profile_route, dashboard_route
+from app.middleware.jwt_middleware import JWTMiddleware
+from app.db.mongo import init_db, update_admin
+from app.core.exception_handler import register_exception_handlers
+from contextlib import asynccontextmanager
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+import asyncio
+
+admin_update_task = None
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db()
+    
+    admin_update_task = asyncio.create_task(update_admin())
+    print("[*] Update admin task started")
+    
+    yield
+
+    if admin_update_task:
+        admin_update_task.cancel()
+        try:
+            await admin_update_task
+        except asyncio.CancelledError:
+            print("[*] Update admin task cancelled")
+
+
+app = FastAPI(lifespan=lifespan)
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+app.add_middleware(JWTMiddleware)
+
+register_exception_handlers(app)
+
+app.include_router(auth_route.router, prefix="/auth")
+app.include_router(profile_route.router, prefix="/profile")
+app.include_router(dashboard_route.router, prefix="/dashboard")
+    

@@ -1,0 +1,30 @@
+import { NextResponse, NextRequest } from 'next/server';
+import jwt from 'jsonwebtoken';
+
+interface JwtPayload {
+    sub: string;
+    username: string;
+    exp: number;
+}
+
+export async function middleware(request: NextRequest) {
+    const token = request.cookies.get('token')?.value;
+
+    if (!token) {
+        return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    const payload = jwt.decode(token, { json: true }) as JwtPayload;
+
+    if (!payload || payload.exp < Date.now() / 1000) {
+        return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    return NextResponse.next();
+}
+
+export const config = {
+    matcher: [
+        '/((?!_next/static|_next/image|favicon.ico|login|register|api/public).*)',
+    ],
+}

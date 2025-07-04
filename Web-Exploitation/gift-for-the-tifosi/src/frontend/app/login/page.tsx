@@ -1,0 +1,24 @@
+import React from 'react'
+import { LoginForm } from '@/components/auth/LoginForm'
+
+export default function Page() {
+    return (
+        <div className="relative h-screen flex items-center justify-center overflow-hidden">
+            <div
+                className="absolute top-0 left-0 w-full h-full z-[1] pointer-events-none"
+                style={{
+                    WebkitMaskImage:
+                        'url(https://media.formula1.com/image/upload/e_trim/c_fit,h_742/q_auto/v1740000000/common/f1/2025/ferrari/chalec01/2025ferrarichalec01numberwhite.webp)',
+                    WebkitMaskRepeat: 'no-repeat',
+                    WebkitMaskSize: '45% auto',
+                    WebkitMaskPosition: 'center',
+                    backgroundColor: '#830007',
+                }}
+            ></div>
+
+            <div className="relative z-[2] w-full">
+                <LoginForm />
+            </div>
+        </div >
+    )
+}

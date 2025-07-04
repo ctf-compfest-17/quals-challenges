@@ -1,0 +1,48 @@
+import React from 'react'
+import NavBar from '@/components/NavBar'
+import { UserTable } from '@/components/dashboard/UserTable'
+import Image from 'next/image'
+import Leclerc from '@/public/ferrari/leclerc.webp'
+
+export default function DashboardPage() {
+    return (
+        <div className="min-h-screen flex flex-col">
+            <NavBar />
+            <div className="flex flex-1">
+                <div className="w-1/2 p-4 h-full overflow-auto">
+                    <UserTable />
+                </div>
+                <div className="w-1/2 p-4 relative overflow-hidden">
+                    <div
+                        className="absolute inset-0 z-[1]"
+                        style={{
+                            WebkitMaskImage: 'url(https://media.formula1.com/image/upload/e_trim/c_fit,h_742/q_auto/v1740000000/common/f1/2025/ferrari/chalec01/2025ferrarichalec01numberwhite.webp)',
+                            WebkitMaskRepeat: 'no-repeat',
+                            WebkitMaskSize: '75% auto',
+                            WebkitMaskPosition: 'center',
+                            backgroundColor: '#830007',
+                        }}
+                    />
+
+                    <div className="relative z-[2] flex justify-center items-start pt-8">
+                        <div
+                            className="w-[300px] md:w-[420px] lg:w-[520px] max-h-[calc(100vh-4rem-68px)]  overflow-hidden"
+                            style={{
+                                maskImage: 'linear-gradient(to bottom, black 55%, transparent 85%)',
+                                WebkitMaskImage: 'linear-gradient(to bottom, black 55%, transparent 85%)',
+                            }}
+                        >
+                            <Image
+                                className="w-full h-auto object-contain object-top"
+                                src={Leclerc}
+                                alt="Charles Leclerc"
+                                width={720}
+                                height={1080}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}

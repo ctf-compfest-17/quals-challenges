@@ -1,0 +1,21 @@
+export const fetcher = async (url: string, options: RequestInit = {}) => {
+    const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('token='))?.split('=')[1];
+
+    const res = await fetch(`/api${url}`, {
+        ...options,
+        credentials: 'include',
+        headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            ...options.headers,
+        },
+    });
+
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message ?? 'An error occurred while fetching data');
+    }
+
+    return res.json();
+};

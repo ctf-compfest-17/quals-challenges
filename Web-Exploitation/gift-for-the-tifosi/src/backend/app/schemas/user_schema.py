@@ -1,0 +1,35 @@
+from pydantic import BaseModel, EmailStr, Field
+
+class UserCreate(BaseModel):
+    username: str = Field(
+        ...,
+        min_length=4,
+        max_length=16,
+        pattern=r'^[a-zA-Z0-9_]+$',
+        description="Username must be alphanumeric and can include underscores, between 4 and 16 characters."
+    )
+    email: EmailStr = Field(..., description="Valid email address.")
+    password: str = Field(..., min_length=8, description="Password must be at least 8 characters long.")
+    description: str = Field(..., max_length=200, description="A brief description of the user, up to 200 characters.")
+    
+    model_config = {
+        "str_strip_whitespace": True,
+        "extra": "forbid"
+    }
+    
+class UserLogin(BaseModel):
+    email: EmailStr = Field(..., description="Valid email address.")
+    password: str = Field(..., min_length=8, description="Password must be at least 8 characters long.")
+    
+    model_config = {
+        "str_strip_whitespace": True,
+        "extra": "forbid"
+    }
+    
+class UserEdit(BaseModel):
+    description: str = Field(..., max_length=200, description="A brief description of the user, up to 200 characters.")
+    
+    model_config = {
+        "str_strip_whitespace": True,
+        "extra": "forbid"
+    }

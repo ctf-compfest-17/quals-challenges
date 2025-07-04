@@ -1,0 +1,30 @@
+from fastapi import APIRouter, Query
+from fastapi.responses import JSONResponse
+from app.services.user_service import find_users_by_username_paginated
+from app.utils.response import success
+
+router = APIRouter()
+
+@router.get("/users")
+async def get_users(
+    username: str = Query(""),
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+):
+    skip = (page - 1) * limit
+    users, total = await find_users_by_username_paginated(username, skip, limit)
+    total_pages = (total + limit - 1) // limit
+
+    return JSONResponse(
+        status_code=200,
+        content=success(
+            "Users retrieved successfully",
+            data={
+                "results": users,
+                "total": total,
+                "page": page,
+                "limit": limit,
+                "totalPages": total_pages
+            }
+        )
+    )

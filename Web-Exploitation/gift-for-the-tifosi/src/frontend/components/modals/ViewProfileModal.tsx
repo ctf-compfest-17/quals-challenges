@@ -1,0 +1,64 @@
+'use client';
+
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { useState, useEffect } from 'react';
+import { fetcher } from '@/lib/fetcher';
+
+type UserProfile = {
+    email: string;
+    username: string;
+    description: string;
+    created_at: string;
+};
+
+interface ViewProfileModalProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}
+
+export default function ViewProfileModal({ open, onOpenChange }: ViewProfileModalProps) {
+    const [profile, setProfile] = useState<UserProfile | null>(null);
+
+    useEffect(() => {
+        if (open) {
+            fetcher('/profile/view')
+                .then(res => setProfile(res.data))
+                .catch(() => setProfile(null));
+        }
+    }, [open]);
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Your Profile</DialogTitle>
+                    <DialogDescription>View your account details.</DialogDescription>
+                </DialogHeader>
+
+                {profile ? (
+                    <div className="space-y-2 py-4">
+                        <p><strong>Email:</strong> {profile.email}</p>
+                        <p><strong>Username:</strong> {profile.username}</p>
+                        <p><strong>Member since:</strong> {new Date(profile.created_at).toLocaleDateString()}</p>
+                        <div>
+                            <strong>About:</strong>
+                            <div
+                                className="prose max-w-none mt-1"
+                                dangerouslySetInnerHTML={{ __html: profile.description }}
+                            />
+                        </div>
+                    </div>
+                ) : (
+                    <p className="py-4">Loading...</p>
+                )}
+
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>
+                        Close
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+}
