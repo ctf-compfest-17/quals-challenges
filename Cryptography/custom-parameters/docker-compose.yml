@@ -1,0 +1,12 @@
+services:
+    big-ahh-rsa:
+      build: .
+      ports:
+        - 1337:1337
+      container_name: custom-parameters
+      restart: on-failure
+      deploy:
+        resources:
+          limits:
+            cpus: '0.25'
+            memory: 256M
