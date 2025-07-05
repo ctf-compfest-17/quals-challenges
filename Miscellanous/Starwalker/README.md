@@ -14,7 +14,7 @@ COMPFEST17{I_4m_th3_0rIg1n4L______St4rW4lk3R_ce7428eba6}
 This jail is Pissing me off...
 
 ## Difficulty
-Tingkat kesulitan soal: medium
+Tingkat kesulitan soal: medium-hard
 
 ## Hints
 * Did you know that the `dis` module have been hiding a bunch of opcodes from `dis.opmap`? Can you find the secret opcodes?
