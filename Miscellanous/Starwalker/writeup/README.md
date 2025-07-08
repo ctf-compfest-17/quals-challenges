@@ -1,10 +1,8 @@
 # Writeup Starwalker
 
 Beda kayak pycjail biasa, di chall ini kita gak bisa specify `co_const` ato `co_names` tapi kita masi bisa recover builtins sama masih bisa dapetin function yang kita mau tanpa harus pake `co_const`.
-Di python versi 3.12, `LOAD_FAST` dan `STORE_FAST` ga ada bounds checkingnya (saking cepetnya wkkwkwkw). Dengan ini, kita bisa magically ngambil builtins.
-
-> **Note:**
-> Karena `LOAD_FAST` dengan index out-of-bounds merupakan undefined behavior, index dari `__builtins__.__dict__` dapat berganti tiap kali containernya di-run (bagi yang pengen ngerun dockernya di local machine). 
+Opcode `LOAD_FAST` dan `STORE_FAST` ga ada bounds checkingnya. Dengan ini, kita bisa magically ngambil builtins sama globals.
+Di challenge juga ada function `gadget` yang bisa membantu untuk call function karena minimal 32 arguments.
 
 # Chosen Bytes
 
@@ -12,25 +10,23 @@ Ini bisa coba coba dan eksplorasi buat opcodes yang ASCII printable (ingat nyari
 
 **Opcodes**
 > `LOAD_FAST`, `RETURN_VALUE`,`SWAP`, `UNPACK_EX`, `MATCH_KEYS`, 
-> `PUSH_EXC_INFO`, `POP_EXCEPT`, `BUILD_TUPLE`
+> `PUSH_EXC_INFO`, `POP_EXCEPT`, `BUILD_TUPLE`, `STORE_FAST`
+> `LOAD_ASSERTION_ERROR`, `STORE_SUBSCR`, `CALL_NO_KW_BUILTIN_FAST`
 
-**Operands**
-> 40 (`__builtins__.__dict__` index), 59 (ini dummy number bisa literally anything), 
-> 120, 121, 109 (`breakpoint` index)
+# General Solution Idea
+
+Basically, kita harus mendapatkan shell dengan cara menggunakan `eval` dan fungsi helper `gadget`. Argument untuk fungsi tersebut kita bisa emplace di dalam `name` jadi untuk allowed bytesnya dia dalem bentuk `<executed code>#<payload>` (for me `breakpoint()#<payload>`).
+
+Karena kita sebenarnya tidak bisa mengakses `builtins` dan `globals` kita bisa memanfaatkan OOB dalam instruksi `LOAD_FAST` dan `STORE_FAST` ( `builtins` ada di 60 dan `globals` ada di `STACK[-100]` setelah spraying `LOAD_FAST`). 
+
 
 # Steps
-
-1. Load builtins dengan `LOAD_FAST` index 40 dua kali (ini nanti buat `MATCH_KEYS`)
-2. Unpack 120 values pake `UNPACK_EX`
-3. Pindah stack[-121] ke atas trus POP (karena pop di-ban kita bisa push exception pake `PUSH_EXC_INFO` trus `POP_EXCEPT` 2 kali) 
-4. Bikin tuple 120 keys.
-5. MATCH_KEYS agar bisa dapet original dict (ini agak crazy dawg)
-> **MATCH_KEYS**
-> 
-> `STACK[-1]` is a tuple of mapping keys, and `STACK[-2]` is the match subject. If `STACK[-2]` contains all of the keys in `STACK[-1]`, push a tuple containing the corresponding values. Otherwise, push `None`.
-6. `UNPACK_EX` lagi dan sekarang kita punya builtins di stack urutan kebalik.
-7. Switch pake `SWAP` biar naro `breakpoint()` di TOS.
-8. Now we have Pdb tinggal shell/open('./flag.txt').
+1. Load `__builtins__.__dict__` menggunakan `LOAD_FAST 60` dua kali (soalnya buat `MATCH_KEYS` biar dapet valuenya doang). Nanti tinggal pake `SWAP` untuk cari fungsi yang kita mau (gausah pake `STORE_FAST`).
+2. Load `globals()` dengan ngespam `LOAD_FAST` OOB 30 kali. 
+3. Load `builtins` lagi buat mengisi dict `globals()` karena itemsnya masih kurang dari 32 (`MATCH_KEYS` minimal 32 items).
+4. Prepare `eval`, `name` dan `gadget` di stack.
+5. Call `gadget` (buat arguments yang gak penting tinggal pake `LOAD_ASSERTION_ERROR`)
+6. `import os; os.system('sh')`
 
 # Further Reading
 

