@@ -7,7 +7,7 @@ by jay
 ## Flag
 
 ```
-COMPFEST17{2544b0c41e}
+COMPFEST17{c0ngr@tulat1on_you_hav3_found_the_s3cret_and_here_is_y0ur_r3ward} 
 ```
 
 ## Description
