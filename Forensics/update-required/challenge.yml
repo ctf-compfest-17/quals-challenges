@@ -2,8 +2,8 @@
 # other tools to install and deploy your challenge.
 
 # Required sections
-name: "challenge name"
-author: "author"
+name: "update required"
+author: "jay"
 
 # Select a category from:
 # - pwn
@@ -13,24 +13,25 @@ author: "author"
 # - forensics
 # - reverse
 # - misc
-category: category
+category: forensics
 
 # This is the challenge description. Make sure you include the
 # necessary URLs / netcat strings here.
 # Constants:
 # {{ IP_SERVER }} to get service IP address
 # {{ PORT }} to get service port
-description: "This is a sample description
-  with multi line
+description: "A researcher in Mondstadt’s tech division received an urgent-looking HTML file, claiming to be a critical security patch. Trusting its source, they executed antivirus.exe — and moments later, a secret PDF file disappeared.
 
-  http://{{ IP_SERVER }}:{{ PORT }}/"
+The PDF contained a confidential override PIN tied to the Vision Distribution Network. To secure it, the researcher encrypted the file using their MetaMask seed phrase, joined with an underscore (_) as the PDF password.
+
+Although the MetaMask vault remains on disk, the password to unlock it is missing. Fortunately, there's a chance: the researcher had once copied the vault password to clipboard."
 
 # Flags specify answers that your challenge use. You should generally provide
 # at least one.
 # Can be removed if unused
 # Accepts strings or dictionaries
 flags:
-  - NETSOS{this_is_a_sample_flag}
+  - COMPFEST17{c0ngr@tulat1on_you_hav3_found_the_s3cret_and_here_is_y0ur_r3ward} 
   - { type: "static", content: "NETSOS{another_flag}", data: "case_insensitive" }
 
 # Tags are used to classify your challenge with topics. You should provide at
@@ -38,9 +39,7 @@ flags:
 # Can be removed if unused
 # Accepts strings
 tags:
-  - web
-  - sandbox
-  - js
+  - malware analysis
 
 # Hints are used to give players a way to buy or have suggestions. They are not
 # required but can be nice.
@@ -54,7 +53,7 @@ hints:
 # Link to problem attachment for participants
 # Can be removed if unused
 # Accepts strings
-attachment: link_to_attachment
+attachment: https://drive.google.com/drive/folders/1R1psX7e04W1aJXFHK_WbNkRt5ukFXOlc?usp=sharing
 
 ##############
 #  BAGIAN TC #
