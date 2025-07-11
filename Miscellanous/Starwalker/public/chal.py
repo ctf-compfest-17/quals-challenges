@@ -1,4 +1,9 @@
 #!/usr/local/bin/python3.12
+import base64
+import io
+from contextlib import redirect_stdout
+from dis import opmap
+
 banner = """
                             @@                               
                           @@@@@                              
@@ -33,34 +38,47 @@ banner = """
 @@@@@@@@@@@@@@@@@@    @@                 @@@                 
                       @@@@@@@@@@@@@@@@@@@@        
 
-%s, This jail is Pissing me off...           
+These birds are Pissing me off...           
 """
+banned = [
+    'IMPORT_NAME', 'IMPORT_FROM', 'GET_ITER', 'FOR_ITER', 
+    'BINARY_SUBSCR', 'STORE_SUBSCR', 'DELETE_SUBSCR',
+    'EXTENDED_ARG', 'POP_TOP', 'CALL', 
+    'LOAD_FAST', 'STORE_FAST', 'LOAD_CONST', 'LOAD_GLOBAL'
+]
 
-# Take this traveller
-def gadget(f, *args):
-    f(args[0])
+def f(): pass
 
-def good(x: str):
-    return all(32 <= ord(c) <= 126 for c in x) and all([y in allowed for y in x]) and len(x) <= 1000
+def get_stdout(f):
+    out = io.StringIO()
+    with redirect_stdout(out):
+        f()
+    return out.getvalue().strip()
 
-name = input('OK desu ka? ')
-allowed = set(name)
-what_is_this = [{}]
+def good(s):
+    return 50 <= len(s) <= 100 and sum([x for x in s]) % 17 == 0 and all([opmap[i] not in s for i in banned])
 
-if not name.isprintable() or len(name) > 52:
-    print('☠⚐🏱☜')
-    exit()
-    
-print(banner % (name))
-inp = input('>>> ')
+def print_flag():
+    with open('./flag.txt') as f:
+        print(f'Heres the    flag: {f.read()}')
 
-def f():
-    pass
+print(banner)
 
-if good(inp):
-    f.__code__ = f.__code__.replace(
-        co_names=(), 
-        co_code=inp.encode())
-    f()
-else:
+try:
+    code = base64.b64decode(input('>>> '))
+except:
+    print('This base64 is Pissing me off...')
+    exit() 
+
+if not good(code):
     print('These characters are Pissing me off...')
+    exit()
+
+f.__code__ = f.__code__.replace(co_code=code, co_consts=(), co_names=())
+
+out = get_stdout(f)
+
+if str(out) == str(code):
+    print_flag()
+else:
+    print('No')
