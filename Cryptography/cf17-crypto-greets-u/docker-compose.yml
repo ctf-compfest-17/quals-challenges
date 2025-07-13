@@ -1,0 +1,12 @@
+services:
+    cf17-cryptography-greets-u:
+      build: .
+      ports:
+        - 1000:8080
+      container_name: cf17-cryptography-greets-u
+      restart: on-failure
+      deploy:
+        resources:
+          limits:
+            cpus: '0.25'
+            memory: 256M
