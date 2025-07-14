@@ -30,10 +30,10 @@ CALL_NO_KW_TUPLE_1 = opmap['CALL_NO_KW_TUPLE_1']
 STORE_SUBSCR = opmap['STORE_SUBSCR']
 LOAD_GLOBAL_BUILTIN = opmap['LOAD_GLOBAL_BUILTIN']
 COPY = opmap['COPY']
-context.log_level = 'critical'
+# context.log_level = 'critical'
 
 CNT = 43
-CNT2 = 21
+CNT2 = 22
 
 code = bytes([
     # Recover builtins,
@@ -46,28 +46,29 @@ code = bytes([
     MATCH_KEYS, CNT,
     UNPACK_EX, 2,
     SWAP, 2,                          # print function
-    # # # # # Recover globals
+    # # # # # # # Recover globals
     COPY, 11,
     COPY, 12,
     UNPACK_EX, CNT2,
     SWAP, CNT2+1,
-    # UNPACK_EX, 1,
+    # # UNPACK_EX, 1,
     *POP,
     BUILD_TUPLE, CNT2,
     MATCH_KEYS, 2,
     UNPACK_EX, 2,
-    # SWAP, 1,
+    SWAP, 2,
     COPY, 6,
-    COPY, 3,                        # print()
-    # SWAP, 2,
-    # COPY, 2,                        # code
+    COPY, 2,                        # print()
+    # # SWAP, 2,
+    # # COPY, 2,                        # code
     CALL_NO_KW_LEN, 0,     # print(code)
-    2,2,2,2,2,32-5+14,                    # cache and also to make it divisible by 17
+    2,2,2,2,2,32-5+13,                    # cache and also to make it divisible by 17
     RETURN_VALUE, 0,
 ])
 
+
 from base64 import b64encode
-print(len(code))
+print(len(code))    
 divis = sum([x for x in code]) % 17
 print(divis)
 
