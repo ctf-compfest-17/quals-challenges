@@ -14,4 +14,4 @@ move "%OUTPUT_EXE%" "%EXE_PATH%"
 del "%PUBLIC_ICON_PATH%"
 copy "%ICON_PATH%" "%PUBLIC_ICON_PATH%"
 
-powershell -Command "Stop-Process -Name explorer -Force; Start-Process explorer"
+@REM powershell -Command "Stop-Process -Name explorer -Force; Start-Process explorer"

@@ -1,22 +1,7 @@
-local Cell = {}
-local bit32 = require("lib.bit32")
-
-function Cell:new(x, y,z)
-    o = {
-        x = x, 
-        y = y,
-        z = z,
-        isRevealed = false,
-        isFlagged = false,
-    } or {}
-    setmetatable(o, self)
-    self.__index = self
-    return o
-end
-
 
 
 function Cell.isSafe(self)
+    local bit32 = require("lib.bit32")
     local x = self.x
     local y = self.y
     local z = self.z
@@ -42,7 +27,3 @@ function Cell.isSafe(self)
     return check1 and check2 and check3
 end
 
-
-
-
-return Cell

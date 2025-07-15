@@ -13,6 +13,9 @@ local HOVER_SPEED = 7
 local cellHoverProgress = {}
 elems.revealedCells = {}
 
+local arrowButton = {}
+
+
 
 local function clamp(val, lower, upper)
     if lower > upper then lower, upper = upper, lower end 
@@ -53,6 +56,15 @@ local function getMinefieldSquareLayout(minefield)
     }
 end
 
+-- stupid fucking thing
+function elems.initUI()
+    local offsetX = 25
+    arrowButton = {
+        left = {x = _G.X * 0.77 - offsetX, y = _G.Y * 0.6, w = 50, h = 50},
+        right = {x = _G.X * 0.87 - offsetX, y = _G.Y * 0.6, w = 50, h = 50}
+    }
+end
+
 function elems.initializeHover(minefield)
     cellHoverProgress = {} 
     if not minefield or not minefield.width or not minefield.height then return end
@@ -60,7 +72,11 @@ function elems.initializeHover(minefield)
     for mx = 1, minefield.width do
         cellHoverProgress[mx] = {}
         for my = 1, minefield.height do
-            cellHoverProgress[mx][my] = 0 
+            cellHoverProgress[mx][my] = {}
+            --depth change
+            for mz = 1, minefield.depth do
+                cellHoverProgress[mx][my][mz] = 0
+            end
         end
     end
 end
@@ -74,7 +90,7 @@ function elems.drawMineBG()
 end
 
 function elems.updateHoverState(minefield, dt)
-    if not minefield or not cellHoverProgress[1] then 
+    if not minefield or not cellHoverProgress[_G.CURRENT_DEPTH] then 
         return
     end
 
@@ -100,15 +116,17 @@ function elems.updateHoverState(minefield, dt)
         if hoveredGridY and (hoveredGridY < 1 or hoveredGridY > layout.mfH) then hoveredGridY = nil end
     end
     
+    --depth change
+    local layerHoverProgress = cellHoverProgress[_G.CURRENT_DEPTH] or {}
     for x = 1, layout.mfW do
-        if not cellHoverProgress[x] then cellHoverProgress[x] = {} end
+        if not layerHoverProgress[x] then layerHoverProgress[x] = {} end
         for y = 1, layout.mfH do
-            if cellHoverProgress[x][y] == nil then cellHoverProgress[x][y] = 0 end
+            if layerHoverProgress[x][y] == nil then layerHoverProgress[x][y] = 0 end
 
             if x == hoveredGridX and y == hoveredGridY then
-                cellHoverProgress[x][y] = math.min(1, cellHoverProgress[x][y] + dt * HOVER_SPEED)
+                layerHoverProgress[x][y] = math.min(1, layerHoverProgress[x][y] + dt * HOVER_SPEED)
             else
-                cellHoverProgress[x][y] = math.max(0, cellHoverProgress[x][y] - dt * HOVER_SPEED)
+                layerHoverProgress[x][y] = math.max(0, layerHoverProgress[x][y] - dt * HOVER_SPEED)
             end
         end
     end
@@ -122,24 +140,30 @@ function elems.drawMines(minefield)
         love.graphics.pop()
         return
     end
+    --depth change
+    local currentRevealed = elems.revealedCells[_G.CURRENT_DEPTH] or {}
+    local currentHover = cellHoverProgress[_G.CURRENT_DEPTH] or {}
 
     for x = 1, layout.mfW do
         for y = 1, layout.mfH do
-            -- skip revealed cells
-            if elems.revealedCells[x] and elems.revealedCells[x][y] then
+            if currentRevealed[x] and currentRevealed[x][y] then
                 goto continue
             end
-
 
             local cellX = layout.gridStartX + (x - 1) * (layout.cellSize + cellPad)
             local cellY = layout.gridStartY + (y - 1) * (layout.cellSize + cellPad)
 
             local progress = 0
-            if cellHoverProgress[x] and cellHoverProgress[x][y] then
-                progress = cellHoverProgress[x][y]
+            if currentHover[x] and currentHover[x][y] then
+                progress = currentHover[x][y]
             end
 
             local r, g, b
+            local curCell = Cell:new(x, y, _G.CURRENT_DEPTH)
+            local isSafe = curCell.isSafe(curCell)
+
+
+
             if progress > 0 then
                 r = lerp(WHITE[1], HOVER_COLOR[1], progress)
                 g = lerp(WHITE[2], HOVER_COLOR[2], progress)
@@ -147,8 +171,13 @@ function elems.drawMines(minefield)
             else
                 r, g, b = WHITE[1], WHITE[2], WHITE[3]
             end
-            
 
+            -- if isSafe then
+            --     r, g, b = 1, 0, 0 
+            -- else
+            --     r, g, b = WHITE[1], WHITE[2], WHITE[3]
+            -- end
+            
             love.graphics.setColor(r, g, b)
             love.graphics.rectangle("fill", cellX, cellY, layout.cellSize, layout.cellSize, 3)
 
@@ -167,7 +196,7 @@ function elems.drawScore()
     local font = love.graphics.newFont(50)
     love.graphics.setFont(font)
 
-    local text = tostring(CELLS_CLICKED) .. "/5"
+    local text = tostring(CELLS_CLICKED) .. "/" .. tostring(_G.TOTAL_SAFE)
     local textWidth = font:getWidth(text)
     local textHeight = font:getHeight()
 
@@ -185,24 +214,47 @@ end
 function elems.mousePressedMines(minefield, x, y, button)
     local layout = getMinefieldSquareLayout(minefield)
     local offset = layout.cellSize + cellPad
+
+    -- ignore outside grid click
+    local gridTotalWidth = layout.mfW * layout.cellSize + (layout.mfW - 1) * cellPad
+    local gridTotalHeight = layout.mfH * layout.cellSize + (layout.mfH - 1) * cellPad
+
+    if x < layout.gridStartX or x > layout.gridStartX + gridTotalWidth or
+       y < layout.gridStartY or y > layout.gridStartY + gridTotalHeight then
+        return { safe = false, revealed = false } 
+    end
+
+
     local col = clamp(math.floor((x - layout.gridStartX) / offset) + 1, 1, layout.mfW)
     local row = clamp(math.floor((y - layout.gridStartY) / offset) + 1, 1, layout.mfH)
 
-    if elems.revealedCells[col] and elems.revealedCells[col][row] then
+    -- ignore click padding
+    local relativeMouseX = x - layout.gridStartX
+    local relativeMouseY = y - layout.gridStartY
+    if relativeMouseX % offset > layout.cellSize or relativeMouseY % offset > layout.cellSize then
+        return { safe = false, revealed = false }
+    end
+
+
+    local z = _G.CURRENT_DEPTH
+    elems.revealedCells[z] = elems.revealedCells[z] or {}
+    elems.revealedCells[z][col] = elems.revealedCells[z][col] or {}
+
+    if elems.revealedCells[z][col][row] then
         return { safe = true, revealed = false }  
     end
 
-    local curCell = minefield.cells[col][row]
+    local curCell = minefield.cells[col][row][z]
     local isSafe = curCell.isSafe(curCell)
 
     if isSafe then
-        elems.revealedCells[col] = elems.revealedCells[col] or {}
-        elems.revealedCells[col][row] = true
-        table.insert(_G.CLICKED, {col, row})
+        elems.revealedCells[z][col][row] = true
+        table.insert(_G.CLICKED, {col, row, z})
     end
 
-    cellHoverProgress[col] = cellHoverProgress[col] or {}
-    cellHoverProgress[col][row] = 0
+    cellHoverProgress[z] = cellHoverProgress[z] or {}
+    cellHoverProgress[z][col] = cellHoverProgress[z][col] or {}
+    cellHoverProgress[z][col][row] = 0
 
     return {
         safe = isSafe,             
@@ -210,7 +262,32 @@ function elems.mousePressedMines(minefield, x, y, button)
     }
 end
 
+--depth change
+function elems.drawDepth()
+    love.graphics.push()
+    local font = love.graphics.newFont(25)
+    love.graphics.setFont(font)
+    love.graphics.setColor(1,1,1)
 
+    -- text
+    local text = "Z:" .. tostring(_G.CURRENT_DEPTH)
+    local textWidth = font:getWidth(text)
+    love.graphics.print(text, _G.X * 0.823 - textWidth/2, _G.Y *0.7)
 
+    -- arrows
+    love.graphics.polygon("fill", arrowButton.left.x, arrowButton.left.y + arrowButton.left.h/2, arrowButton.left.x + arrowButton.left.w, arrowButton.left.y, arrowButton.left.x + arrowButton.left.w, arrowButton.left.y + arrowButton.left.h)
+    love.graphics.polygon("fill", arrowButton.right.x + arrowButton.right.w, arrowButton.right.y + arrowButton.right.h/2, arrowButton.right.x, arrowButton.right.y, arrowButton.right.x, arrowButton.right.y + arrowButton.right.h)
+    love.graphics.pop()
+end
+
+function elems.mousePressedDepth(x,y)
+    if x > arrowButton.left.x and x < arrowButton.left.x + arrowButton.left.w and y > arrowButton.left.y and y < arrowButton.left.y + arrowButton.left.h then
+        return "left"
+    end
+    if x > arrowButton.right.x and x < arrowButton.right.x + arrowButton.right.w and y > arrowButton.right.y and y < arrowButton.right.y + arrowButton.right.h then
+        return "right"
+    end
+    return nil
+end
 
 return elems
