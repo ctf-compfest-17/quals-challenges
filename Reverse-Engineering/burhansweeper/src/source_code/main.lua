@@ -12,7 +12,6 @@ _G.SCREEN_W, _G.SCREEN_H = love.window.getDesktopDimensions()
 _G.SCREEN_SCALE = 0.7
 _G.CLICKED = {}
 _G.WIN_MSG = "8Bn8SoOsBMEKAs9oQfh+S+nZij0i3lMabXGF9j9rycJFF6TIzC/V11eObZlwK5417BumVK6lRMJVPI9eXaV7WZGisHsjmgsKejna7RI/wPFGRPLc+xKo2CSqDv9wfdZlgkHv"
--- s3aSLfHNcLRmY7sBLpYNauOR709H/jppTQjqg01Lr64kcJ7oj2CYhxHLPs1BHOVc
 
 CELLS_CLICKED = 0
 GLOBAL_TIME = 0
@@ -22,17 +21,6 @@ hitMine = false
 function love.load()
     love.window.setMode(SCREEN_W*SCREEN_SCALE-200, SCREEN_H*SCREEN_SCALE, {vsync = true, msaa=15}) 
     _G.X, _G.Y = love.graphics.getWidth(), love.graphics.getHeight()
-
-    -- local coords = {
-    --     {14, 10},
-    --     {20, 8},
-    --     {9, 13},
-    --     {13, 20},
-    --     {12, 5}
-    -- }
-
-
-
 
     -- initialize hover state
     mf = Minefield:new(30, 30)

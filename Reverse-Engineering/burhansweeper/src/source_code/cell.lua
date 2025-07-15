@@ -5,7 +5,7 @@ function Cell:new(x, y)
         x = x, 
         y = y,
         isRevealed = false,
-        isFlagged = false,s
+        isFlagged = false,
     } or {}
     setmetatable(o, self)
     self.__index = self
