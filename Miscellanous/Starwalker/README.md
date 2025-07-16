@@ -17,7 +17,7 @@ These birds are Pissing me off...
 Tingkat kesulitan soal: medium-hard
 
 ## Hints
-* Do you really need `LOAD_FAST` tho?
+* Some specialized opcodes need caching. You can check for this yourself by dissasembling a function with a specialized opcode with `dis.dis` and turning on `show_caches`. Most of the time, this will fix crashes.
 
 ## Tags
 pycjail
