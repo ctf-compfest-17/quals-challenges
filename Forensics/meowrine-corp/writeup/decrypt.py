@@ -5,14 +5,19 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 
 def decrypt_file(encrypted_file_path, output_file_path):
-    # Hardcoded key and IV (same byte arrays as PowerShell script)
-    key = bytes([57,120,75,35,109,80,50,36,118,66,56,110,81,55,122,76])  # 16 bytes
-    iv = bytes([52,116,82,33,106,70,54,38,119,69,51,115,65,57,104,89])   # 16 bytes
-    
     try:
         # Read encrypted file
         with open(encrypted_file_path, 'rb') as f:
-            encrypted_data = f.read()
+            combined_data = f.read()
+        
+        # Extract key (first 16 bytes), encrypted data (middle), and IV (last 16 bytes)
+        key = combined_data[:16]
+        iv = combined_data[-16:]
+        encrypted_data = combined_data[16:-16]
+        
+        print(f"Key length: {len(key)} bytes")
+        print(f"IV length: {len(iv)} bytes")
+        print(f"Encrypted data length: {len(encrypted_data)} bytes")
         
         # Create AES cipher
         cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
