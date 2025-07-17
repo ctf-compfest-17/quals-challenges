@@ -7,7 +7,7 @@ by Karev
 ## Flag
 
 ```
-COMPFEST17{meow_meow_meow_meow__meow_meow_meow_meow_meoware_e233b7e475}
+COMPFEST17{powershell_script__logging_is_very_powerfull_b4ffdc5da5}
 ```
 
 ## Description
