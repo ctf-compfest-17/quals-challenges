@@ -40,7 +40,6 @@ flags:
 tags:
   - evtx
   - pcap
-  - ad1
   - persistance
 
 # Hints are used to give players a way to buy or have suggestions. They are not

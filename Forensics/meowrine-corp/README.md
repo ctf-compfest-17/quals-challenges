@@ -22,7 +22,7 @@ Tingkat kesulitan soal: easy-medium
 * hint dst.
 
 ## Tags
-ad1,pcap,evtx,persistance, powershell deobfuscation
+pcap,evtx,persistance, powershell deobfuscation
 
 ## Deployment
 
