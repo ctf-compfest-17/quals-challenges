@@ -9,7 +9,7 @@
 
 ## Step 1:
 
-From the description, we know that the admiral's computer got hacked and that the hacker managed to get access to it. The most common way a hacker gain access to a machine is via a reverse shell. In a reverse shell, the hacker will do all the commands in the victim's computer powershell window. A quick google search or asking a LLM would show that powershell commands are logged by the powershell script block logging, where the logs could be found at `Microsoft-Windows-PowerShell%4Operational.evtx`
+From the description, we know that the admiral's computer got hacked and that the hacker managed to get access to it. The most common way a hacker gain access to a machine is via a reverse shell. In a reverse shell, the hacker will do all the commands via powershell termimal. A quick google search or asking a LLM would show that powershell commands are logged by the powershell script block logging, where the logs could be found at `Microsoft-Windows-PowerShell%4Operational.evtx`
 
 
 ## Step 2:
