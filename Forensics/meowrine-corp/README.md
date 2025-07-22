@@ -27,4 +27,4 @@ pcap,evtx,persistance, powershell deobfuscation
 ## Deployment
 
 ## Notes
-Tambahan informasi untuk soal, deployment, atau serangan yang mungkin terjadi pada service soal
+The first step rely on the description of the challenge, so if you think the description is not clear enough or is making it too obvious, let me know and I'll change it
