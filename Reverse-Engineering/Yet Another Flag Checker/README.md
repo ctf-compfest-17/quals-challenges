@@ -7,7 +7,7 @@ by AdamRayyan
 ## Flag
 
 ```
-COMPFEST17{it5_sm4r7_bu7_als0_v3ry_d4ng3r0u5_ccb390b346}
+COMPFEST17{i5n7_i7_fUn_wh3n_7h3_r3v_ch4ll_i5_actu4lly_4_c0mppr0g_problem?_33c1210974}
 ```
 
 ## Description
@@ -17,7 +17,7 @@ Is it really a CTF without a flag checker challenge?
 > ^[A-Za-z0-9]+$
 > ```
 ## Difficulty
-Tingkat kesulitan soal: medium-hard
+Tingkat kesulitan soal: medium
 
 ## Hints
 -
