@@ -17,7 +17,7 @@ The PDF contained a confidential override PIN tied to the Vision Distribution Ne
 
 Although the MetaMask vault remains on disk, the password to unlock it is missing. Fortunately, there's a chance: the researcher had once copied the vault password to clipboard.
 
-passs zip nya : "soalinigasusahkokxixixixi"
+Zip password : soalinigasusahkokxixixixi
 
 ## Difficulty
 Tingkat kesulitan soal: medium-hard
