@@ -148,15 +148,15 @@ public class Based64 {
             
             int n1 = (n >> 18) & 0x3F, n2 = (n >> 12) & 0x3F, n3 = (n >> 6) & 0x3F, n4 = n & 0x3F;
             
-            System.out.printf("n = %d, n1 = %d, n2 = %d, n3 = %d, n4 = %d\n", n, n1, n2, n3, n4);
+            // System.out.printf("n = %d, n1 = %d, n2 = %d, n3 = %d, n4 = %d\n", n, n1, n2, n3, n4);
             
             int[] coord1 = kt(n1/8, n1%8);
             int[] coord2 = kt(n2/8, n2%8);
             int[] coord3 = kt(n3/8, n3%8);
             int[] coord4 = kt(n4/8, n4%8);
             
-            System.out.printf("ch1 = %d, ch2 = %d, ch3 = %d, ch4 = %d\n", TABLE[coord1[0]][coord1[1]], TABLE[coord2[0]][coord2[1]], TABLE[coord3[0]][coord3[1]], TABLE[coord4[0]][coord4[1]]);
-            System.out.println("coord1 = " + Arrays.toString(coord1) + ", coord2 = " + Arrays.toString(coord2) + ", coord3 = " + Arrays.toString(coord3) + ", coord4 = " + Arrays.toString(coord4));
+            // System.out.printf("ch1 = %d, ch2 = %d, ch3 = %d, ch4 = %d\n", TABLE[coord1[0]][coord1[1]], TABLE[coord2[0]][coord2[1]], TABLE[coord3[0]][coord3[1]], TABLE[coord4[0]][coord4[1]]);
+            // System.out.println("coord1 = " + Arrays.toString(coord1) + ", coord2 = " + Arrays.toString(coord2) + ", coord3 = " + Arrays.toString(coord3) + ", coord4 = " + Arrays.toString(coord4));
             
             char ch1 = CHARS.charAt(TABLE[coord1[0]][coord1[1]]);
             char ch2 = CHARS.charAt(TABLE[coord2[0]][coord2[1]]);
