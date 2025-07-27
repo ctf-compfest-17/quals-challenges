@@ -14,7 +14,7 @@ public class Based64 {
     static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     static final int[][] TABLE = {{22, 2, 15, 5, 19, 17, 11, 61}, {60, 59, 27, 18, 7, 23, 21, 44}, {26, 34, 58, 38, 37, 4, 14, 20}, {29, 39, 13, 56, 57, 47, 9, 46}, {54, 62, 33, 42, 48, 12, 45, 53}, {35, 55, 36, 25, 52, 41, 49, 8}, {24, 50, 16, 6, 40, 28, 3, 63}, {51, 0, 1, 30, 31, 32, 10, 43}};
     static boolean[][] visited = new boolean[8][8];
-    static int[][] map = {{-1, -1, -1, -1, -1, -1, -1, -1}, {-1, -1, -1, -1, -1, -1, -1, -1}, {-1, -1, -1, -1, -1, -1, -1, -1}, {-1, -1, -1, -1, -1, -1, -1, -1}, {-1, -1, -1, -1, -1, -1, -1, -1}, {-1, -1, -1, -1, -1, -1, -1, -1}, {-1, -1, -1, -1, -1, -1, -1, -1}, {-1, -1, -1, -1, -1, -1, -1, -1}};
+    static int[][] map = {{63, 63, 63, 63, 63, 62, 63, 63}, {63, 63, 62, 62, 61, 61, 59, 63}, {55, 63, 63, 61, 63, 62, 62, 63}, {63, 62, 61, 61, 61, 59, 61, 63}, {63, 63, 60, 61, 63, 60, 51, 54}, {62, 55, 39, 35, 61, 58, 43, 52}, {44, 48, 56, 54, 54, 31, 23, 27}, {58, 46, 48, 39, 23, 31, 33, 21}};
 
     // Count the number of onward valid knight moves from (x, y)
     static int co(List<List<Integer>> board, int x, int y, 
@@ -81,33 +81,6 @@ public class Based64 {
         }
         return false;
     }
-
-    // // Function to start the knight's tour
-    // static List<List<Integer>> knightTour(int n, int x, int y) {
-        
-        // // Initialize the board with -1 (unvisited)
-        // List<List<Integer>> board = new ArrayList<>();
-        // for (int i = 0; i < n; ++i) {
-            // List<Integer> row = new ArrayList<>(Collections.nCopies(n, -1));
-            // board.add(row);
-        // }
-
-        // // Define all 8 possible knight moves
-        // int[][] dir = {
-            // {2, 1}, {1, 2}, {-1, 2}, {-2, 1},
-            // {-2, -1}, {-1, -2}, {1, -2}, {2, -1}
-        // };
-
-        // board.get(x).set(y, 0);
-
-        // // Start solving from step 1
-        // if (!ktu(x, y, 1, n, board, dir)) {
-            // // Return {-1} if solution doesn't exist
-            // return Collections.singletonList(Collections.singletonList(-1));
-        // }
-
-        // return board; // Return completed board
-    // }
     
     static int[] kt(int x, int y) {
         List<List<Integer>> board = new ArrayList<>(8);
@@ -160,53 +133,7 @@ public class Based64 {
         return new int[] {y, x};
     }
     
-    static void ikt(int x, int y) {
-        List<List<Integer>> board = new ArrayList<>(8);
-        for (int i = 0; i < 8; ++i) {
-            List<Integer> row = new ArrayList<>(Collections.nCopies(8, -1));
-            board.add(row);
-        }
-        
-        int[][] dir = {
-            {2, 1}, {1, 2}, {-1, 2}, {-2, 1},
-            {-2, -1}, {-1, -2}, {1, -2}, {2, -1}
-        };
-        
-        board.get(x).set(y, 0);
-
-        // System.out.printf("x = %d, y = %d\n", x, y);
-        if (!ktu(x, y, 1, 8, board, dir)) return;
-        
-        boolean restart = false;
-        int target = 63;
-        while (true) {
-            for (int cx = 0; cx < 8; cx++) {
-                for (int cy = 0; cy < 8; cy++) {
-                    if (board.get(cx).get(cy) == target) {
-                        if (visited[cx][cy]) {
-                            target = (target-1) < 0 ? 0 : target-1;
-                            restart = true;
-                            break;
-                        }
-                        visited[cx][cy] = true;
-                        map[x][y] = target;
-                        // System.out.printf("x = %d, y = %d, cx = %d, cy = %d\n", x, y, cx, cy);
-                        return;
-                    }
-                }
-                
-                if (restart) {
-                    restart = false;
-                    break;
-                }
-            }
-        }
-    }
-    
     static byte[] encode(byte[] inputBytes) {
-        for (int i = 0; i < 64; i++) {
-            ikt(i/8, i%8);
-        }
         String input = new String(inputBytes);
         String pad = "";
         int c = input.length() % 3;
