@@ -2,6 +2,7 @@ import re
 
 CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 TABLE = [[22, 2, 15, 5, 19, 17, 11, 61], [60, 59, 27, 18, 7, 23, 21, 44], [26, 34, 58, 38, 37, 4, 14, 20], [29, 39, 13, 56, 57, 47, 9, 46], [54, 62, 33, 42, 48, 12, 45, 53], [35, 55, 36, 25, 52, 41, 49, 8], [24, 50, 16, 6, 40, 28, 3, 63], [51, 0, 1, 30, 31, 32, 10, 43]]
+TARGETS = [[63, 63, 63, 63, 63, 62, 63, 63], [63, 63, 62, 62, 61, 61, 59, 63], [55, 63, 63, 61, 63, 62, 62, 63], [63, 62, 61, 61, 61, 59, 61, 63], [63, 63, 60, 61, 63, 60, 51, 54], [62, 55, 39, 35, 61, 58, 43, 52], [44, 48, 56, 54, 54, 31, 23, 27], [58, 46, 48, 39, 23, 31, 33, 21]]
 
 def countOptions(grid, x, y, dir):
     """
@@ -32,8 +33,6 @@ def getSortedMoves(grid, x, y, dir):
     # Sort moves with least onward options first (Warnsdorff's rule)
     options.sort()
     return options
-
-visited = set()
 
 def knightTourUtil(n, x, y, grid, step, dir):
     """
@@ -103,63 +102,35 @@ for x in range(8):
         else:
             done = False
             restart = False
-            target = 63
-            # for cx in range(8):
-                # for cy in range(8):
-                    # if tour[cx][cy] == target:
-                        # # if (cx, cy) in visited:
-                            # # target = max(0, target-1)
-                            # # restart = True
-                            # # break
-                        # mapping[(x, y)] = (cx, cy)
-                        # # visited.add((cx, cy))
-                        # done = True
-                        # # target = 63
-                        # break
-                # if done: break
-            while not done:
-                for cx in range(8):
-                    for cy in range(8):
-                        if tour[cx][cy] == target:
-                            if (cx, cy) in visited:
-                                target = max(0, target-1)
-                                restart = True
-                                break
-                            mapping[(x, y)] = (cx, cy)
-                            visited.add((cx, cy))
-                            done = True
-                            target = 63
+            target = TARGETS[x][y]
+            for cx in range(8):
+                for cy in range(8):
+                    if tour[cx][cy] == target:
+                        if (cx, cy) in visited:
+                            target = max(0, target-1)
+                            restart = True
                             break
-                    if done: break
-                    if restart:
-                        restart = False
+                        mapping[(x, y)] = (cx, cy)
+                        visited.add((cx, cy))
+                        done = True
+                        target = 63
                         break
+                
+                if done: break
             
             if not done:
                 mapping[(x, y)] = (y, x)
 
 rev_map = {v: k for k, v in mapping.items()}
-# for k, v in mapping.items():
-    # rev_map[v] = rev_map.get(v, []) + [k]
 
 tmap = {}
 for x in range(8):
     for y in range(8):
         tmap[TABLE[x][y]] = (x, y)
 
-enc = "EYKbd8r0dOEHbLIHrio+MRmYM0K93n6Xv9bBaRY9aLEgaRYYv9b+MimH3OsOhZNSbG6Bb92g+E=="
-pad = enc.count("=")
-# enc = enc.replace("=", "A")
-# possible = []
+enc = "eKEe6Nd6zHdw7KbwvqravgMbaqM3bk33wsvrcLawMgawcYabw1vav4MwaK3bhchhrmbrwJbwxE+x"
 dec = ""
 rnd = 0
-# pat = re.compile(r"COMPFEST17{\w*}?", flags=re.ASCII)
-# asc3 = re.compile(r"[a-zA-Z0-9_\{\}]{3}", flags=re.ASCII)
-# asc2 = re.compile(r"[a-zA-Z0-9_\{\}]{2}", flags=re.ASCII)
-# asc1 = re.compile(r"[a-zA-Z0-9_\{\}]", flags=re.ASCII)
-# isascii3 = lambda s: asc3.search(s)
-# isascii2 = lambda s: asc2.search(s)
-# isascii1 = lambda s: asc1.search(s)
 for c in range(0, len(enc), 4):
     ch1 = CHARS.index(enc[c])
     ch2 = CHARS.index(enc[c+1])
@@ -176,23 +147,30 @@ for c in range(0, len(enc), 4):
     n1 = (8*tmp1[0] + tmp1[1])
     tmp2 = rev_map[tmap[ch2]]
     n2 = (8*tmp2[0] + tmp2[1])
-    if ch3 == None:
-        n = (n1 << 18) + (n2 << 12)
-        dec += chr((n >> 16) & 0xFF)
-        break
+    # if ch3 == None:
+        # n = (n1 << 18) + (n2 << 12)
+        # dec += chr((n >> 16) & 0xFF)
+        # break
 
     tmp3 = rev_map[tmap[ch3]]
     n3 = (8*tmp3[0] + tmp3[1])
-    if ch4 == None:
-        n = (n1 << 18) + (n2 << 12) + (n3 << 6)
-        dec += chr((n >> 16) & 0xFF) + chr((n >> 8) & 0xFF)
-        break
+    # if ch4 == None:
+        # n = (n1 << 18) + (n2 << 12) + (n3 << 6)
+        # dec += chr((n >> 16) & 0xFF) + chr((n >> 8) & 0xFF)
+        # break
     
     tmp4 = rev_map[tmap[ch4]]
     n4 = (8*tmp4[0] + tmp4[1])
 
-    n = (n1 << 18) + (n2 << 12) + (n3 << 6) + n4
-    dec += chr((n >> 16) & 0xFF) + chr((n >> 8) & 0xFF) + chr(n & 0xFF)
+    p1 = (n2 & 0b001100) >> 2
+    p3 = (n2 & 0b110000) >> 4
+    p4 = n2 & 0b000011
+    n1 = (n1 << 2) + p1
+    n3 = (n3 << 2) + p3
+    n4 = (n4 << 2) + p4
+    dec += chr(n3) + chr(n1) + chr(n4)
+    # n = (n1 << 18) + (n2 << 12) + (n3 << 6) + n4
+    # dec += chr((n >> 16) & 0xFF) + chr((n >> 8) & 0xFF) + chr(n & 0xFF)
 
     rnd += 1
 
