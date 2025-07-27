@@ -128,8 +128,8 @@ for x in range(8):
     for y in range(8):
         tmap[TABLE[x][y]] = (x, y)
 
-enc = "eKEe6Nd6zHdw7KbwvqravgMbaqM3bk33wsvrcLawMgawcYabw1vav4MwaK3bhchhrmbrwJbwxE+x"
-dec = ""
+enc = open("flag.jpg.enc").read()
+dec = b""
 rnd = 0
 for c in range(0, len(enc), 4):
     ch1 = CHARS.index(enc[c])
@@ -141,7 +141,7 @@ for c in range(0, len(enc), 4):
     if enc[c+3] != "=":
         ch4 = CHARS.index(enc[c+3])
     
-    print(f"{rnd = }, {ch1 = }, {ch2 = }, {ch3 = }, {ch4 = }")
+    # print(f"{rnd = }, {ch1 = }, {ch2 = }, {ch3 = }, {ch4 = }")
     
     tmp1 = rev_map[tmap[ch1]]
     n1 = (8*tmp1[0] + tmp1[1])
@@ -168,10 +168,10 @@ for c in range(0, len(enc), 4):
     n1 = (n1 << 2) + p1
     n3 = (n3 << 2) + p3
     n4 = (n4 << 2) + p4
-    dec += chr(n3) + chr(n1) + chr(n4)
+    dec += n3.to_bytes() + n1.to_bytes() + n4.to_bytes()
     # n = (n1 << 18) + (n2 << 12) + (n3 << 6) + n4
     # dec += chr((n >> 16) & 0xFF) + chr((n >> 8) & 0xFF) + chr(n & 0xFF)
 
     rnd += 1
 
-print(dec)
+open("out.jpg", "wb").write(dec)

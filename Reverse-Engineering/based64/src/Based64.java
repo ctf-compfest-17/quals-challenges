@@ -133,7 +133,11 @@ public class Based64 {
     }
     
     static byte[] encode(byte[] inputBytes) {
-        String input = new String(inputBytes);
+        char[] inputChars = new char[inputBytes.length];
+        for (int i = 0; i < inputBytes.length; i++) {
+            inputChars[i] = (char)(inputBytes[i] & 0xFF);
+        }
+        String input = new String(inputChars);
         String pad = "";
         int c = input.length() % 3;
         for (; c > 0 && c < 3; c++) {
