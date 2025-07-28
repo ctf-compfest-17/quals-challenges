@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -132,11 +133,22 @@ public class Based64 {
         return new int[] {y, x};
     }
     
-    static byte[] encode(byte[] inputBytes) {
-        char[] inputChars = new char[inputBytes.length];
-        for (int i = 0; i < inputBytes.length; i++) {
-            inputChars[i] = (char)(inputBytes[i] & 0xFF);
+    static void s(char[] arr) {
+        int seed = 0;
+        for (char a : arr) {
+            seed ^= a;
         }
+        Random rnd = new Random(seed);
+        for (int i = arr.length - 1; i > 0; i--) {
+            int idx = rnd.nextInt(i+1);
+            char tmp = arr[idx];
+            arr[idx] = arr[i];
+            arr[i] = tmp;
+        }
+    }
+    
+    static byte[] encode(char[] inputChars) {
+        s(inputChars);
         String input = new String(inputChars);
         String pad = "";
         int c = input.length() % 3;
@@ -184,8 +196,12 @@ public class Based64 {
             String outputFileName = inputFileName + ".enc";
 
             byte[] fileBytes = Files.readAllBytes(Paths.get(inputFileName));
+            char[] inputChars = new char[fileBytes.length];
+            for (int i = 0; i < fileBytes.length; i++) {
+                inputChars[i] = (char)(fileBytes[i] & 0xFF);
+            }
             
-            byte[] encodedBytes = encode(fileBytes);
+            byte[] encodedBytes = encode(inputChars);
             Files.write(Paths.get(outputFileName), encodedBytes);
             
             System.out.println("File encoded successfully. Output: " + outputFileName);
