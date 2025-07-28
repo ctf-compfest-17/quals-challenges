@@ -31,6 +31,11 @@ inst(COPY, (bottom, unused[oparg-1] -- bottom, unused[oparg-1], top)) {
 
 Dengan ini, kita dapat merecover leftover builtins dan globals dengan mengakses uninitialized elements di stack.
 
+
+# Specialized Opcodes for Substitutions
+
+Karena beberapa opcodes seperti `POP_TOP` dan `CALL` yang esensial untuk bytecode itu diban, kita bisa menggantikannya dengan specialized opcodes seperti `POP_JUMP_IF_NONE` untuk `POP_TOP` dan `CALL_NO_KW_LEN` untuk `CALL`. Specialized opcodes tersebut jika tidak memenuhi syarat penggunaan yang benar akan devolve ke regular opcodes.
+
 # Steps
 1. Load `__builtins__.__dict__` menggunakan `COPY 5` dan selanjutnya `COPY 6`. Builtins diload 2 kali buat setup `MATCH_KEYS` agar bisa mengambil values dari dict.
 2. `UNPACK_EX` -> `BUILD_TUPLE` -> `MATCH_KEYS` -> `UNPACK_EX` basically unpack values dari dict ke stack. Setelah itu kita taro fungsi `print` di TOS dengan menggunakan `SWAP`
