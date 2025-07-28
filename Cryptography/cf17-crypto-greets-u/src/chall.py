@@ -5,7 +5,7 @@ with open('flag.txt', 'rb') as f:
     flag = f.read().strip()
 
 m = bytes_to_long(flag)
-p = getPrime(30)
+p = getPrime(32)
 e = 5
 k = 100
 n = p**k
