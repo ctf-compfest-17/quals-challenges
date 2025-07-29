@@ -13,7 +13,7 @@ COMPFEST17{thanks_to_maple3142_and_soon_haari_for_the_original_challenge_inspira
 have u played Free Fire (also known as FF)? btw try my new encryption scheme! it used 17 keys because right now it is COMPFEST 17!!!
 
 ## Difficulty
-Tingkat kesulitan soal: medium-hard
+Tingkat kesulitan soal: hard
 
 ## Hints
 * hint 1
