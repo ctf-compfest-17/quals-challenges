@@ -16,7 +16,7 @@ def generate_given(bound, mod, k, n, priv_key):
     for i in range(k):
         row = []
         for i in range(n):
-            row.append(random.randint(0, int(math.sqrt(mod // 512))))
+            row.append(random.randint(1, int(math.sqrt(mod // 1024))))
         a.append(row)
 
     b = []
@@ -44,15 +44,16 @@ def encrypt(msg, key):
     return ct
 
 if __name__ == "__main__":
-    k, n = 32, 32
-    mod = getPrime(100)
+    k, n = 32, 64
+    mod = getPrime(512)
     bound = int(math.sqrt(mod//2))
 
     private_key = generate_key(n)
     a, b = generate_given(bound, mod, k, n, private_key)
 
     ciphertext = encrypt(flag, private_key)
-    print("Ciphertext: " + ciphertext.hex())
-    print("Modulo: " + str(mod))
-    print("Given1: " + ", ".join([str(i) for i in a]))
-    print("Given2: " + ", ".join([str(i) for i in b]))
+    with open('encrypted.txt', 'w') as f:
+        f.write("Ciphertext: " + ciphertext.hex() + "\n")
+        f.write("Modulo: " + str(mod) + "\n")
+        f.write("Given1: " + ", ".join([str(i) for i in a]) + "\n")
+        f.write("Given2: " + ", ".join([str(i) for i in b]) + "\n")
