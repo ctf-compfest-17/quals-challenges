@@ -92,62 +92,6 @@ def knightTour(n, x, y):
     empty = sum(row.count(0) for row in grid)
     return grid if empty == 1 else [[-1]]
 
-class JavaRandom:
-    def __init__(self, seed=None):
-        if seed is None:
-            import time
-            seed = int(time.time() * 1000)  # Similar to Java's default seeding
-        self.seed = self.initial_scramble(seed)
-
-    def initial_scramble(self, seed):
-        return (seed ^ 0x5DEECE66D) & ((1 << 48) - 1)
-
-    def next(self, bits):
-        self.seed = (self.seed * 0x5DEECE66D + 0xB) & ((1 << 48) - 1)
-        return (self.seed >> (48 - bits)) & 0xFFFFFFFF
-
-    # def next_int(self, bound=None):
-        # if bound is None:
-            # return self.next(32)  # Standard 32-bit int
-        # if bound <= 0:
-            # raise ValueError("bound must be positive")
-        # # Java's algorithm for bounded nextInt
-        # bits = self.next(31)
-        # val = bits % bound
-        # while (bits - val + bound - 1) < 0:
-            # bits = self.next(31)
-            # val = bits % bound
-        # return val
-
-    def next_int(self, bound=None):
-        if bound is None:
-            return self.next(32)  # Standard 32-bit int
-        if bound <= 0:
-            raise ValueError("bound must be positive")
-        
-        r = self.next(31)  # Java uses 31 bits for bounded nextInt
-        m = bound - 1
-        if (bound & m) == 0:  # Power of 2: faster path
-            return (bound * r) >> 31
-        else:
-            # Rejection-based correction to avoid modulo bias
-            u = r
-            while True:
-                val = u % bound
-                if u - val + m >= 0:
-                    return val
-                u = self.next(31)
-
-    # Additional methods (similar to Java's Random)
-    def next_long(self):
-        return (self.next(32) << 32) + self.next(32)
-
-    def next_boolean(self):
-        return self.next(1) != 0
-
-    def next_float(self):
-        return self.next(24) / (1 << 24)
-
 mapping = {}
 visited = set()
 for x in range(8):
@@ -184,8 +128,9 @@ for x in range(8):
     for y in range(8):
         tmap[TABLE[x][y]] = (x, y)
 
-enc = "MnbaMT3hEIwrv1waw9d3vxwrw+cebKacvqba6rbevgvMhZwbaTr3wshrdgabwa+7a36MwYbzxg3x"
-dec = ""
+with open("flag.jpg.enc") as f:
+    enc = f.read()
+dec = b""
 rnd = 0
 for c in range(0, len(enc), 4):
     ch1 = CHARS.index(enc[c])
@@ -224,7 +169,7 @@ for c in range(0, len(enc), 4):
     n1 = (n1 << 2) + p1
     n3 = (n3 << 2) + p3
     n4 = (n4 << 2) + p4
-    dec += chr(n3) + chr(n1) + chr(n4)
+    dec += (n3).to_bytes() + (n1).to_bytes() + (n4).to_bytes()
     # n = (n1 << 18) + (n2 << 12) + (n3 << 6) + n4
     # dec += chr((n >> 16) & 0xFF) + chr((n >> 8) & 0xFF) + chr(n & 0xFF)
 
@@ -232,16 +177,40 @@ for c in range(0, len(enc), 4):
 
 seed = 0
 for c in dec:
-    seed ^= ord(c)
-rnd = JavaRandom(seed)
-idxs = []
-for i in range(len(dec[:-2])-1, -1, -1):
-    idxs.append(rnd.next_int(i+1))
+    seed ^= c
+
+java_src = f"""
+import java.util.Random;
+
+public class Tmp {{
+    public static void main(String[] args) {{
+        int len = {len(dec)};
+        Random rnd = new Random({seed});
+        int[] idxs = new int[len];
+        for (int i = len-1; i > 0; i--) {{
+            idxs[i] = rnd.nextInt(i+1);
+        }}
+        System.out.println(java.util.Arrays.toString(idxs));
+    }}
+}}
+"""
+
+with open("Tmp.java", "w") as f:
+    f.write(java_src)
+
+import subprocess
+
+idxs = eval(subprocess.run(["java", "Tmp.java"], capture_output=True).stdout)
+
+import os
+os.remove("Tmp.java")
 
 dec = list(dec)
-for i, idx in enumerate(idxs[::-1]):
+for i, idx in enumerate(idxs):
     # print(f"{i = }, {idx = }")
     tmp = dec[idx]
     dec[idx] = dec[i]
     dec[i] = tmp
-print("".join(dec))
+
+with open("out.jpg", "wb") as f:
+    f.write(bytes(dec))
