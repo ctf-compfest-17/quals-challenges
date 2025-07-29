@@ -1,0 +1,116 @@
+_G.love = require("love")
+
+local Cell          = require("cell")
+local Minefield     = require("minefield")
+local utils         = require("lib.utils")
+local elems         = require("elems")
+local burhan        = require("burhan")
+local enc           = require("enc")
+
+_G.SCREEN_W, _G.SCREEN_H = love.window.getDesktopDimensions()
+_G.SCREEN_SCALE = 0.7
+_G.CLICKED = {}
+_G.WIN_MSG = "6ktTOQqLL6ltQzBqNFy0qsIixCMlCLeh3f1tQ2L+oPGSZAHv/f+UxeGEngJC0Fvb3XYuNnmvTM9tFXg6Wgb9"
+_G.SIZE = 32
+_G.CURRENT_DEPTH = 1
+_G.TOTAL_SAFE = 170
+
+CELLS_CLICKED = 0
+GLOBAL_TIME = 0
+TIMEOUT = 0
+hitMine = false
+
+function love.load()
+    love.window.setMode(SCREEN_W*SCREEN_SCALE-200, SCREEN_H*SCREEN_SCALE, {vsync = true, msaa=15}) 
+    _G.X, _G.Y = love.graphics.getWidth(), love.graphics.getHeight()
+    -- ui shit
+    elems.initUI()
+    
+    -- initialize hover state
+    mf = Minefield:new(_G.SIZE, _G.SIZE, _G.SIZE)
+    mf:init(mf)
+    elems.initializeHover(mf)
+    -- initialize shader
+    bgShader = love.graphics.newShader("shaders/bgshader.frag")
+    
+    -- local key = enc.hash({{12,22,20},{11,9,15},{21,14,29},{24,4,24},{9,20,14},{6,20,3},{22,30,13},{3,14,30},{3,5,9},{1,22,32},{18,1,24},{1,7,22},{26,22,26},{15,11,7},{26,20,8},{3,18,7},{6,30,7},{25,15,8},{29,22,15},{16,5,18},{6,5,17},{2,1,27},{25,4,8},{26,30,18},{13,5,8},{6,28,28},{7,11,27},{25,9,19},{23,18,29},{11,14,4},{6,24,15},{27,18,6},{3,22,18},{12,2,7},{21,32,30},{14,24,13},{19,18,17},{11,13,26},{8,13,7},{12,26,10},{9,30,20},{32,17,17},{8,21,8},{19,3,13},{29,8,27},{4,16,20},{16,12,7},{1,29,30},{24,20,18},{24,30,29},{11,31,13},{5,10,13},{26,10,29},{31,20,20},{13,17,15},{2,19,16},{3,22,20},{13,19,30},{19,26,23},{4,2,11},{26,30,4},{11,24,28},{23,29,18},{29,13,7},{29,25,6},{3,29,25},{23,2,28},{19,14,24},{20,11,12},{18,11,20},{15,12,3},{2,17,3},{6,15,7},{12,14,4},{20,24,12},{17,9,15},{24,20,32},{2,25,25},{18,29,19},{24,1,6},{23,11,3},{24,11,17},{22,15,6},{31,21,14},{28,14,12},{17,32,4},{8,22,23},{29,19,22},{1,13,8},{31,6,13},{3,26,10},{25,18,31},{20,22,8},{7,9,27},{11,9,5},{27,13,7},{25,14,6},{11,9,23},{13,1,10},{7,5,23},{4,19,4},{1,11,10},{9,10,21},{17,31,23},{31,30,10},{25,18,6},{19,4,15},{30,13,16},{24,6,32},{14,23,30},{23,21,18},{20,22,1},{18,9,9},{14,30,8},{23,7,10},{7,19,30},{6,14,28},{10,31,13},{27,25,26},{30,31,24},{11,28,11},{5,31,2},{25,12,2},{26,19,29},{2,31,24},{31,2,11},{27,3,7},{17,7,22},{32,23,30},{3,25,4},{16,17,12},{10,21,2},{27,6,12},{6,1,9},{9,17,1},{9,18,8},{18,31,5},{4,23,15},{15,28,24},{12,1,19},{19,3,3},{20,19,4},{12,6,18},{18,18,32},{2,20,17},{26,18,11},{31,28,32},{10,6,13},{30,10,6},{16,22,1},{30,13,2},{17,17,1},{22,28,28},{20,15,27},{28,31,16},{5,28,8},{32,10,16},{11,24,27},{21,29,8},{4,18,21},{4,22,19},{32,11,24},{4,15,13},{32,12,22},{24,26,23},{10,24,2},{30,12,15},{1,2,23},{26,16,7},{2,29,22}})
+    -- local enc = enc.encrypt("COMPFEST17{i_m4y_h4v3_4_s3v3r3_4dd1c710n_to_b4l4tr0_5a021a3917}", key)
+    -- print(enc)
+end 
+
+function love.update(dt)
+    GLOBAL_TIME = GLOBAL_TIME + dt
+    elems.updateHoverState(mf, dt)
+
+    if hitMine == true then
+        TIMEOUT = TIMEOUT + dt
+        if TIMEOUT > 1 then
+            love.event.quit()
+        end
+    else
+        TIMEOUT = 0
+    end
+
+end
+
+function love.draw()
+
+    -- validate shader
+    if bgShader then 
+        love.graphics.setShader(bgShader)
+        bgShader:send("u_time", GLOBAL_TIME)
+        bgShader:send("u_resolution", {_G.X, _G.Y})
+        love.graphics.rectangle("fill", 0,0, _G.X, _G.Y)
+        love.graphics.setShader()
+    else
+        love.graphics.setBackgroundColor(0x20/255, 0x20/255, 0x20/255)
+        love.graphics.clear(love.graphics.getBackgroundColor())
+    end
+
+    elems.drawScore()
+    elems.drawMineBG()
+    elems.drawMines(mf)
+    elems.drawDepth()
+    love.graphics.setColor(1,1,1)
+
+    if hitMine then
+        burhan.draw()
+    end
+
+    if CELLS_CLICKED == _G.TOTAL_SAFE then
+        love.graphics.setColor(0,0,0)
+        love.graphics.rectangle("fill", 0,0,_G.X,_G.Y)
+        enc.drawWin()
+    end
+
+end
+
+function love.mousepressed(x, y, button)
+   if button == 1 and not hitMine then
+        -- depth change; check arrow click
+        local arrowClicked = elems.mousePressedDepth(x, y)
+        if arrowClicked == "left" then
+            _G.CURRENT_DEPTH = math.max(1, _G.CURRENT_DEPTH - 1)
+            return
+        elseif arrowClicked == "right" then
+            _G.CURRENT_DEPTH = math.min(_G.SIZE, _G.CURRENT_DEPTH + 1)
+            return
+        end
+
+        local res = elems.mousePressedMines(mf, x, y, button)
+
+        if res.revealed then
+            CELLS_CLICKED = CELLS_CLICKED + 1
+
+            if not res.safe then
+                hitMine = true
+            end
+        end
+
+        -- print("CELLS_CLICKED:", CELLS_CLICKED)
+        -- print("hitMine:", hitMine)
+    end
+end
+
+
+
