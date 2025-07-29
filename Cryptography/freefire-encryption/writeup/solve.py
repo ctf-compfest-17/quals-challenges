@@ -1,9 +1,9 @@
 from sage.all import *
-from pwn import process
+from pwn import *
 import os, ast
 from lll_cvp import reduce_mod_p
 
-io = process(['python', 'chall.py'])
+io = remote("localhost", 1000)
 
 p = 2**127 - 1
 k = 64
