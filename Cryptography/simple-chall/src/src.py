@@ -55,5 +55,5 @@ if __name__ == "__main__":
     with open('encrypted.txt', 'w') as f:
         f.write("Ciphertext: " + ciphertext.hex() + "\n")
         f.write("Modulo: " + str(mod) + "\n")
-        f.write("Given1: " + ", ".join([str(i) for i in a]) + "\n")
-        f.write("Given2: " + ", ".join([str(i) for i in b]) + "\n")
+        f.write("Given1: [" + ", ".join([str(i) for i in a]) + "]\n")
+        f.write("Given2: [" + ", ".join([str(i) for i in b]) + "]\n")
