@@ -9,7 +9,7 @@ RUN apt-get update && \
     pip install py-ecc pycryptodome && \
     rm -rf /var/lib/apt/lists/*
 
-COPY src/chall.py .
+COPY src/* .
 
 USER sage
 
