@@ -17,7 +17,7 @@ These birds are Pissing me off...
 Tingkat kesulitan soal: medium-hard
 
 ## Hints
-> **Note: ** Hint 1 langsung dirilis, hint selainnya jangan.
+> ~~Note: Hint 1 langsung dirilis, hint selainnya jangan.~~ Actually jangan deh, I wanna see where this goes. Ini hint buat jaga jaga saja
 * Some specialized opcodes need caching. You can check for this yourself by dissasembling a function with a specialized opcode with `dis.dis` and turning on `show_caches`. Most of the time, this will fix crashes.
 Example code:
 ```python
