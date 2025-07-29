@@ -16,7 +16,7 @@ def generate_given(bound, mod, k, n, priv_key):
     for i in range(k):
         row = []
         for i in range(n):
-            row.append(random.randint(1, int(math.sqrt(mod // 1024))))
+            row.append(random.randint(1, int(math.sqrt(mod // 4096))))
         a.append(row)
 
     b = []
@@ -44,8 +44,8 @@ def encrypt(msg, key):
     return ct
 
 if __name__ == "__main__":
-    k, n = 32, 64
-    mod = getPrime(512)
+    k, n = 64, 128
+    mod = getPrime(1024)
     bound = int(math.sqrt(mod//2))
 
     private_key = generate_key(n)
