@@ -139,7 +139,8 @@ print(divis)
 A = [108, 109, 68, 93, 62, 63, 64, 25, 60, 61, 144, 1, 171, 39, 47, 27, 60, 71, 74, 87, 90, 95, 97, 100, 101, 106, 116, 124, 125, 127, 136, 137, 138, 141, 143, 175, 176, 262, 263, 264, 265, 266, 66, 67, 70, 72, 73, 76, 77, 78, 79, 80, 81, 82, 84, 86, 88, 111, 112, 113, 148, 153, 154, 158, 159, 160]
 assert (set(A) & set(code)) == set()
 
-p = process(["python", "chal.py"])
+# p = process(["python", "../src/chal.py"])
+p = remote('localhost', 1225)
 dis(code, adaptive=1, show_caches=1)
 b64code = b64encode(code)
 payload = open('payload', 'w')
