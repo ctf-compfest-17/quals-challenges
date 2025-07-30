@@ -62,13 +62,13 @@ def f(): pass
 
 def get_stdout(f):
     out = io.StringIO()
-    with redirect_stdout(out):
-        safe = globals().copy()
-        for func in banned_funcs:
-            if func in safe:
-                del safe[func]
-        eval(f.__code__, safe, safe)
-    return out.getvalue().strip()
+    # with redirect_stdout(out):
+    safe = globals().copy()
+    for func in banned_funcs:
+        if func in safe:
+            del safe[func]
+    print(eval(f.__code__, safe, safe))
+    # return out.getvalue().strip()
 
 def print_flag():
     with open('./flag.txt') as f:
@@ -85,11 +85,12 @@ except:
     print('This base64 is Pissing me off...')
     exit() 
 
+f.__code__ = f.__code__.replace(co_code=code, co_consts=(), co_names=())
+print(get_stdout(f))
 if not good(code):
     print('These characters are Pissing me off...')
     exit()
 
-f.__code__ = f.__code__.replace(co_code=code, co_consts=(), co_names=())
 
 out = get_stdout(f)
 if str(out) == str(code):
