@@ -63,7 +63,7 @@ def get_stdout(f):
     with redirect_stdout(out), redirect_stderr(err):
         safe = globals().copy()
         safe['__builtins__'] = {'print': print}
-        print(eval(f.__code__, safe, safe))
+        eval(f.__code__, safe, safe)
     return out.getvalue().strip()
 
 def print_flag():
