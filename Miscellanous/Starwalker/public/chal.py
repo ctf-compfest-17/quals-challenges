@@ -49,7 +49,7 @@ banned_op = [
 ]
 
 banned_funcs = [
-    'exec', 'eval', 'compile', 'globals', 'locals', 'dir', 'breakpoint'
+    'exec', 'eval', 'compile', 'globals', 'locals', 'dir', 'breakpoint',
     'getattr', 'setattr', 'delattr', 'hasattr', 'input', 'open', 'help', 'license'
 ]
 
@@ -64,7 +64,7 @@ def get_stdout(f):
     out = io.StringIO()
     err = io.StringIO()
     with redirect_stdout(out), redirect_stderr(err):
-        safe = globals().copy()
+        safe = __builtins__.__dict__.copy()
         for func in banned_funcs:
             if func in safe:
                 del safe[func]

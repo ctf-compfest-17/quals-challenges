@@ -40,7 +40,9 @@ banner = """
 
 These birds are Pissing me off...           
 """
-banned_op = [
+
+# I'll ban both opcodes AND opargs >:)
+banned_bytes = [
     'IMPORT_NAME', 'IMPORT_FROM', 'GET_ITER', 
     'FOR_ITER', 'FOR_ITER_LIST', 'FOR_ITER_TUPLE', 'FOR_ITER_RANGE',
     'BINARY_SUBSCR', 'STORE_SUBSCR', 'DELETE_SUBSCR',
@@ -48,15 +50,10 @@ banned_op = [
     'CALL', 'CALL_NO_KW_BUILTIN_FAST', 'CALL_NO_KW_STR_1',
 ]
 
-banned_funcs = [
-    'exec', 'eval', 'compile', 'globals', 'locals', 'dir', 'breakpoint'
-    'getattr', 'setattr', 'delattr', 'hasattr', 'input', 'open', 'help', 'license'
-]
-
 # No LOAD and STORE for you
 for o in op.keys():
     if o.startswith("LOAD") or o.startswith("STORE"):
-        banned_op.append(o)
+        banned_bytes.append(o)
 
 def f(): pass
 
@@ -65,10 +62,8 @@ def get_stdout(f):
     err = io.StringIO()
     with redirect_stdout(out), redirect_stderr(err):
         safe = globals().copy()
-        for func in banned_funcs:
-            if func in safe:
-                del safe[func]
-        eval(f.__code__, safe, safe)
+        safe['__builtins__'] = {'print': print}
+        print(eval(f.__code__, safe, safe))
     return out.getvalue().strip()
 
 def print_flag():
@@ -76,7 +71,7 @@ def print_flag():
         print(f'Heres the    flag: {f.read()}')
 
 def good(s):
-    return 50 <= len(s) <= 100 and sum([x for x in s]) % 17 == 0 and all([op[i] not in map(int, s) for i in banned_op])
+    return 50 <= len(s) <= 100 and sum([x for x in s]) % 17 == 0 and all([op[i] not in map(int, s) for i in banned_bytes])
 
 print(banner)
 
@@ -91,7 +86,6 @@ if not good(code):
     exit()
 
 f.__code__ = f.__code__.replace(co_code=code, co_consts=(), co_names=())
-
 out = get_stdout(f)
 if str(out) == str(code):
     print_flag()
