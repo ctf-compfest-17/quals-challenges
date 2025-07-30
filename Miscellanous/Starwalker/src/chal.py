@@ -44,13 +44,13 @@ banned_op = [
     'IMPORT_NAME', 'IMPORT_FROM', 'GET_ITER', 
     'FOR_ITER', 'FOR_ITER_LIST', 'FOR_ITER_TUPLE', 'FOR_ITER_RANGE',
     'BINARY_SUBSCR', 'STORE_SUBSCR', 'DELETE_SUBSCR',
-    'EXTENDED_ARG', 'POP_TOP', 'POP_EXCEPT', 
+    'EXTENDED_ARG', 'POP_TOP', 'POP_EXCEPT', 'PUSH_NULL',
     'CALL', 'CALL_NO_KW_BUILTIN_FAST', 'CALL_NO_KW_STR_1',
 ]
 
 banned_funcs = [
-    'exec', 'eval', 'compile', 'globals', 'locals', 'dir',
-    'getattr', 'setattr', 'delattr', 'hasattr', 'input', 'open'
+    'exec', 'eval', 'compile', 'globals', 'locals', 'dir', 'breakpoint'
+    'getattr', 'setattr', 'delattr', 'hasattr', 'input', 'open', 'help', 'license'
 ]
 
 # No LOAD and STORE for you
