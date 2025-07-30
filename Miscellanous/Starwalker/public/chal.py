@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3.12
 import base64
 import io
-from contextlib import redirect_stdout
+from contextlib import redirect_stdout, redirect_stderr
 from dis import _all_opmap as op
 
 banner = """
@@ -44,7 +44,7 @@ banned_op = [
     'IMPORT_NAME', 'IMPORT_FROM', 'GET_ITER', 
     'FOR_ITER', 'FOR_ITER_LIST', 'FOR_ITER_TUPLE', 'FOR_ITER_RANGE',
     'BINARY_SUBSCR', 'STORE_SUBSCR', 'DELETE_SUBSCR',
-    'EXTENDED_ARG', 'POP_TOP', 'POP_EXCEPT', 'PUSH_NULL',
+    'EXTENDED_ARG', 'POP_TOP', 'POP_EXCEPT',
     'CALL', 'CALL_NO_KW_BUILTIN_FAST', 'CALL_NO_KW_STR_1',
 ]
 
@@ -62,7 +62,8 @@ def f(): pass
 
 def get_stdout(f):
     out = io.StringIO()
-    with redirect_stdout(out):
+    err = io.StringIO()
+    with redirect_stdout(out), redirect_stderr(err):
         safe = globals().copy()
         for func in banned_funcs:
             if func in safe:
