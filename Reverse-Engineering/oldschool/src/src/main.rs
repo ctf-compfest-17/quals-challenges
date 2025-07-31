@@ -117,11 +117,13 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
                     let len = mask - 2;
 
                     let n_bytes = [
-                        (len >> 24) as u8, (val >> 16) as u8, (val >> 8) as u8, (val & 0xFF) as u8,
+                        (len >> 24) as u8, (len >> 16) as u8, (len >> 8) as u8, (len & 0xFF) as u8,
                         (val >> 24) as u8, (val >> 16) as u8, (val >> 8) as u8, (val & 0xFF) as u8,
                     ];
 
                     // bit manip stuff
+                    // println!("val = {val}, len = {len}, mask = {mask:032b}");
+                    // std::process::exit(0);
                     cur_buffer |= n_bytes[0] >> placed_bits;
                     output[last_idx] = cur_buffer;
                     let inserted_bits = 8 - placed_bits;
@@ -130,6 +132,9 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
                         output.push(cur_buffer);
                         last_idx += 1;
                     }
+                    cur_buffer = n_bytes[7] << inserted_bits;
+                    output.push(cur_buffer);
+                    last_idx += 1;
                     placed_bits = inserted_bits;
                     break 'rle;
                 }
