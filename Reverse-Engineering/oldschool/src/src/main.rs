@@ -1,6 +1,7 @@
 use std::env;
 use std::fs;
 use std::time::{SystemTime, UNIX_EPOCH};
+use std::path::Path;
 
 fn check_validity(width: u32, height: u32, bpp: u16) -> bool {
     if height > (i32::MAX as u32) {
@@ -51,8 +52,8 @@ fn delta_encode_plane(plane: &[u8]) -> Vec<u8> {
 
 fn xor_planes(plane_a: &[u8], plane_b: &[u8]) -> Vec<u8> {
     let mut output = Vec::with_capacity(plane_a.len());
-    for (i, (a, b)) in plane_a.iter().zip(plane_b).enumerate() {
-        output[i] = a ^ b;
+    for (a, b) in plane_a.iter().zip(plane_b) {
+        output.push(a ^ b);
     }
 
     output
@@ -84,7 +85,7 @@ fn enc_mode3(rplane: &[u8], gplane: &[u8], bplane: &[u8]) -> (Vec<u8>, Vec<u8>, 
     (rplane, gplane, bplane)
 }
 
-fn compress_plane(plane: &mut [u8]) {
+fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
     let mut output = Vec::<u8>::new();
     let initial_type = plane[0] & 0xC0; // 00 -> type 0/RLE, anything else -> type 1/Data
     let initial_packet = if initial_type == 0 {0u8} else {1u8 << 7};
@@ -96,11 +97,12 @@ fn compress_plane(plane: &mut [u8]) {
     while i < plane.len() {
         // let mut tmp_arr = Vec::<u8>::new();
         let mut cur_buffer = output[last_idx];
-        let mut cnt = 0u16;
+        let mut cnt = 0u32;
         'rle: while i < plane.len() { // RLE Packet loop
             if (i == 0) && (initial_type != 0) { // If initial type is Data then don't do this loop
                 break;
             }
+            // println!("Progress: {i}/{}", plane.len());
             let mut byte = plane[i];
             for _ in 0..4 {
                 if (byte & 0xC0) == 0 {
@@ -110,28 +112,25 @@ fn compress_plane(plane: &mut [u8]) {
                 } else {
                     plane[i] = byte;
                     cnt += 1;
-                    let mask = 1u16 << (16 - cnt.leading_zeros() - 1);
+                    let mask = 1u32 << (16 - cnt.leading_zeros() - 1);
                     let val = cnt ^ mask;
                     let len = mask - 2;
-                    let upper_val = (val >> 8) as u8;
-                    let lower_val = (val & 0xFF) as u8;
-                    let upper_len = (len >> 8) as u8;
-                    let lower_len = (len & 0xFF) as u8;
+
+                    let n_bytes = [
+                        (val >> 24) as u8, (val >> 16) as u8, (val >> 8) as u8, (val & 0xFF) as u8,
+                        (len >> 24) as u8, (val >> 16) as u8, (val >> 8) as u8, (val & 0xFF) as u8
+                    ];
 
                     // bit manip stuff
-                    cur_buffer |= upper_val >> placed_bits;
+                    cur_buffer |= n_bytes[0] >> placed_bits;
                     output[last_idx] = cur_buffer;
-                    let inserted_bits = 8 - placed_bits; // 8 because everything is on u8
-                    cur_buffer = (upper_val << inserted_bits) | (lower_val >> placed_bits);
-                    output.push(cur_buffer);
-                    cur_buffer = (lower_val << inserted_bits) | (upper_len >> placed_bits);
-                    output.push(cur_buffer);
-                    cur_buffer = (upper_len << inserted_bits) | (lower_len >> placed_bits);
-                    output.push(cur_buffer);
-                    cur_buffer = lower_len << inserted_bits;
-                    output.push(cur_buffer);
+                    let inserted_bits = 8 - placed_bits;
+                    for idx in 0..(n_bytes.len()-1) {
+                        cur_buffer = (n_bytes[idx] << inserted_bits) | (n_bytes[idx+1] >> placed_bits);
+                        output.push(cur_buffer);
+                        last_idx += 1;
+                    }
                     placed_bits = inserted_bits;
-                    last_idx += 4;
                     break 'rle;
                 }
             }
@@ -141,6 +140,7 @@ fn compress_plane(plane: &mut [u8]) {
                     
         let mut cur_buffer = output[last_idx];
         'data: while i < plane.len() { // Data Packet loop
+            // println!("Progress: {i}/{}", plane.len());
             let mut byte = plane[i];
             let mut last_bit = byte & 0x80;
             byte <<= 1;
@@ -160,14 +160,12 @@ fn compress_plane(plane: &mut [u8]) {
                         6 => {
                             output.push(cur_buffer);
                             output.push(0);
-                            // cur_buffer = 0;
                             placed_bits = 0;
                             last_idx += 2;
                         }
                         7 => {
                             output.push(cur_buffer);
                             output.push(0);
-                            // cur_buffer = 0;
                             placed_bits = 1;
                             last_idx += 2
                         }
@@ -175,6 +173,8 @@ fn compress_plane(plane: &mut [u8]) {
                     }
                     break 'data;
                 } else {
+                    byte <<= 1;
+                    processed += 1;
                     match placed_bits {
                         0..6 => {
                             cur_buffer |= last_bit >> placed_bits;
@@ -198,23 +198,60 @@ fn compress_plane(plane: &mut [u8]) {
                         },
                         _ => unreachable!()
                     }
-                    last_bit = cur_bit;
+                    last_bit = byte & 0x80;
+                    processed += 1;
                 }
             }
             i += 1;
+            processed = 0;
         }
-
-        // match placed_bits {
-        //     0 => {},
-        //     2 => {},
-        //     4 => {},
-        //     6 => {},
-        //     _ => unreachable!()
-        // }
     }
+
+    (output, placed_bits)
 }
 
-fn compress(data: &[u8]) {
+fn pack_planes(plane_a: &[u8], last_pos_a: u8, plane_b: &[u8], last_pos_b: u8) -> (Vec<u8>, u8) {
+    let mut output = Vec::with_capacity(plane_a.len() + plane_b.len());
+    let mut pos;
+
+    for &byte in plane_a {
+        output.push(byte);
+    }
+
+    if last_pos_a == 0 {
+        for &byte in plane_b {
+            output.push(byte);
+        }
+        pos = last_pos_b;
+    } else {
+        let mut last_idx = output.len() - 1;
+        let mut last_byte = output[last_idx];
+        pos = last_pos_a;
+        for &byte in plane_b {
+            last_byte |= byte >> pos;
+            output[last_idx] = last_byte;
+            let inserted = 8 - pos;
+            last_byte = byte << inserted;
+            output.push(last_byte);
+            pos = inserted;
+            last_idx += 1;
+        }
+    }
+
+    (output, pos)
+}
+
+fn pack(header: u16, red: &[u8], red_pos: u8, green: &[u8], green_pos: u8, blue: &[u8], blue_pos: u8) -> Vec<u8> {
+    let (red_green, red_green_pos) = pack_planes(red, red_pos, green, green_pos);
+    let (red_green_blue, _) = pack_planes(&red_green, red_green_pos, blue, blue_pos); 
+    
+    let tmp = [(header >> 8) as u8, (header & 0xFF) as u8];
+    let output = [tmp.as_slice(), red_green_blue.as_slice()].concat();
+
+    output
+}
+
+fn compress(data: Vec<u8>) -> Vec<u8> {
     let arr_offset = u32::from_le_bytes([data[0x0a], data[0x0b], data[0x0c], data[0x0d]]) as usize;
     let width = u32::from_le_bytes([data[0x12], data[0x13], data[0x14], data[0x15]]);
     let height = u32::from_le_bytes([data[0x16], data[0x17], data[0x18], data[0x19]]);
@@ -235,12 +272,11 @@ fn compress(data: &[u8]) {
     let mut green_plane = Vec::with_capacity(plane_size);
     let mut blue_plane = Vec::with_capacity(plane_size);
 
-    let pixel_array = &data[arr_offset..pixel_array_size];
-    for (i, chunk) in pixel_array.chunks_exact(3).enumerate() {
+    for chunk in data[arr_offset..(pixel_array_size+arr_offset)].chunks_exact(3) {
         let (r, g, b) = (chunk[0], chunk[1], chunk[2]);
-        red_plane[i] = r;
-        green_plane[i] = g;
-        blue_plane[i] = b;
+        red_plane.push(r);
+        green_plane.push(g);
+        blue_plane.push(b);
     }
 
     let time = match SystemTime::now().duration_since(UNIX_EPOCH) {
@@ -266,9 +302,11 @@ fn compress(data: &[u8]) {
     }
 
     let packed_header = ((wtiles as u16) << 9) | ((htiles as u16) << 2) | (enc_mode as u16);
-    compress_plane(&mut red_plane);
-    // println!("width = {width}, height = {height}, wtiles = {wtiles:08b}, htiles = {htiles:08b}, bpp = {bpp}, enc_mode = {enc_mode}");
-    // println!("packed_header = {packed_header:016b}");
+    let (comp_red, last_pos_red) = compress_plane(&mut red_plane);
+    let (comp_green, last_pos_green) = compress_plane(&mut green_plane);
+    let (comp_blue, last_pos_blue) = compress_plane(&mut blue_plane);
+    
+    pack(packed_header, &comp_red, last_pos_red, &comp_green, last_pos_green, &comp_blue, last_pos_blue)
 }
 
 fn main() {
@@ -278,14 +316,22 @@ fn main() {
         std::process::exit(1);
     }
 
-    let file_path = &args[1];
+    let file_path = Path::new(&args[1]);
     let data = match fs::read(file_path) {
         Ok(res) => res,
         Err(_) => {
-            println!("Error reading file: {file_path}");
-            std::process::exit(2);
+            println!("Error reading file: {}", file_path.to_str().unwrap());
+            std::process::exit(1);
         }
     };
-    println!("Data length = {}", data.len());
-    compress(&data)
+    let output = compress(data);
+    let filename: Vec<&str> = file_path.file_name().unwrap().to_str().unwrap().split(".").collect();
+    let out_filename = format!("compressed_{}.dat", filename[0]);
+    match fs::write(&out_filename, &output) {
+        Ok(_) => println!("File compressed successfully!"),
+        Err(_) => {
+            println!("Error writing file: {}", &out_filename);
+            std::process::exit(1);
+        }
+    }
 }
