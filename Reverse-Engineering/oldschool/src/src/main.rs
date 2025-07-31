@@ -112,13 +112,13 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
                 } else {
                     plane[i] = byte;
                     cnt += 1;
-                    let mask = 1u32 << (16 - cnt.leading_zeros() - 1);
+                    let mask = 1u32 << (32 - cnt.leading_zeros() - 1);
                     let val = cnt ^ mask;
                     let len = mask - 2;
 
                     let n_bytes = [
+                        (len >> 24) as u8, (val >> 16) as u8, (val >> 8) as u8, (val & 0xFF) as u8,
                         (val >> 24) as u8, (val >> 16) as u8, (val >> 8) as u8, (val & 0xFF) as u8,
-                        (len >> 24) as u8, (val >> 16) as u8, (val >> 8) as u8, (val & 0xFF) as u8
                     ];
 
                     // bit manip stuff
