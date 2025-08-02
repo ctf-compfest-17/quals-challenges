@@ -1,4 +1,3 @@
-
 from Crypto.Util.number import getPrime, bytes_to_long
 from random import randint
 from math import gcd

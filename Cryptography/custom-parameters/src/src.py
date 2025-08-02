@@ -2,7 +2,7 @@
 from Crypto.Util.number import getPrime,bytes_to_long
 from random import randint
 from math import gcd
-FLAG = b"COMPFEST17{63n3r4l1z3d_w13n3r_4774ck_4641n57_700_l4r63_d_15_c00l_e97e4f3392}"
+FLAG = b"COMPFEST17{wait__that_works_here_too__thats_cool_anyway_see_you_at_the_finals_75d3e3d44a}"
 
 def generate_pub_key():
     while True:
