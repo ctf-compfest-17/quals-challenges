@@ -3,7 +3,7 @@ from pwn import *
 import os, ast
 from lll_cvp import reduce_mod_p
 
-io = remote("localhost", 1000)
+io = process(['python', 'chall.py'])
 
 p = 2**127 - 1
 k = 64
