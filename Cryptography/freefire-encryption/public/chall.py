@@ -11,10 +11,10 @@ class FFEncryption:
     
     def gen_key(self):
         return [self.F.random_element() for _ in range(17)]
-    
+
     def to_lst(self, el):
-        return el.polynomial().padded_list(self.k)
-    
+        return el.list()
+
     def to_el(self, lst):
         return self.F(list(lst))
     
