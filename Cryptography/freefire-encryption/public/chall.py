@@ -33,7 +33,7 @@ def main():
     print("Welcome to FF Encryption System!")
     print("This super secure system uses 17 keys for encryption!!!")
     
-    while (count < 1000):
+    while (count < 1700):
         inp = input("> ").encode()
         
         if inp == b'done':
