@@ -85,75 +85,6 @@ fn enc_mode3(rplane: &[u8], gplane: &[u8], bplane: &[u8]) -> (Vec<u8>, Vec<u8>, 
     (rplane, gplane, bplane)
 }
 
-fn rle_packet(output: &mut Vec<u8>, cnt: u32, cur_buffer: u8, placed_bits: u8, last_idx: usize) -> (u8, usize) {
-    let mut placed_bits = placed_bits;
-    let mut last_idx = last_idx;
-    let mut cur_buffer = cur_buffer;
-    let needed_to_enc = 32 - cnt.leading_zeros() - 1;
-    let mask = 1u32 << needed_to_enc;
-    // println!("[EARLY DEBUG] cnt = {cnt}, i = {i}, mask = {mask:032b}, processed = {processed}, needed_to_enc = {needed_to_enc}");
-    let val = cnt ^ mask;
-    let len = mask - 2;
-    // println!("[DEBUG] cnt = {}, i = {i}, processed = {processed}, byte = {byte:08b}", cnt-1);
-
-    // bit manip stuff
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // FIX: Need to properly make it so that all the leading zero bits are not part of the output //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    let mut inserted_len = 0u32;
-    while inserted_len < needed_to_enc {
-        let left = needed_to_enc - inserted_len;
-        let available = 8 - placed_bits as u32;
-        // println!("[DEBUG LEN] len left = {left}, placed_bits = {placed_bits}, cur_buffer = {cur_buffer:08b}");
-        let inserted;
-        if left <= available {
-            cur_buffer |= (len as u8) << (available - left);
-            inserted = needed_to_enc;
-            placed_bits = (placed_bits + (left as u8)) % 8;
-        } else {
-            let shift = left - available;
-            cur_buffer |= (len >> shift) as u8;
-            inserted = needed_to_enc - shift;
-            placed_bits = 0; // this part always fills the current buffer
-        }
-        output[last_idx] = cur_buffer;
-        inserted_len = inserted;
-        if placed_bits == 0 {
-            cur_buffer = 0;
-            output.push(cur_buffer);
-            last_idx += 1;
-        }
-    }
-
-    let mut inserted_val = 0u32;
-    while inserted_val < needed_to_enc {
-        let left = needed_to_enc - inserted_val;
-        let available = 8 - placed_bits as u32;
-        // println!("[DEBUG VAL] val left = {left}, placed_bits = {placed_bits}, cur_buffer = {cur_buffer:08b}");
-        let inserted;
-        if left <= available {
-            cur_buffer |= (val as u8) << (available - left);
-            inserted = needed_to_enc;
-            placed_bits = (placed_bits + (left as u8)) % 8;
-        } else {
-            let shift = left - available;
-            cur_buffer |= (val >> shift) as u8;
-            inserted = needed_to_enc - shift;
-            placed_bits = 0;
-        }
-        output[last_idx] = cur_buffer;
-        inserted_val = inserted;
-        if placed_bits == 0 {
-            cur_buffer = 0;
-            output.push(cur_buffer);
-            last_idx += 1;
-        }
-    }
-
-    (placed_bits, last_idx)
-}
-
 fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
     let mut output = Vec::<u8>::new();
     let initial_type = plane[0] & 0xC0; // 00 -> type 0/RLE, anything else -> type 1/Data
@@ -164,7 +95,7 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
     let mut i = 0usize;
     let mut processed = 0u8; // amount of bits that have been processed in the current byte
     let mut cur_buffer;
-    println!("Plane length = {}", plane.len());
+    println!("===== [STARTING COMPRESSION OF PLANE] =====");
     while i < plane.len() {
         // let mut tmp_arr = Vec::<u8>::new();
         cur_buffer = output[last_idx];
@@ -258,7 +189,8 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
                 let mask = 1u32 << needed_to_enc;
                 let val = cnt ^ mask;
                 let len = mask - 2;
-                println!("[DEBUG] cnt = {}, i = {i}, processed = {processed}, byte = {byte:08b}", cnt-1);
+                println!("[DEBUG] cnt = {}, i = {i}, processed = {processed}, placed = {placed_bits}, byte = {byte:08b}", cnt-1);
+                // println!("[DEBUG LAST RLE] needed = {needed_to_enc}, mask = {mask:032b}, val = {val:032b}, len = {len:032b}");
                 
                 let mut inserted_len = 0u32;
                 while inserted_len < needed_to_enc {
@@ -283,6 +215,7 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
                         last_idx += 1;
                     }
                 }
+                // println!("[AFTER LEN] output[-5:] = [{:08b}, {:08b}, {:08b}, {:08b}, {:08b}, {:08b}]", output[last_idx-5], output[last_idx-4], output[last_idx-3], output[last_idx-2], output[last_idx-1], output[last_idx]);
                 
                 let mut inserted_val = 0u32;
                 while inserted_val < needed_to_enc {
@@ -301,93 +234,17 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
                     }
                     output[last_idx] = cur_buffer;
                     inserted_val = inserted;
-                    if placed_bits == 0 {
+                    if (placed_bits == 0) && (inserted_val != needed_to_enc) {
                         cur_buffer = 0;
                         output.push(cur_buffer);
                         last_idx += 1;
                     }
                 }
+                // println!("[AFTER VAL] output[-5:] = [{:08b}, {:08b}, {:08b}, {:08b}, {:08b}, {:08b}]", output[last_idx-5], output[last_idx-4], output[last_idx-3], output[last_idx-2], output[last_idx-1], output[last_idx]);
             }
         }
 
         cur_buffer = output[last_idx];
-        // 'data: while i < plane.len() { // Data Packet loop
-        //     // println!("Progress: {i}/{}", plane.len());
-        //     ///////////////////////////////////////////////////////////////////////////////
-        //     // FIX: Need to put cur_buffer back into output[last_idx] and not just push! //
-        //     ///////////////////////////////////////////////////////////////////////////////
-        //     let mut byte = plane[i];
-        //     let mut last_bit = byte & 0x80;
-        //     byte <<= 1;
-        //     processed += 1;
-        //     // println!("processed = {processed}");
-        //     while processed < 8 {
-        //         let cur_bit = byte & 0x80;
-        //         // println!("[DATA DEBUG] last_bit = {last_bit}, cur_bit = {cur_bit}, processed = {processed}");
-        //         if (last_bit == 0) && (cur_bit == 0) {
-        //             byte >>= 1;
-        //             plane[i] = byte;
-        //             processed -= 1;
-        //             match placed_bits {
-        //                 0..6 => {
-        //                     output[last_idx] = cur_buffer;
-        //                     // output.push(cur_buffer);
-        //                     // last_idx += 1;
-        //                     placed_bits += 2;
-        //                 }
-        //                 6 => {
-        //                     output[last_idx] = cur_buffer;
-        //                     // output.push(cur_buffer);
-        //                     output.push(0);
-        //                     placed_bits = 0;
-        //                     last_idx += 1;
-        //                 }
-        //                 7 => {
-        //                     output[last_idx] = cur_buffer;
-        //                     // output.push(cur_buffer);
-        //                     output.push(0);
-        //                     placed_bits = 1;
-        //                     last_idx += 1;
-        //                 }
-        //                 _ => unreachable!()
-        //             }
-        //             // println!("[DATA END] cur_buffer = {cur_buffer:08b}, placed_bits = {placed_bits}");
-        //             break 'data;
-        //         } else {
-        //             byte <<= 1;
-        //             processed += 1;
-        //             match placed_bits {
-        //                 0..6 => {
-        //                     cur_buffer |= last_bit >> placed_bits;
-        //                     cur_buffer |= cur_bit >> (placed_bits + 1);
-        //                     placed_bits += 2;
-        //                 },
-        //                 6 => {
-        //                     cur_buffer |= last_bit >> placed_bits;
-        //                     cur_buffer |= cur_bit >> (placed_bits + 1);
-        //                     output[last_idx] = cur_buffer;
-        //                     cur_buffer = 0;
-        //                     output.push(cur_buffer);
-        //                     placed_bits = 0;
-        //                     last_idx += 1;
-        //                 },
-        //                 7 => {
-        //                     cur_buffer |= last_bit >> placed_bits;
-        //                     output[last_idx] = cur_buffer;
-        //                     cur_buffer = cur_bit;
-        //                     output.push(cur_buffer);
-        //                     placed_bits = 1;
-        //                     last_idx += 1;
-        //                 },
-        //                 _ => unreachable!()
-        //             }
-        //             last_bit = byte & 0x80;
-        //             processed += 1;
-        //         }
-        //     }
-        //     i += 1;
-        //     processed = 0;
-        // }
         'data: while i < plane.len() {
             let mut byte = plane[i];
             println!("[DATA DEBUG] byte = {byte:08b}, i = {i}");
@@ -421,14 +278,10 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
                     byte <<= 2;
                     match placed_bits {
                         0..6 => {
-                            // cur_buffer |= last_bit >> placed_bits;
-                            // cur_buffer |= cur_bit >> (placed_bits + 1);
                             cur_buffer |= cur_pair >> placed_bits;
                             placed_bits += 2;
                         },
                         6 => {
-                            // cur_buffer |= last_bit >> placed_bits;
-                            // cur_buffer |= cur_bit >> (placed_bits + 1);
                             cur_buffer |= cur_pair >> placed_bits;
                             output[last_idx] = cur_buffer;
                             cur_buffer = 0;
@@ -451,11 +304,31 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
             }
             i += 1;
             processed = 0;
+            if i == plane.len() { // if plane ends on the Data packet, don't forget terminate with 00
+                match placed_bits {
+                    0..6 => {
+                        output[last_idx] = cur_buffer;
+                        placed_bits += 2;
+                    },
+                    6 => {
+                        output[last_idx] = cur_buffer;
+                        cur_buffer = 0;
+                        placed_bits = 0;
+                    },
+                    7 => {
+                        output[last_idx] = cur_buffer;
+                        output.push(0);
+                        placed_bits = 1;
+                    },
+                    _ => unreachable!()
+                }
+            }
         }
     }
 
     // println!("Last idx of output = {:08b}, cur_buffer = {cur_buffer:08b}", output[output.len()-1]);
-    // println!("Bits written: {}", output.len()*8 - 8 + placed_bits as usize);
+    println!("Bits written: {}", output.len()*8 - 8 + placed_bits as usize);
+    println!("Bytes written: {}", output.len());
 
     (output, placed_bits)
 }
@@ -554,7 +427,7 @@ fn compress(data: Vec<u8>) -> Vec<u8> {
     
     let packed_header = ((wtiles as u16) << 9) | ((htiles as u16) << 2) | (enc_mode as u16);
     let (comp_red, last_pos_red) = compress_plane(&mut red_plane);
-    std::process::exit(1);
+    // std::process::exit(1);
     let (comp_green, last_pos_green) = compress_plane(&mut green_plane);
     let (comp_blue, last_pos_blue) = compress_plane(&mut blue_plane);
     
