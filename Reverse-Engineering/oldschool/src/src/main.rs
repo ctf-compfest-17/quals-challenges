@@ -95,7 +95,7 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
     let mut i = 0usize;
     let mut processed = 0u8; // amount of bits that have been processed in the current byte
     let mut cur_buffer;
-    println!("===== [STARTING COMPRESSION OF PLANE] =====");
+    // println!("===== [STARTING COMPRESSION OF PLANE] =====");
     while i < plane.len() {
         // let mut tmp_arr = Vec::<u8>::new();
         cur_buffer = output[last_idx];
@@ -119,7 +119,7 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
                     // println!("[EARLY DEBUG] cnt = {cnt}, i = {i}, mask = {mask:032b}, processed = {processed}, needed_to_enc = {needed_to_enc}");
                     let val = cnt ^ mask;
                     let len = mask - 2;
-                    println!("[DEBUG] cnt = {}, i = {i}, processed = {processed}, byte = {byte:08b}", cnt-1);
+                    // println!("[DEBUG] cnt = {}, i = {i}, processed = {processed}, byte = {byte:08b}", cnt-1);
 
                     // bit manip stuff
                     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -189,7 +189,7 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
                 let mask = 1u32 << needed_to_enc;
                 let val = cnt ^ mask;
                 let len = mask - 2;
-                println!("[DEBUG] cnt = {}, i = {i}, processed = {processed}, placed = {placed_bits}, byte = {byte:08b}", cnt-1);
+                // println!("[DEBUG] cnt = {}, i = {i}, processed = {processed}, placed = {placed_bits}, byte = {byte:08b}", cnt-1);
                 // println!("[DEBUG LAST RLE] needed = {needed_to_enc}, mask = {mask:032b}, val = {val:032b}, len = {len:032b}");
                 
                 let mut inserted_len = 0u32;
@@ -247,7 +247,7 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
         cur_buffer = output[last_idx];
         'data: while i < plane.len() {
             let mut byte = plane[i];
-            println!("[DATA DEBUG] byte = {byte:08b}, i = {i}");
+            // println!("[DATA DEBUG] byte = {byte:08b}, i = {i}");
             while processed < 8 {
                 let cur_pair = byte & 0xC0;
                 if cur_pair == 0 {
@@ -327,15 +327,15 @@ fn compress_plane(plane: &mut [u8]) -> (Vec<u8>, u8) {
     }
 
     // println!("Last idx of output = {:08b}, cur_buffer = {cur_buffer:08b}", output[output.len()-1]);
-    println!("Bits written: {}", output.len()*8 - 8 + placed_bits as usize);
-    println!("Bytes written: {}", output.len());
+    // println!("Bits written: {}", output.len()*8 - 8 + placed_bits as usize);
+    // println!("Bytes written: {}", output.len());
 
     (output, placed_bits)
 }
 
 fn pack_planes(plane_a: &[u8], last_pos_a: u8, plane_b: &[u8], last_pos_b: u8) -> (Vec<u8>, u8) {
     let mut output = Vec::with_capacity(plane_a.len() + plane_b.len());
-    let mut pos;
+    let pos;
 
     for &byte in plane_a {
         output.push(byte);
@@ -349,17 +349,25 @@ fn pack_planes(plane_a: &[u8], last_pos_a: u8, plane_b: &[u8], last_pos_b: u8) -
     } else {
         let mut last_idx = output.len() - 1;
         let mut last_byte = output[last_idx];
-        pos = last_pos_a;
+        let end_pos = (last_pos_a + last_pos_b) % 8;
+        let inserted = 8 - last_pos_a;
         for &byte in plane_b {
-            last_byte |= byte >> pos;
+            last_byte |= byte >> last_pos_a;
             output[last_idx] = last_byte;
-            let inserted = 8 - pos;
             last_byte = byte << inserted;
             output.push(last_byte);
-            pos = inserted;
             last_idx += 1;
         }
+        // last_byte |= plane_b[plane_b.len()-1] >> last_pos_a;
+        // output[last_idx] = last_byte;
+        // if end_pos != 0 {
+        //     last_byte = plane_b[plane_b.len()-1] << inserted;
+        //     output.push(last_byte);
+        // }
+        pos = end_pos;
     }
+
+    // println!("[DEBUG] last pos a = {last_pos_a}, last pos b = {last_pos_b}, new pos = {pos}");
 
     (output, pos)
 }
