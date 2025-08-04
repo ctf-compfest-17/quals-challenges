@@ -1,0 +1,85 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# Required sections
+name: "update required"
+author: "jay"
+
+# Select a category from:
+# - pwn
+# - web
+# - osint
+# - crypto
+# - forensics
+# - reverse
+# - misc
+category: forensics
+
+# This is the challenge description. Make sure you include the
+# necessary URLs / netcat strings here.
+# Constants:
+# {{ IP_SERVER }} to get service IP address
+# {{ PORT }} to get service port
+description: A researcher in Mondstadt’s tech division received an urgent-looking HTML file, claiming to be a critical security patch. Trusting its source, they executed antivirus.exe and moments later, a secret PDF file disappeared.
+
+The PDF contained a confidential override PIN tied to the Vision Distribution Network. To protect it, the researcher locked the PDF with their wallet’s seed phrase (exported from a Chrome extension), joined with an underscore (_) as the password.
+
+Although the wallet vault file remains on disk, the password to unlock it has since been lost. Fortunately, there’s a lead: the researcher once copied the vault password to clipboard."
+
+# Flags specify answers that your challenge use. You should generally provide
+# at least one.
+# Can be removed if unused
+# Accepts strings or dictionaries
+flags:
+  - COMPFEST17{c0ngr@tulat1on_you_hav3_found_the_s3cret_and_here_is_y0ur_r3ward} 
+  - { type: "static", content: "NETSOS{another_flag}", data: "case_insensitive" }
+
+# Tags are used to classify your challenge with topics. You should provide at
+# least one.
+# Can be removed if unused
+# Accepts strings
+tags:
+  - malware analysis
+
+# Hints are used to give players a way to buy or have suggestions. They are not
+# required but can be nice.
+# Default value: cost = 0, state = "visible"
+# Can be removed if unused
+# Accepts dictionaries
+hints:
+  - { content: "This hint costs points", cost: 10 }
+  - { content: "Not published hint", cost: 0, state: "hidden" }
+
+# Link to problem attachment for participants
+# Can be removed if unused
+# Accepts strings
+attachment: https://drive.google.com/drive/folders/1R1psX7e04W1aJXFHK_WbNkRt5ukFXOlc?usp=sharing
+
+##############
+#  BAGIAN TC #
+##############
+
+# This is the number of points awarded for the challenge.
+value: 500
+type: dynamic
+
+# Number of solves it takes to reach the minimum value.
+decay: 450
+
+# Minimum value.
+minimum: 100
+
+# Provide paths to files from the same directory that this file is in
+# Accepts strings
+files:
+  - dist/source.py
+
+# The state of the challenge.
+# May be "visible" or "hidden".
+# It is "visible" by default.
+state: hidden
+
+# The ports to expose. The target port will be used to access the deployed container.
+expose:
+  containerPort: 9999
+  targetPort: 30231

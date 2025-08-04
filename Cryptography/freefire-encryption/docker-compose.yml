@@ -1,0 +1,12 @@
+services:
+    ff-encryption:
+      build: .
+      ports:
+        - 1000:8080
+      container_name: ff-encryption
+      restart: on-failure
+      deploy:
+        resources:
+          limits:
+            cpus: '0.5'
+            memory: 256M
