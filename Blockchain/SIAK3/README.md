@@ -11,10 +11,12 @@ COMPFEST17{makanya_bikin_tanda_tangan_jangan_ngasal_ntar_bisa_dicontek_ama_orang
 ```
 
 ## Description
-bayar UKT? pakai SIAK3!
-Bob lupa dengan privkeynya, bantu dia bayar UKT sebelum tenggat!
-Dia sepertinya hanya ingat di privkeynya ada kata 'cafe'?
-
+Next version of SIAK-NG! SIAK3!
+Bob paid his previous tuition fees using SIAK3,
+but he seems to have forgotten his privkey.
+Accidentally, his wallet has a bug that creates a vulnerable signature for his previous payments.
+He only remembers that his privkey contains the keyword 'cafe'.
+Can you help him retrieve his privkey and pay his tuition?
 
 ## Difficulty
 Tingkat kesulitan soal: medium-hard
@@ -23,7 +25,7 @@ Tingkat kesulitan soal: medium-hard
 * 
 
 ## Tags
-Solidity, DeFi
+Solidity
 
 ## Deployment
 - Install docker engine>=19.03.12 and docker-compose>=1.26.2.
