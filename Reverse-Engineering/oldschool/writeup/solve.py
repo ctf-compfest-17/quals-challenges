@@ -121,7 +121,11 @@ red_plane = red_plane.getvalue()
 green_plane = green_plane.getvalue()
 blue_plane = blue_plane.getvalue()
 
-if enc_mode == 3: # the distributed one is mode 3
+assert len(red_plane) == plane_size, f"{len(red_plane) = }"
+assert len(green_plane) == plane_size, f"{len(green_plane) = }"
+assert len(blue_plane) == plane_size, f"{len(blue_plane) = }"
+
+if enc_mode == 3:
     red_plane = delta_decode_plane(red_plane)
     green_plane = delta_decode_plane(green_plane)
     blue_plane = delta_decode_plane(blue_plane)
@@ -134,9 +138,23 @@ if enc_mode == 3: # the distributed one is mode 3
     green_plane = xor_planes(red_plane, green_plane)
     
 elif enc_mode == 2:
-    pass
+    red_plane = delta_decode_plane(red_plane)
+
+    red_plane = [int(red_plane[i:i+8], 2) for i in range(0, len(red_plane), 8)]
+    green_plane = [int(green_plane[i:i+8], 2) for i in range(0, len(green_plane), 8)]
+    blue_plane = [int(blue_plane[i:i+8], 2) for i in range(0, len(blue_plane), 8)]
+
+    blue_plane = xor_planes(green_plane, blue_plane)
+    green_plane = xor_planes(red_plane, green_plane)
+
 else: # only other option is 1
-    pass
+    red_plane = delta_decode_plane(red_plane)
+    green_plane = delta_decode_plane(green_plane)
+    blue_plane = delta_decode_plane(blue_plane)
+
+    red_plane = [int(red_plane[i:i+8], 2) for i in range(0, len(red_plane), 8)]
+    green_plane = [int(green_plane[i:i+8], 2) for i in range(0, len(green_plane), 8)]
+    blue_plane = [int(blue_plane[i:i+8], 2) for i in range(0, len(blue_plane), 8)]
 
 
 from PIL import Image

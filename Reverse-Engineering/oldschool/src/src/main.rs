@@ -39,7 +39,7 @@ fn delta_encode_plane(plane: &[u8]) -> Vec<u8> {
     let mut output = Vec::with_capacity(plane.len());
     for &byte in plane {
         for current_bit_pos in (0..7u8).rev() {
-            let current_bit = byte & (1 << current_bit_pos);
+            let current_bit = (byte & (1 << current_bit_pos)) >> current_bit_pos;
             current_byte |= (prev_bit ^ current_bit) << current_bit_pos;
             prev_bit = current_bit;
         }
