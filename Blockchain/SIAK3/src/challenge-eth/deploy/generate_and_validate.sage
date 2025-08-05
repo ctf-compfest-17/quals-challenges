@@ -25,7 +25,7 @@ PAST_SEMESTERS = ["2022-1", "2022-2", "2023-1", "2023-2", "2024-1", "2024-2"]
 
 # --- Nonce Bias Parameters ---
 n_sigs = len(PAST_SEMESTERS)
-bias_bits = 45
+bias_bits = d % 102
 max_nonce = 2**(256 - bias_bits)
 random.seed(int(1337))
 

@@ -6,10 +6,10 @@ from web3 import Web3
 # CONFIGURATION
 # ======================================================================
 # --- UPDATE THESE VALUES FOR YOUR DEPLOYMENT ---
-RPC_URL = "http://localhost:48334/93898eba-686b-4b82-a6d1-04b58b305a56"
-PRIVKEY = "140437b0f2e70b00990ea46179605a04dde7657c5168aa10dd715ab995adda18"
-SETUP_CONTRACT_ADDR = "0xE1c19a8E8991b21E39C200F0598312E888629dF4"
-WALLET_ADDR = "0x7262368F2E1E5237d661250abDdD0118190999d5"
+RPC_URL = "http://127.0.0.1:48334/452bc267-3e75-49ad-9172-5155ea0a6e94"
+PRIVKEY = "0f8f8e8e0903c378cfdf7e5fd2932d509babfa14dc676fbfad535b868328e667"
+SETUP_CONTRACT_ADDR = "0x4c49B0442E89cac3b9dED944f8f2f5dBb1f3970b"
+WALLET_ADDR = "0xF0B10f6d9A8Ab64Dfe33F57B3DFcE6E4782BE2eE"
 # -----------------------------------------------
 
 # --- ABIs for the Tuition Payment Challenge (Updated for final contracts) ---

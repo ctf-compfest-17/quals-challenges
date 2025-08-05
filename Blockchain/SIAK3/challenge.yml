@@ -20,8 +20,9 @@ category: Blockchain
 # Constants:
 # {{ IP_SERVER }} to get service IP address
 # {{ PORT }} to get service port
-description: "bayar UKT? pakai SIAK3!
-  Bob lupa dengan privkeynya, bantu dia bayar UKT sebelum tenggat!
+description: "next version of SIAK-NG! SIAK3!
+  Bob paid his previous tuition fees using SIAK3,
+  however, it seems that his wallet has a bug that create a vulnerable SECP256K1 signature
   Dia sepertinya hanya ingat di privkeynya ada kata 'cafe'?
 
   http://{{ IP_SERVER }}:{{ PORT }}/"
