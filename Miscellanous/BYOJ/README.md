@@ -23,3 +23,6 @@ Tingkat kesulitan soal: hard
 
 ## Tags
 pyjail
+
+## Deployment
+Make sure env variable `FILENAME` ada pas mau deploy pake docker compose, kalo mau gampang bisa pake build.sh nya, otherwise kalo gk mau pake docker compose tinggal di edit biar pake docker build trus di pas `--build-arg filename=<filename>`

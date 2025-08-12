@@ -1,6 +1,9 @@
 services:
   byoj:
-    build: .
+    build:
+      context: .
+      args:
+        filename: ${FILENAME:-flag.txt}
     container_name: byoj
     restart: always
     ports:

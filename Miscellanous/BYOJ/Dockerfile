@@ -18,8 +18,14 @@ RUN make install; exit 0
 
 RUN cd / && rm -rf /var/lib/apt/lists/* && rm -rf /build
 
+
 FROM pwn.red/jail AS chall
+
+ARG filename
 COPY --from=base / /srv
 COPY ./src/chall.py /srv/app/run
 COPY ./src/flag.txt /srv/flag.txt
-ENV JAIL_MEM=20M JAIL_TIME=30 JAIL_CPU=250
+RUN chmod 444 /srv/flag.txt && mv /srv/flag.txt /srv/${filename:-flag.txt}
+RUN chmod +x /srv/app/run
+
+ENV JAIL_MEM=20M JAIL_TIME=30 JAIL_CPU=250 JAIL_ENV_FLAG_FILENAME=${filename:-flag.txt}
