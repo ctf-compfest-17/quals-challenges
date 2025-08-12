@@ -40,7 +40,7 @@ if __name__ == "__main__":
     interp = __import__("concurrent.interpreters").interpreters.create()
     interp.prepare_main(secret=secret)
     safe = {"__builtins__": {}}
-    out = interp.call(eval, res, globals=safe, locals=safe)
+    out = interp.call(eval, code, globals=safe, locals=safe)
     interp.close()
     
     if out != secret:
