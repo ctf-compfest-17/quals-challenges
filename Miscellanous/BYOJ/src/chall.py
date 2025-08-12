@@ -42,13 +42,13 @@ if __name__ == "__main__":
     choice = __import__("random").choice
     new_main = "".join(choice(tmp) for _ in range(64))
     
-    __import__("sys").modules['os'] = None
-    __import__("sys").modules['posix'] = None
-    __import__("sys").modules['ctypes'] = None
-    
     interp = __import__("concurrent.interpreters").interpreters.create()
     interp.prepare_main(secret=secret)
-    interp.exec(f"__import__('sys').modules['{new_main}'] = __import__('sys').modules['__main__']\n__import__('sys').modules['__main__'] = None")
+    interp.exec(f"__import__('sys').modules['{new_main}'] = __import__('sys').modules['__main__']")
+    interp.exec("__import__('sys').modules['__main__'] = None")
+    interp.exec("__import__('sys').modules['os'] = None")
+    interp.exec("__import__('sys').modules['posix'] = None")
+    interp.exec("__import__('sys').modules['ctypes'] = None")
     safe = {"__builtins__": {}}
     
     try:
