@@ -45,10 +45,10 @@ if __name__ == "__main__":
     interp = __import__("concurrent.interpreters").interpreters.create()
     interp.prepare_main(secret=secret)
     interp.exec(f"__import__('sys').modules['{new_main}'] = __import__('sys').modules['__main__']")
-    interp.exec("__import__('sys').modules['__main__'] = None")
     interp.exec("__import__('sys').modules['os'] = None")
     interp.exec("__import__('sys').modules['posix'] = None")
     interp.exec("__import__('sys').modules['ctypes'] = None")
+    interp.exec("__import__('sys').modules['__main__'] = None")
     safe = {"__builtins__": {}}
     
     try:
