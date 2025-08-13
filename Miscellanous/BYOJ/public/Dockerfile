@@ -1,4 +1,5 @@
-FROM ubuntu:24.04 AS base
+# this is pinned just because the version changed in the middle of creating this challenge and i wasn't eager to have to build every layer again
+FROM ubuntu:24.04@sha256:a08e551cb33850e4740772b38217fc1796a66da2506d312abe51acda354ff061 AS base
 
 RUN apt-get update
 RUN apt-get install -y git
@@ -26,6 +27,6 @@ COPY --from=base / /srv
 COPY ./src/chall.py /srv/app/run
 COPY ./src/flag.txt /srv/flag.txt
 RUN chmod 444 /srv/flag.txt && mv /srv/flag.txt /srv/${filename:-flag.txt}
-RUN chmod +x /srv/app/run
+RUN chmod 555 /srv/app/run
 
 ENV JAIL_MEM=20M JAIL_TIME=30 JAIL_CPU=250 JAIL_ENV_FLAG_FILENAME=${filename:-flag.txt}

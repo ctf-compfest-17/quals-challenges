@@ -9,3 +9,4 @@ services:
     ports:
       - 1337:5000
     privileged: true
+    dns: 127.0.0.0

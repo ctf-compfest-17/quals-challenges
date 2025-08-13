@@ -5,6 +5,29 @@ def header():
     print("Here, you can create your own jail to escape out of")
     print("All you need to do is provide some characters you want to be whitelisted")
 
+def sanitize(interp):
+    chrs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+    choice = __import__("random").choice
+    randint = __import__("random").randint
+    ins = []
+    for _ in range(randint(32, 64)):
+        name = "".join(choice(chrs) for _ in range(randint(5, 20)))
+        ins.append((name, None))
+    
+    idx = randint(0, len(ins)-1)
+    interp.exec(f"ins = {ins}\nins[{idx}] = (ins[{idx}][0], __import__('sys').modules['__main__'])")
+    interp.exec(f"__import__('sys').modules |= dict(ins)\ndel ins")
+    interp.exec("__import__('sys').stdin = None")
+    interp.exec("__import__('sys').stdout = None")
+    interp.exec("__import__('sys').stderr = None")
+    interp.exec("__import__('sys').__stdin__ = None")
+    interp.exec("__import__('sys').__stdout__ = None")
+    interp.exec("__import__('sys').__stderr__ = None")
+    interp.exec("__import__('sys').modules['os'] = None")
+    interp.exec("__import__('sys').modules['posix'] = None")
+    interp.exec("__import__('sys').modules['ctypes'] = None")
+    interp.exec("__import__('sys').modules['__main__'] = None")
+
 
 if __name__ == "__main__":
     header()
@@ -22,7 +45,7 @@ if __name__ == "__main__":
         exit()
     
     whitelist = set(whitelist)
-    if len(whitelist) > 32:
+    if len(whitelist) > 30:
         print("Surely you don't need that many")
         exit()
 
@@ -34,27 +57,19 @@ if __name__ == "__main__":
         print("Oops, you inputted a blacklisted character!")
         exit()
     
-    if len(code) > 200:
+    if len(code) > 150:
         print("That's too long")
         exit()
     
-    tmp = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
-    choice = __import__("random").choice
-    new_main = "".join(choice(tmp) for _ in range(64))
-    
     interp = __import__("concurrent.interpreters").interpreters.create()
     interp.prepare_main(secret=secret)
-    interp.exec(f"__import__('sys').modules['{new_main}'] = __import__('sys').modules['__main__']")
-    interp.exec("__import__('sys').modules['os'] = None")
-    interp.exec("__import__('sys').modules['posix'] = None")
-    interp.exec("__import__('sys').modules['ctypes'] = None")
-    interp.exec("__import__('sys').modules['__main__'] = None")
+    sanitize(interp)
     safe = {"__builtins__": {}}
     
     try:
         out = interp.call(eval, code, globals=safe, locals=safe)
         interp.close()
-    
+
         if out != secret:
             print("No flag for you")
             exit()
