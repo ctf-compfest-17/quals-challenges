@@ -1,13 +1,11 @@
-FROM ubuntu:22.04
+FROM python:3.9-slim
 
-RUN apt-get -y -q update \
-    && apt-get -y -q install sudo nano git curl wget build-essential python3-pip socat
+WORKDIR /app
 
-RUN pip3 install py-ecc pycryptodome
+RUN apt-get update && \
+    apt-get install -y socat && \
+    pip install py-ecc pycryptodome
 
-RUN mkdir -p /app/
-WORKDIR /app/
+COPY src/chall.py .
 
-COPY src/* .
-
-CMD ["socat", "TCP-LISTEN:8080,fork,reuseaddr", "EXEC:sage chall.py,stderr"]
+CMD socat TCP-LISTEN:8080,fork,reuseaddr EXEC:"python3 chall.py",stderr
