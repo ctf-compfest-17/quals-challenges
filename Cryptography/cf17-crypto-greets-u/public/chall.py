@@ -8,7 +8,7 @@ with open('flag.txt', 'rb') as f:
 
 random.seed(os.urandom(128))
 m = bytes_to_long(flag)
-p = getPrime(16)
+p = getPrime(30)
 e = 5
 k = 100
 n = p**k
