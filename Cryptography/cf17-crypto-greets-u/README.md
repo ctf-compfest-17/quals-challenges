@@ -7,14 +7,14 @@ by tipsen
 ## Flag
 
 ```
-COMPFEST17{w3lC0m3_t0_COMPFEST_17_th1s_1s_34sy_crypT0gr4phy_juSt_n0nC3_r3use_w1th_h3ns3l's_l1ft1ng_hehe_166cfe809d}
+COMPFEST17{w3lC0m3_t0_COMPFEST_17_th1s_1s_34sy???_crypT0gr4phy_juSt_r4nd0m_4nd_n0nC3_r3use_w1th_h3ns3l's_l1ft1ng_hehe_166cfe809d}
 ```
 
 ## Description
-this should be the easiest challenge in this competition
+this should be the easiest challenge in this competition (or maybe i lied?)
 
 ## Difficulty
-Tingkat kesulitan soal: easy
+Tingkat kesulitan soal: medium-hard
 
 ## Hints
 * hint 1

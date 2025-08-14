@@ -1,7 +1,7 @@
 from sage.all import *
 from Crypto.Util.number import long_to_bytes, bytes_to_long
 from pwn import *
-from tqdm import tqdm
+from tqdm import tqdm, trange
 
 def elgamal_nonce_reuse_attack(n, test_msg, c1_test, c2_test, c1_secret, c2_secret):
     """
@@ -32,7 +32,41 @@ def hensel_lifting(f, p, k, base_solution):
         solution = lift(f, p, i, solution)
     return solution
 
+def construct_a_row(RNG):
+    row = []
+    for _ in range(19968):
+        out = RNG.getrandbits(32)
+        row.append(out & 1)
+    return row
+
+print("[*] Building matrix L...")
+L = Matrix(GF(2), 19968, 19968, sparse=True)
+RNG = random.Random()
+
+for i in trange(19968):
+    state = [0] * 624
+    temp = "0" * i + "1" + "0" * (19968 - 1 - i)
+    for j in range(624):
+        state[j] = int(temp[32*j:32*j+32], 2)
+    RNG.setstate((3, tuple(state + [624]), None))
+    row = construct_a_row(RNG)
+    L[i] = row
+
+print("[*] Transforming matrix...")
+M = L.transpose()
+
+M = M[:19968, [0] + list(range(32, 19968))]
+
+print("[*] Matrix M shape:", M.nrows(), "x", M.ncols())
+
 io = process(['python', 'chall.py'])
+
+leak_bits = []
+for _ in range(19968):
+    if io.recvline().strip() == b"even":
+        leak_bits.append(0)
+    else:
+        leak_bits.append(1)
 
 io.recvuntil(b'p = ')
 p = int(io.recvline().strip())
@@ -45,12 +79,6 @@ n = int(io.recvline().strip())
 
 io.recvuntil(b'coeffs = ')
 coeffs = eval(io.recvline().strip())
-
-io.recvuntil(b'g = ')
-g = int(io.recvline().strip())
-
-io.recvuntil(b'h = ')
-h = int(io.recvline().strip())
 
 test_msg = bytes_to_long(b"This is just a test message.")
 
@@ -65,6 +93,26 @@ c1_secret = int(io.recvline().strip())
 
 io.recvuntil(b'c2_secret = ')
 c2_secret = int(io.recvline().strip())
+
+assert len(leak_bits) == 19968, f"Expected 19968 bits, got {len(leak_bits)}"
+
+print("[*] Solving for MT state...")
+R = vector(GF(2), leak_bits)
+res = (M.solve_right(R)).list()  
+
+# Rebuild MT internal state
+res = [res[0]] + [0] * 31 + res[1:]
+init_bits = "".join(map(str, res))
+state_words = [int(init_bits[32*i:32*i+32], 2) for i in range(624)]
+
+RNG = random.Random()
+RNG.setstate((3, tuple(state_words + [624]), None))
+for _ in range(19968):RNG.getrandbits(32)
+
+c1_test -= RNG.getrandbits(1024)
+c2_test -= RNG.getrandbits(1024)
+c1_secret -= RNG.getrandbits(1024)
+c2_secret -= RNG.getrandbits(1024)
 
 poly_result = elgamal_nonce_reuse_attack(n, test_msg, c1_test, c2_test, c1_secret, c2_secret)
 print(f"Recovered polynomial result: {poly_result}")
