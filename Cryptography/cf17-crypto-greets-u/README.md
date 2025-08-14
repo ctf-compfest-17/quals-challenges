@@ -1,6 +1,6 @@
 # CF17 crypto greets u
 
-by tipsen
+by tipsen & Karev
 
 ---
 
