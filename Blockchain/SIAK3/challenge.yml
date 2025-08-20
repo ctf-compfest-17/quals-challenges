@@ -22,9 +22,7 @@ category: Blockchain
 # {{ PORT }} to get service port
 description: "next version of SIAK-NG! SIAK3!
   Bob paid his previous tuition fees using SIAK3, but he seems to have forgotten his privkey.
-  Accidentally, his wallet has a bug that creates a vulnerable signature for his previous payments.
-  He only remembers that his privkey contains the keyword 'cafe'.
-  Can you help him retrieve his privkey and pay his tuition?
+  Accidentally, his wallet has a bug in signing method and He only remembers that his privkey contains the keyword 'cafe'.
 
   http://{{ IP_SERVER }}:{{ PORT }}/"
 

@@ -4,34 +4,25 @@ from pathlib import Path
 import sandbox
 from web3 import Web3
 
-# --- Configuration & Pre-generated Signatures ---
-
-# Private key for Bob's address (0x6dc7C25252515164FF388e10bB6dD1f5501fc88e)
 BOB_PRIVKEY = "0xa4e8e4e8cafea0b69e4d1de7f98f5e159f07728f056a6405e68f2aa0b5607219"
 BOB_ADDRESS = "0x6dc7C25252515164FF388e10bB6dD1f5501fc88e"
 
 SIGNATURES_FOR_DEPLOYMENT = [
-    (27, 0xcc01ccb300f10f031158676c41f6873354f95207c6e19fdce3a7f42af4d76691, 0xbbbe23505f16bf6eaa878d1b36cfb6cccc74abbdedb20d6b417373193186c32b, "2022-1"),
-    (27, 0x97899d469d055b62c50d13443aee019f8028c1d577b665063062e841b57e8932, 0x33c543dea9078fbe23165ebfa039303db10b283be350b203db245db6f86ea341, "2022-2"),
-    (27, 0xf720ecb1dad6068cf8196023e744f3cc503f836c1f29e56b1752ee074c3c59ed, 0xe38b09f7b09448bf8d0fed0fdb89a2a9eb92e593586999278deab6ee064eb50f, "2023-1"),
-    (28, 0xdfa3554e4ec008d16ab70d538bb4955fba2edf50c807a84b60899d274e505128, 0x024d70376ac734255c41d6348eec0a093f2c6834067d0e4c47b4f34a5967b638, "2023-2"),
-    (28, 0x23aa99b4d580123537705c790c9e3f691e97c17c7113d0320cbd221734edacbe, 0x3a12284ba4180b67d438942f92c62da87dc0adec9f9d3c4f85f3a3bc9f7e8356, "2024-1"),
-    (27, 0xe7f9f89fa9ea62e94d93e05ab85245a710fb703a1df224edd7afaf35977c60d0, 0xf66749731a8592dd63e2371e4dc26edc4dd208e9c5daaf554906edc1fea7f181, "2024-2")
+    (27, 0xcc01ccb300f10f031158676c41f6873354f95207c6e19fdce3a7f42af4d76691, 0x02131bd89e614118557b2ff6794c90cae20510a0f0f99e4845f484856b8e4c34, "2022-1"),
+    (27, 0x97899d469d055b62c50d13443aee019f8028c1d577b665063062e841b57e8932, 0x7b25f224cb4a5ece59c9f28aaf13eb833e0256ba8461bad0889a2ca4ee0f8e7d, "2022-2"),
+    (27, 0xf720ecb1dad6068cf8196023e744f3cc503f836c1f29e56b1752ee074c3c59ed, 0x7c0f98445465b4c3f320abb6238bc987ce065292c673402513af718509e4c174, "2023-1"),
+    (28, 0xdfa3554e4ec008d16ab70d538bb4955fba2edf50c807a84b60899d274e505128, 0x0285b918d5a418be78af25e816e388fbe5051e207def0ef5ec033b05a4210e1a, "2023-2"),
+    (28, 0x23aa99b4d580123537705c790c9e3f691e97c17c7113d0320cbd221734edacbe, 0x6d8cc9f8c2313f1a4be3c0e4abd79acff35708703e6833b2937f203bbd18d4bd, "2024-1"),
+    (27, 0xe7f9f89fa9ea62e94d93e05ab85245a710fb703a1df224edd7afaf35977c60d0, 0xa7ac159403fa59d5ec5061a94095686d3ecffc1f77ba152402fb1d5615aea28a, "2024-2")
 ]
-
-# --- Helper Function ---
 
 def set_balance(web3: Web3, account_address: str, amount_wei: int):
     web3.provider.make_request("anvil_setBalance", [account_address, hex(amount_wei)])
 
-# --- Main Deployment Logic ---
-
 def deploy(web3: Web3, deployer_address: str, deployer_privateKey: str, player_address: str) -> str:
-    # 1. Load Contract ABIs and Bytecode
     setup_info = json.loads(Path("compiled/Setup.sol/Setup.json").read_text())
     siak3_info = json.loads(Path("compiled/SIAK3.sol/SIAK3.json").read_text())
     
-    # 2. Deploy the Setup Contract (which deploys SIAK3)
     setup_factory = web3.eth.contract(abi=setup_info["abi"], bytecode=setup_info["bytecode"]["object"])
     
     construct_txn = setup_factory.constructor().build_transaction({
@@ -47,11 +38,10 @@ def deploy(web3: Web3, deployer_address: str, deployer_privateKey: str, player_a
     siak3_address = setup_contract.functions.challenge().call()
     siak3_contract = web3.eth.contract(address=siak3_address, abi=siak3_info["abi"])
 
-    # 3. Fund Bob and the Player so they can make transactions
     set_balance(web3, BOB_ADDRESS, Web3.to_wei(2, 'ether'))
     set_balance(web3, player_address, Web3.to_wei(2, 'ether'))
 
-    # 4. Simulate Bob making all his past payments
+    # Simulate Bob past payments
     bob_nonce = web3.eth.get_transaction_count(BOB_ADDRESS)
     for v, r, s, semester in SIGNATURES_FOR_DEPLOYMENT:
         payment_txn = siak3_contract.functions.payTuition(
@@ -72,6 +62,27 @@ def deploy(web3: Web3, deployer_address: str, deployer_privateKey: str, player_a
     
     return setup_address
 
-# --- Sandbox Launcher ---
+def pre_tx_hook(data, node_info):
+    """
+    Executed before a transaction is processed.
+    Returns:
+        - status: HTTP status code (e.g., 200 for success, 400 for error)
+        - msg: Message to be returned in the response in case of non 2xx status
+    """
+    return 200, ""
 
-app = sandbox.run_launcher(deploy)
+def post_tx_hook(data, response, node_info):
+    
+    """
+    Executed after a transaction is processed.
+    Returns:
+        - status: HTTP status code (e.g., 200 for success, 400 for error)
+        - msg: Message to be returned in the response in case of non 2xx status
+    """
+    return 200, ""
+
+app = sandbox.run_launcher(
+    deploy,
+    pre_tx_hook=pre_tx_hook,
+    post_tx_hook=post_tx_hook
+)

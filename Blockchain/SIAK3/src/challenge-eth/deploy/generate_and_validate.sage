@@ -7,7 +7,6 @@ from Crypto.Hash import keccak
 # ======================================================================
 # PART 0: CHALLENGE CONFIGURATION
 # ======================================================================
-print("⚙️  Configuring challenge parameters...")
 
 # --- Cryptographic Parameters for secp256k1 ---
 p = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F
@@ -36,14 +35,22 @@ print(f"[*] Using {n_sigs} signatures with a {bias_bits}-bit nonce bias.")
 # ======================================================================
 print("\nPart 1: Generating biased signatures...")
 
-def solidity_keccak256(types, values):
+def solidity_encode(types, values):
+    """Encode same way as abi.encodePacked for string and uint256 only (as in your contract)."""
     encoded = b''
     for t, v in zip(types, values):
-        if t == 'string': encoded += v.encode('utf-8')
-        elif t == 'uint256': encoded += v.to_bytes(32, 'big')
-    k_hash = keccak.new(digest_bits=256)
-    k_hash.update(encoded)
-    return int.from_bytes(k_hash.digest(), 'big')
+        if t == 'string':
+            encoded += v.encode('utf-8')
+        elif t == 'uint256':
+            encoded += int(v).to_bytes(32, 'big')
+        else:
+            raise ValueError("unsupported type")
+    return encoded
+
+def keccak256_bytes(data: bytes) -> bytes:
+    k = keccak.new(digest_bits=256)
+    k.update(data)
+    return k.digest()
 
 signatures_for_attack = []
 signatures_for_chal_py = []
@@ -51,7 +58,14 @@ signatures_for_chal_py = []
 for i in range(n_sigs):
     k = random.randint(1, max_nonce - 1)
     semester = PAST_SEMESTERS[i]
-    msg_hash_int = solidity_keccak256(['string', 'uint256', 'string'], [NPM, UKT_AMOUNT, semester])
+
+    raw_encoded = solidity_encode(['string', 'uint256', 'string'], [NPM, UKT_AMOUNT, semester])
+    raw_hash = keccak256_bytes(raw_encoded)  # 32 bytes
+
+    prefix = b"\x19Ethereum Signed Message:\n32"
+    eth_signed = keccak256_bytes(prefix + raw_hash)
+    msg_hash_int = Integer(int.from_bytes(eth_signed, 'big'))
+
     R = k * G
     r = Integer(R.xy()[0])
     # CORRECTED: All signature math must be modulo q
@@ -61,7 +75,7 @@ for i in range(n_sigs):
     signatures_for_attack.append((msg_hash_int, r, s))
     signatures_for_chal_py.append((v, r, s, semester))
 
-print("✅ Signatures generated. Copy the block below into your `chal.py`.")
+print("Signatures generated. Copy the block below into your `chal.py`.")
 print("-" * 60)
 print("SIGNATURES_FOR_DEPLOYMENT = [")
 for i, (v, r, s, sem) in enumerate(signatures_for_chal_py):
@@ -77,7 +91,6 @@ print("\nPart 2: Validating signatures with a lattice attack...")
 
 n_attack = len(signatures_for_attack)
 B = 2**(256 - bias_bits)
-print(f"Building {n_attack+2}x{n_attack+2} matrix...")
 
 # CORRECTED: The lattice must also be constructed with modulo q
 Mtilde_list = [B, 0]; Rtilde_list = [0, B/q]
@@ -92,13 +105,10 @@ Pdiag = -q * identity_matrix(QQ, n_attack)
 Z = matrix(QQ, n_attack, 2, 0)
 M_lower = block_matrix([[Z, Pdiag]])
 M = block_matrix([[Mtilde], [Rtilde], [M_lower]])
-print("✓ Matrix constructed.")
 
-print("✓ Running LLL reduction...")
+print("Running LLL")
 L = M.LLL()
-print("✓ LLL reduction complete.")
 
-print("✓ Searching for the private key in the reduced basis...")
 recovered_private_key = None
 for row in L.rows():
     if recovered_private_key: break
@@ -108,12 +118,11 @@ for row in L.rows():
         if not k_val.is_integer() or k_val == 0: continue
         k = Integer(k_val)
         try:
-            # CORRECTED: Key recovery math must also be modulo q
             r_inv = inverse_mod(r, q)
             d_recovered = (r_inv * (k * s - m)) % q
             if d_recovered * G == P:
                 recovered_private_key = d_recovered
-                print("✓ Nonce found! Key validated successfully.")
+                print("Nonce found! Key validated successfully.")
                 break
         except (ZeroDivisionError, ValueError):
             continue
@@ -123,11 +132,9 @@ for row in L.rows():
 # ======================================================================
 if recovered_private_key:
     print("\n" + "=" * 60)
-    print("🎉🎉🎉      CHALLENGE IS SOLVABLE      🎉🎉🎉")
     print(f"Recovered Private Key: 0x{recovered_private_key:064x}")
     print("=" * 60)
 else:
     print("\n" + "=" * 60)
-    print("❌❌❌      VALIDATION FAILED      ❌❌❌")
     print("The lattice attack could not recover the private key.")
     print("=" * 60)

@@ -5,6 +5,7 @@ import "./SIAK3.sol";
 
 contract Setup {
     SIAK3 public challenge;
+    string public constant CURRENT_SEMESTER = "2025-1";
 
     constructor() payable {
         require(msg.value >= 1 ether, "Setup must be funded");
@@ -12,6 +13,6 @@ contract Setup {
     }
 
     function isSolved() external view returns (bool) {
-        return challenge.isChallengeSolved();
+        return challenge.paidSemesters(CURRENT_SEMESTER);
     }
 }
