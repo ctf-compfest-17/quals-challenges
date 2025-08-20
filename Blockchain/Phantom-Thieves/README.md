@@ -11,13 +11,8 @@ COMPFEST17{y0u_are_p0werless_since_y0u_cann0t_d0_the_rug_n0w_huh?_b62ecb3383}
 ```
 
 ## Description
-dear phantom thieves,
-The king is up to something.
-as a Phantom Thieves, you must not let this greedy king get away with it!
-However we can't infiltrate now, we can only teach him a lesson.
-Show this greedy ruler that their own fortress has become their cage!
+Let's infiltrate this palace and make the greedy king got trapped!
 
-P.S. you only have 1 ether left on your piggybank
 
 ## Difficulty
 Tingkat kesulitan soal: easy

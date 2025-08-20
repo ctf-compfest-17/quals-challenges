@@ -20,13 +20,7 @@ category: Blockchain
 # Constants:
 # {{ IP_SERVER }} to get service IP address
 # {{ PORT }} to get service port
-description: "dear phantom thieves,
-  The king is up to something.
-  as a Phantom Thieves, you must not let this greedy king get away with it!
-  However we can't infiltrate now, we can only teach him a lesson.
-  Show this greedy ruler that their own fortress has become their cage!
-
-  P.S. you only have 1 ether left on your piggybank
+description: "Let's infiltrate this palace and make the greedy king got trapped!
 
   http://{{ IP_SERVER }}:{{ PORT }}/"
 
