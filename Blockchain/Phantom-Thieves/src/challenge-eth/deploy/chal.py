@@ -34,8 +34,31 @@ def deploy(web3: Web3, deployer_address: str, deployer_privateKey: str, player_a
 
     rcpt = web3.eth.wait_for_transaction_receipt(tx_hash)
 
-    set_balance(web3, player_address, Web3.to_wei(1.1, 'ether'))
+    set_balance(web3, player_address, Web3.to_wei(1.5, 'ether'))
 
     return rcpt.contractAddress
 
-app = sandbox.run_launcher(deploy)
+def pre_tx_hook(data, node_info):
+    """
+    Executed before a transaction is processed.
+    Returns:
+        - status: HTTP status code (e.g., 200 for success, 400 for error)
+        - msg: Message to be returned in the response in case of non 2xx status
+    """
+    return 200, ""
+
+def post_tx_hook(data, response, node_info):
+    
+    """
+    Executed after a transaction is processed.
+    Returns:
+        - status: HTTP status code (e.g., 200 for success, 400 for error)
+        - msg: Message to be returned in the response in case of non 2xx status
+    """
+    return 200, ""
+
+app = sandbox.run_launcher(
+    deploy,
+    pre_tx_hook=pre_tx_hook,
+    post_tx_hook=post_tx_hook
+)

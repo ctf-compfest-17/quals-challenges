@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "./Fortress.sol";
 
@@ -11,16 +11,21 @@ contract Setup {
     }
 
     function isSolved() external view returns (bool) {
-        Vault vault = challenge.vaultContract();
+        // simulate openVault()
+        (bool ok, bytes memory ret) = address(challenge).staticcall(
+            abi.encodeWithSignature("openVault()")
+        );
 
-        if (vault.totalShares() == 0) {
-            return false;
+        if (ok) return false;
+
+        if (ret.length >= 4) {
+            bytes4 sel;
+            assembly {
+                sel := mload(add(ret, 32))
+            }
+            // bytes4(keccak256("NoShares()"))
+            return sel == NoShares.selector;
         }
-        uint256 _amount = challenge.tokenInstance().balanceOf(address(challenge));
-        uint256 currentBalance = challenge.tokenInstance().balanceOf(address(vault));
-        uint256 currentShares = vault.totalShares();
-        uint256 shares = (_amount * currentShares) / currentBalance;
-
-        return shares == 0;
+        return false;
     }
 }

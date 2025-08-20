@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
 
 contract PhantomCoin is ERC20 {
     uint256 public constant MAX_SUPPLY = 100 ether;
@@ -28,7 +27,6 @@ contract Vault {
 
     function deposit(uint256 _amount) external {
         require(_amount > 0, "Vault: amount must be greater than 0");
-
         uint256 currentBalance = token.balanceOf(address(this));
         uint256 currentShares = totalShares;
 
@@ -62,10 +60,12 @@ contract Vault {
     }
 }
 
+error NoShares();
+
 contract Fortress {
     Vault public vaultContract;
     PhantomCoin public tokenInstance;
-    
+
     address public owner;
     uint256 public depositAmount;
 
@@ -77,26 +77,28 @@ contract Fortress {
         depositAmount = msg.value;
         tokenInstance.buyTokens{value: msg.value}();
         tokenInstance.approve(address(vaultContract), msg.value);
-
     }
 
     function openVault() external returns (bool) {
         require(msg.sender == owner, "Only owner");
 
+        uint256 currentBalance = tokenInstance.balanceOf(address(vaultContract));
+        uint256 currentShares = vaultContract.totalShares();
+
+        uint256 wouldMint = currentShares == 0
+            ? depositAmount
+            : (depositAmount * currentShares) / currentBalance;
+
+        if (wouldMint == 0) revert NoShares();
+
         vaultContract.deposit(depositAmount);
         uint256 myShares = vaultContract.shares(address(this));
-        require(myShares > 0, "No shares to withdraw!");
         uint256 vaultBalance = tokenInstance.balanceOf(address(vaultContract));
         vaultContract.withdraw(myShares);
         tokenInstance.transfer(owner, vaultBalance);
         return true;
     }
-    
-    function vault() external view returns (address) { 
-        return address(vaultContract);
-    }   
 
-    function token() external view returns (address) { 
-        return address(tokenInstance); 
-    }
+    function vault() external view returns (address) { return address(vaultContract); }
+    function token() external view returns (address) { return address(tokenInstance); }
 }

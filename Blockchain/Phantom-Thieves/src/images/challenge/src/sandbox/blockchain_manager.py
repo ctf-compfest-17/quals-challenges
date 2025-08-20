@@ -1,5 +1,6 @@
 import os
 import re
+import shlex
 import sys
 import json
 import time
@@ -46,6 +47,7 @@ os.makedirs(INSTANCE_BY_TEAM_DIR, exist_ok=True)
 os.makedirs(INSTANCE_BY_UUID_DIR, exist_ok=True)
 
 EVM_VERSION = os.getenv("EVM_VERSION") or "latest"
+ANVIL_EXTRA_OPTIONS = shlex.split(os.getenv("ANVIL_EXTRA_OPTIONS") or "")
 
 if BLOCKCHAIN_TYPE == "eth":
     print("EVM_VERSION:", EVM_VERSION)
@@ -225,6 +227,7 @@ def launch_ethereum_node(team_id: str) -> NodeInfo:
 
     
     # Start Anvil process
+    EVM_VERSION = "cancun"
     anvil_process = subprocess.Popen(
         args=[
             "anvil",
@@ -234,6 +237,7 @@ def launch_ethereum_node(team_id: str) -> NodeInfo:
             "--port", str(node_port),
             "--block-base-fee-per-gas", "0",
             "--hardfork", EVM_VERSION,
+            *ANVIL_EXTRA_OPTIONS
         ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
@@ -243,7 +247,12 @@ def launch_ethereum_node(team_id: str) -> NodeInfo:
     web3 = Web3(Web3.HTTPProvider(f"http://127.0.0.1:{node_port}"))
     while True:
         if anvil_process.poll() is not None:
-            raise RuntimeError("Anvil process failed to start")
+            out, err = anvil_process.communicate()
+            raise RuntimeError(
+                    f"Anvil process failed to start.\n"
+                    f"stdout:\n{out.decode(errors='ignore')}\n"
+                    f"stderr:\n{err.decode(errors='ignore')}"
+                )
         if web3.is_connected():
             break
         time.sleep(0.1)
