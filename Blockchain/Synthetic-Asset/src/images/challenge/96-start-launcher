@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# env.py is now handled by the Python code using PersistentStore
+
+(
+    echo "starting launcher"
+    cd /home/ctf/
+    PYTHONUNBUFFERED=true python3 -m gunicorn \
+        --user root \
+        --group root \
+        --bind 0.0.0.0:$LAUNCHER_PORT \
+        --daemon \
+        --workers 4 \
+        --threads 8 \
+        --access-logfile /var/log/ctf/proxy.access.log \
+        --error-logfile /var/log/ctf/proxy.error.log \
+        --capture-output \
+        --log-level debug \
+        chal:app
+)
+
+sleep 5
