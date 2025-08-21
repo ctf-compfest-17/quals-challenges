@@ -1,7 +1,7 @@
 # crash out writeup
 
-1. View registry given in Users/nadia/AppData/ and see HKEY_CURRENT_USER\Software\Microsoft\Powershell\1\PowershellExec (it will show powershell command that reveal the path to security_tool.ps1 and winsec.ps1). Else, if they found it first, players can just read the script directly in \Users\nadia\Scripts.
-2. security_tool.ps1 compiles winsec.ps1 into exe to run it. it also imports BLABLA.dll module.
-3. first flag can be found in BLABLA.dll
-4. second flag is in winsec.ps1
-5. last flag is in .WER file located in Users/nadia/AppData/Local/Microsoft/WER
+1. Crash report is here: programdata/microsoft/windows/wer/reportarchive/AppCrash*/Report.wer, memory dump of the report is here: programdata/dumps/chrome_updater*.dmp
+2. From the dump, you get several path leading to file.enc and 89a0b289f0221.zip and a password "whereourcrashis" (use strings https://isc.sans.edu/diary/22536)
+3. users/evan/documents/89a0b*.zip unlock with "whereourcrashis" and you find script.py. reverse it
+4. decrypt the file using the reversed script: users/evan/downloads/upload_queue/file.enc
+5. edit the s0f0 header of jpg (after ff c0), reference: https://cyberhacktics.com/hiding-information-by-changing-an-images-height/

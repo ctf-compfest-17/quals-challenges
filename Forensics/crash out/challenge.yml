@@ -20,7 +20,7 @@ category: forensics
 # Constants:
 # {{ IP_SERVER }} to get service IP address
 # {{ PORT }} to get service port
-description: "I recently brought my laptop to a service center. Now it starts to behave weirdly, the powershell tab just comes up out of nowhere?? Can you find out what is going on? Here is a dump of my machine: https://drive.google.com/file/d/1oaqD44dLpa9AhnqQni38m12YmBozCbRm/view?usp=sharing Password: 848331f8c07b6c372bd03321f31609f7345b1de42e942b7ce88cd29e4ca3c92"
+description: "Evan installed and executed a supposedly safe file. It caused his laptop to hang, several data to become corrupted, and new password-protected files to show up. The password popped up for a while, but he didn't memorize it. Can you get him back his file?"
 
 # Flags specify answers that your challenge use. You should generally provide
 # at least one.
