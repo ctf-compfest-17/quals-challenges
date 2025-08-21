@@ -1,0 +1,11 @@
+services:
+  byoj:
+    build:
+      context: .
+      args:
+        filename: ${FILENAME:-flag.txt}
+    container_name: byoj
+    restart: always
+    ports:
+      - 1337:5000
+    privileged: true
