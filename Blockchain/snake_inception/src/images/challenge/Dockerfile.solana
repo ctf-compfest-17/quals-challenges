@@ -1,0 +1,39 @@
+FROM gcr.io/paradigmxyz/ctf/base:latest
+
+# Install required packages
+RUN apt update && apt install -y curl build-essential git pkg-config libudev-dev libssl-dev python3 python3-pip && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# Install Node.js and Yarn
+RUN curl -fsSL https://deb.nodesource.com/setup_23.x | sh && \
+    apt install -y --no-install-recommends nodejs && \
+    npm install --global yarn && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Solana tools
+ENV PATH="/root/.local/share/solana/install/active_release/bin:/root/.cargo/bin:/root/.avm/bin:$PATH"
+RUN cargo install --git https://github.com/coral-xyz/anchor avm --force && \
+    avm install 0.31.1 && \
+    avm use 0.31.1 && \
+    which anchor || echo "anchor not found in PATH"
+RUN sh -c "$(curl -sSfL https://release.anza.xyz/v2.2.14/install)"
+RUN agave-install init 2.1.0
+
+# Build Solana dependencies
+COPY ./solana-deps /solana-deps
+RUN cd /solana-deps && \
+    echo "PATH: $PATH" && \
+    which anchor && \
+    anchor build && \
+    rm -rf /solana-deps
+
+# Set up environment
+ENV PYTHONPATH=/usr/lib/python
+ENV BLOCKCHAIN_TYPE=solana
+
+# Copy application files
+COPY 96-start-launcher /startup
+COPY src/sandbox /usr/lib/python/sandbox
