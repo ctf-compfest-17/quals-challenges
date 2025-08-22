@@ -2,6 +2,7 @@
 from Crypto.Util.number import getPrime,bytes_to_long
 from random import randint
 from math import gcd
+from decimal import Decimal
 FLAG = b"COMPFEST17{wait__that_works_here_too__thats_cool_anyway_see_you_at_the_finals_75d3e3d44a}"
 
 def generate_pub_key():
@@ -11,9 +12,13 @@ def generate_pub_key():
         if (p < q < 2*p) or (q< p < 2*q):
             break
     N = p * q
+
     phi = (p**2-1) * (q**2-1)
     print("N: ", N)
     bound = int(input("Enter bound: "))
+    if bound < 2**1000:
+        print("Get out of here!")
+        exit(1)
     while True:
         d = randint(phi-bound,phi-1)
         if gcd(d,phi) == 1:
