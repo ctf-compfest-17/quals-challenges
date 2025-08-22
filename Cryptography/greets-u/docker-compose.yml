@@ -1,9 +1,9 @@
 services:
-    cf17-cryptography-greets-u:
+    greets-u:
       build: .
       ports:
-        - 1000:8080
-      container_name: cf17-cryptography-greets-u
+        - 7101:8080
+      container_name: greets-u
       restart: on-failure
       deploy:
         resources:

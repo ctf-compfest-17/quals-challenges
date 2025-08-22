@@ -7,5 +7,7 @@ RUN apt-get update && \
     pip install py-ecc pycryptodome
 
 COPY src/chall.py .
+COPY src/secret.py .
+COPY src/flag.txt .
 
 CMD socat TCP-LISTEN:8080,fork,reuseaddr EXEC:"python3 chall.py",stderr

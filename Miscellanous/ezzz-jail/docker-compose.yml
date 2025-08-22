@@ -2,7 +2,7 @@ services:
     ezzz-jail:
       build: .
       ports:
-        - 9000:8080
+        - 7603:8080
       container_name: ezzz-jail
       restart: on-failure
       deploy:

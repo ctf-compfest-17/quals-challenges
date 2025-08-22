@@ -15,7 +15,7 @@ COPY ./src/bltinmodule.c /build/cpython/Python/bltinmodule.c
 COPY ./src/freeze_modules.py /build/cpython/Tools/build/freeze_modules.py
 COPY ./src/interpreters.py /build/cpython/Lib/concurrent/interpreters/__init__.py
 COPY ./src/funcobject.c /build/cpython/Objects/funcobject.c
-RUN make -j 4
+RUN make -j 1
 RUN make install; exit 0
 
 RUN cd / && rm -rf /var/lib/apt/lists/* && rm -rf /build
