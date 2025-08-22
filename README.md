@@ -30,7 +30,7 @@
 | Web Exploitation | Dark side of asteroid | 7302 | `http://ctf.compfest.id:7302` |
 | Web Exploitation | Gift for the Tifosi | 7303 | `http://ctf.compfest.id:7303` |
 | Web Exploitation | Not Simple Web | 7304 | `http://ctf.compfest.id:7304` |
-| Miscellaneous | BYOJ | 7601 | `nc ctf.compfest.id 7601` |
+| Miscellaneous | BYOJ | 7601 | `nc 35.198.215.85 7601` |
 | Miscellaneous | Starwalker | 7602 | `nc ctf.compfest.id 7602` |
 | Muscellaneous | ezzz-jail | 7603 | `nc ctf.compfest.id 7603` |
 | Cryptography | greets-u | 7101 | `nc ctf.compfest.id 7101` |
