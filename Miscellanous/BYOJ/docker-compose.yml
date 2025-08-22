@@ -10,3 +10,8 @@ services:
       - 7601:5000
     privileged: true
     dns: 127.0.0.0
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
