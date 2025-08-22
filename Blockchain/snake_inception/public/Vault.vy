@@ -38,7 +38,7 @@ def _recover_signer(message_hash: bytes32, v: uint256, r: uint256, s: uint256) -
 def claim_reward(v: uint256, r: uint256, s: uint256):
     
     temp: address = msg.sender
-    assert temp.codesize <= 69, "Contract can't be too big"
+    assert temp.codesize <= 43, "Contract can't be too big"
     
     sig_hash: bytes32 = keccak256(concat(convert(v, bytes32), convert(r, bytes32), convert(s, bytes32)))
 
@@ -60,7 +60,7 @@ def gamble_reward(v: uint256, r: uint256, s: uint256):
     """Gamble 20 ETH with valid signature"""
 
     temp: address = msg.sender
-    assert temp.codesize <= 69, "Contract can't be too big"
+    assert temp.codesize <= 43, "Contract can't be too big"
 
     sig_hash: bytes32 = keccak256(concat(convert(v, bytes32), convert(r, bytes32), convert(s, bytes32)))
 
@@ -80,5 +80,3 @@ def gamble_reward(v: uint256, r: uint256, s: uint256):
     self.claimed[sig_hash] = True
 
     log Claimed(msg.sender, self.reward_amount)
-
-
