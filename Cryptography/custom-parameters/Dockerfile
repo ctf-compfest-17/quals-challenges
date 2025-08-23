@@ -11,4 +11,4 @@ RUN apt-get update && \
 COPY src/src.py .
 
 # Run with socat
-CMD socat TCP-LISTEN:1337,fork,reuseaddr EXEC:"python3 src.py",stderr
+CMD socat TCP-LISTEN:1337,fork,reuseaddr EXEC:"python3 -u src.py",stderr

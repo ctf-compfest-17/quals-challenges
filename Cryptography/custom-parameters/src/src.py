@@ -6,16 +6,16 @@ from decimal import Decimal
 FLAG = b"COMPFEST17{wait__that_works_here_too__thats_cool_anyway_see_you_at_the_finals_75d3e3d44a}"
 
 def generate_pub_key():
+    while True:
+        p = getPrime(2048)
+        q = getPrime(2048)
+        if (p < q < 2*p) or (q< p < 2*q):
+            break
     
-    p = getPrime(2048)
-    q = getPrime(2048)
-
     N = p * q
-    
-    print("N: ", N)
 
     phi = (p**2-1) * (q**2-1)
-    
+    print("N: ", N)
     bound = int(input("Enter bound: "))
     if bound < 2**1000:
         print("Get out of here!")
