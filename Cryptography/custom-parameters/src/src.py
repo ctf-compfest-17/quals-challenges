@@ -6,11 +6,13 @@ from decimal import Decimal
 FLAG = b"COMPFEST17{wait__that_works_here_too__thats_cool_anyway_see_you_at_the_finals_75d3e3d44a}"
 
 def generate_pub_key():
-    while True:
+    
+    p = getPrime(2048)
+    q = getPrime(2048)
+    while not ((p < q < 2*p) or (q < p < 2*q)):
         p = getPrime(2048)
         q = getPrime(2048)
-        if (p < q < 2*p) or (q< p < 2*q):
-            break
+
     N = p * q
 
     phi = (p**2-1) * (q**2-1)

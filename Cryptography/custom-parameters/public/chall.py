@@ -6,11 +6,13 @@ from decimal import Decimal
 FLAG = b"REDACTED"
 
 def generate_pub_key():
-    while True:
+    
+    p = getPrime(2048)
+    q = getPrime(2048)
+    while not ((p < q < 2*p) or (q < p < 2*q)):
         p = getPrime(2048)
         q = getPrime(2048)
-        if (p < q < 2*p) or (q< p < 2*q):
-            break
+
     N = p * q
 
     phi = (p**2-1) * (q**2-1)
