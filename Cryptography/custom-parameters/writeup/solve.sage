@@ -112,8 +112,8 @@ def factor_N(N, e, prec=None):
     return None, None
 
 if __name__ == "__main__":
-    #proc = remote("localhost", 7102)
-    proc = process(["python3", "../src/src.py"])
+    proc = remote("localhost", 7102)
+    #proc = process(["python3", "../src/src.py"])
     proc.recvuntil(b"N:")
     N = int(proc.recvline().strip())
     bound = round((2*N).sqrt().sqrt())

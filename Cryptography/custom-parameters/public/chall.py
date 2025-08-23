@@ -9,9 +9,6 @@ def generate_pub_key():
     
     p = getPrime(2048)
     q = getPrime(2048)
-    while not ((p < q < 2*p) or (q < p < 2*q)):
-        p = getPrime(2048)
-        q = getPrime(2048)
 
     N = p * q
 

@@ -9,14 +9,13 @@ def generate_pub_key():
     
     p = getPrime(2048)
     q = getPrime(2048)
-    while not ((p < q < 2*p) or (q < p < 2*q)):
-        p = getPrime(2048)
-        q = getPrime(2048)
 
     N = p * q
+    
+    print("N: ", N)
 
     phi = (p**2-1) * (q**2-1)
-    print("N: ", N)
+    
     bound = int(input("Enter bound: "))
     if bound < 2**1000:
         print("Get out of here!")
