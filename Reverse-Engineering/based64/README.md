@@ -10,6 +10,11 @@ by Zanark
 COMPFEST17{1dk_wh4t_sp4rk3d_m3_t0_m4k3_th1s_5abc6dd720}
 ```
 
+Mirror
+```
+COMPFEST17{what_even_sparked_me_to_make_this_kind_of_chall_836bcbf395}
+```
+
 ## Description
 `base64.b64encode(flag)` or is it?
 
@@ -27,4 +32,4 @@ Tingkat kesulitan soal: hard
 Tags dari soal pisahkan koma (e.g: tags1, tags2, tags3)
 
 ## Deployment
-None
+Bukan buat deployment tapi buat mirror file `pdb` nya tahan dulu saja ya.

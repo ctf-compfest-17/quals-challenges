@@ -10,6 +10,11 @@ by Zanark
 COMPFEST17{h0w_d1d_y0u_g3t_h3re?_w3ll_gr4tz_44157bcbb6}
 ```
 
+Mirror
+```
+COMPFEST17{c0ngr4ts_y0u_f0uNd_th3_s3crE7!_98f4e10bec}
+```
+
 ## Description
 Create your own pyjail by just providing characters to be whitelisted!
 

@@ -57,7 +57,7 @@ def xor_planes(plane_a: list[int], plane_b: list[int]) -> list[int]:
     return [a ^ b for a, b in zip(plane_a, plane_b)]
 
 
-with open("compressed_flag.dat", "rb") as f:
+with open("compressed_flag_mirror.dat", "rb") as f:
     comp = f.read()
 
 bitstring = StringIO()
@@ -69,7 +69,7 @@ bitstring = bitstring.getvalue()
 width = int(bitstring[:7], 2)
 height = int(bitstring[7:14], 2)
 enc_mode = int(bitstring[14:16], 2)
-
+print(f"{enc_mode = }")
 rr = []
 
 plane_size = width * 8 * height * 8 * 8 # in bits
@@ -123,7 +123,8 @@ blue_plane = blue_plane.getvalue()
 
 assert len(red_plane) == plane_size, f"{len(red_plane) = }"
 assert len(green_plane) == plane_size, f"{len(green_plane) = }"
-assert len(blue_plane) == plane_size, f"{len(blue_plane) = }"
+#assert len(blue_plane) == plane_size, f"{len(blue_plane) = }"
+blue_plane = blue_plane[:plane_size]
 
 if enc_mode == 3:
     red_plane = delta_decode_plane(red_plane)
@@ -167,6 +168,6 @@ for r, g, b in zip(red_plane, green_plane, blue_plane):
     pixel_array.append(b)
 
 img = Image.frombytes("RGB", (width*8, height*8), bytes(pixel_array))
-img.save("test_out.bmp", format="BMP")
+img.save("test_out_mirror.bmp", format="BMP")
 
 # print(red_plane[:10])

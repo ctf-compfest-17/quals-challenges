@@ -128,7 +128,7 @@ for x in range(8):
     for y in range(8):
         tmap[TABLE[x][y]] = (x, y)
 
-with open("flag.jpg.enc") as f:
+with open("flag_mirror.jpg.enc") as f:
     enc = f.read()
 dec = b""
 rnd = 0
@@ -179,6 +179,8 @@ seed = 0
 for c in dec:
     seed ^= c
 
+dec = dec[:-1] # offset padding manual
+
 java_src = f"""
 import java.util.Random;
 
@@ -212,5 +214,5 @@ for i, idx in enumerate(idxs):
     dec[idx] = dec[i]
     dec[i] = tmp
 
-with open("out.jpg", "wb") as f:
+with open("out_mirror.jpg", "wb") as f:
     f.write(bytes(dec))
