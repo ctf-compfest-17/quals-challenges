@@ -2,24 +2,17 @@
 from Crypto.Util.number import getPrime,bytes_to_long
 from random import randint
 from math import gcd
-from decimal import Decimal
 FLAG = b"REDACTED"
 
 def generate_pub_key():
-    
     p = getPrime(2048)
     q = getPrime(2048)
-
+    
     N = p * q
 
     phi = (p**2-1) * (q**2-1)
-    print("N: ", N)
-    bound = int(input("Enter bound: "))
-    if bound < 2**1000:
-        print("Get out of here!")
-        exit(1)
     while True:
-        d = randint(phi-bound,phi-1)
+        d = randint(phi-2**2048,phi-1)
         if gcd(d,phi) == 1:
             break
     e = pow(d,-1,phi)
@@ -38,6 +31,8 @@ if __name__ == "__main__":
     print("")
     m = FLAG
     ct = encrypt(m, N, e)
-    print("e:", e)
-    print("ct:", ct)
+    with open("output.txt", "w") as f:
+        f.write(f"N: {N}\n\n")
+        f.write(f"e: {e}\n\n")
+        f.write(f"ct: {ct}\n")
 
