@@ -3,19 +3,18 @@ from Crypto.Util.number import getPrime,bytes_to_long
 from random import randint
 from math import gcd
 from decimal import Decimal
-FLAG = b"COMPFEST17{wait__that_works_here_too__thats_cool_anyway_see_you_at_the_finals_75d3e3d44a}"
+FLAG = b"COMPFEST17{wienner_attack_also_works_on_too_large_d_79bb13ff6b}"
 
 def generate_pub_key():
     p = getPrime(2048)
     q = getPrime(2048)
-
     
     N = p * q
 
     phi = (p**2-1) * (q**2-1)
     print("N: ", N)
     bound = int(input("Enter bound: "))
-    if bound < 2**1000:
+    if bound < 2**2049:
         print("Get out of here!")
         exit(1)
     while True:
