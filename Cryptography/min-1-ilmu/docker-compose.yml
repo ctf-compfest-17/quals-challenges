@@ -1,0 +1,13 @@
+services:
+  min-1-ilmu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:  
+      - "9999:8080"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
