@@ -1,4 +1,4 @@
-# Custom Parameter
+# Normal RSA?
 
 by Karev
 
@@ -8,10 +8,11 @@ by Karev
 
 ```
 COMPFEST17{wait__that_works_here_too__thats_cool_anyway_see_you_at_the_finals_75d3e3d44a}
+Mirror : COMPFEST17{wienner_attack_also_works_on_too_large_d_with_a_bit_of_a_twist_6fe4dd8e23}
 ```
 
 ## Description
-This time I allow you to customize a parameter, but I made sure it is safe.
+Except its not
 
 ## Difficulty
 Tingkat kesulitan soal: medium-hard 
