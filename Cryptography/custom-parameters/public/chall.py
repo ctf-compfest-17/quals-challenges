@@ -11,7 +11,7 @@ def normal(N):
         return 1
     return int(val)  # floor
 
-def generate_key(nbits=2048, v_attempts=64):
+def generate_key(nbits=4096, v_attempts=64):
     half = nbits//2
     p = getPrime(half)
     q = getPrime(half)
@@ -21,16 +21,12 @@ def generate_key(nbits=2048, v_attempts=64):
     phi = (p**2 - 1) * (q**2 - 1)
 
     thr = normal(N)
-    if thr <= 2:
-        raise RuntimeError("threshold too small")
 
     d_max = max(2, isqrt(thr))
     for _ in range(10000):
         d = random.randrange(2, d_max + 1)
         if GCD(d, phi) == 1:
             break
-    else:
-        raise RuntimeError("no d found")
 
     found = False
     for _ in range(v_attempts):
