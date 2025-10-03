@@ -10,6 +10,12 @@ by AdamRayyan
 COMPFEST17{I_4m_th3_0rIg1n4L______St4rW4lk3R_ce7428eba6}
 ```
 
+## Mirror Flag
+
+```
+COMPFEST17{fb02fb82a2c12c3d591f3e49d66950b9bc334e5b5abb8efaead5094c0a4384a5}
+```
+
 ## Description
 These birds are Pissing me off...           
 

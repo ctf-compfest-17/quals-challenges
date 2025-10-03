@@ -9,6 +9,11 @@ by tipsen
 COMPFEST17{thanks_to_maple3142_and_soon_haari_for_the_original_challenge_inspiration_now_i_know_what_FF_means_other_than_Free_Fire_ckckckck_btw_you_dont_need_the_oracle_since_its_only_polynomial_of_degree_2_f9c233c2ad}
 ```
 
+Mirror
+```
+COMPFEST17{dis_is_ff_encryption_boi_thanks_maple_thanks_soon_hari_b67aaaba91}
+```
+
 ## Description
 have u played Free Fire (also known as FF)? btw try my new encryption scheme! it used 17 keys because right now it is COMPFEST 17!!!
 

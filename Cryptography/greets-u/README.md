@@ -10,6 +10,11 @@ by tipsen & Karev
 COMPFEST17{w3lC0m3_t0_COMPFEST_17_th1s_1s_34sy???_crypT0gr4phy_juSt_r4nd0m_4nd_n0nC3_r3use_w1th_h3ns3l's_l1ft1ng_hehe_166cfe809d}
 ```
 
+Mirror
+```
+COMPFEST17{w3lc0m3_70_c0mpf357_17_7h15_15_345y???_cryp706r4phy_ju57_n0nc3_r3u53_w17h_h3n53l'5_l1f71n6_4nd_r4ndom_h3h3_8f2499c00e}
+```
+
 ## Description
 this should be the easiest challenge in this competition (or maybe i lied?)
 
